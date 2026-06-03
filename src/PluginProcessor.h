@@ -1,8 +1,7 @@
 #pragma once
 #include <JuceHeader.h>
 
-class MyReduxProcessor : public juce::AudioProcessor
-{
+class MyReduxProcessor : public juce::AudioProcessor{
 public:
     MyReduxProcessor();
     ~MyReduxProcessor() override;
@@ -22,7 +21,7 @@ public:
     bool acceptsMidi() const override;
     bool producesMidi() const override;
     bool isMidiEffect() const override;
-    double getTailLength() const override;
+    double getTailLengthSeconds() const override;
 
     int getNumPrograms() override;
     int getCurrentProgram() override;
@@ -33,12 +32,10 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    // --- Your Custom State & Parameters ---
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts { *this, nullptr, "Parameters", createParameterLayout() };
 
 private:
-    // Variables for the downsampling logic
     std::vector<float> heldSamples;
     std::vector<int> sampleCounters;
 
