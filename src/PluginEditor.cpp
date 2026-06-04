@@ -39,7 +39,7 @@ MyReduxEditor::~MyReduxEditor(){
 }
 
 void MyReduxEditor::paint (juce::Graphics& g){
-    g.fillAll (juce::Colour (0xff2d2d2d)); // Simple dark grey background
+    g.fillAll (juce::Colour (0xff2d2d2d)); 
 }
 
 void MyReduxEditor::resized(){
