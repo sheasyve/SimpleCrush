@@ -11,7 +11,7 @@ A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio d
 
 ## Compatibility
 * **Format:** VST3 & Standalone Application
-* **OS:** Windows (Compiled via MSVC 2026 x64)
+* **OS:** Cross Platform (Compiled via MSVC 2026 x64)
 * **DAWs:** Compatible with any major digital audio workstation that supports the 64 bit VST3 format (Ableton Live, FL Studio, Reaper, Bitwig, Cubase, etc.)
 
 ## Build Instructions
