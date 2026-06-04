@@ -113,14 +113,11 @@ void MyReduxProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
 
     // Get params from gui.
     auto* rawBits = apvts.getRawParameterValue("BITS");
-    auto* rawRate = apvts.getRawParameterValue("RATE");
-
-    // Safely load the float values.
     float bits = (rawBits != nullptr) ? rawBits->load() : 16.0f;
     float targetRateKHz = apvts.getRawParameterValue("RATE")->load();
     float targetRateHz = targetRateKHz * 1000.0f;
     int rate = std::max(1, static_cast<int>(getSampleRate() / targetRateHz));
-    
+
     if (rate < 1) rate = 1;
 
     float totalLevels = std::pow(2.0f, bits);//2^16 = 65,536 levels. 2^4 = 16 levels.
