@@ -86,8 +86,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyReduxProcessor::createPara
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"BITS", 1}, "Bit Depth", 1.0f, 16.0f, 16.0f));
         
-    layout.add(std::make_unique<juce::AudioParameterInt>(
-        juce::ParameterID{"RATE", 1}, "Downsample Rate", 1, 32, 1));
+    // Knob goes from 1.0 kHz to 44.1 kHz, defaulting to 44.1 kHz (Clean)
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+        juce::ParameterID{"RATE", 1}, "Sample Rate", 1.0f, 44.1f, 44.1f));
 
     return layout;
 }
@@ -116,7 +117,10 @@ void MyReduxProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
 
     // Safely load the float values.
     float bits = (rawBits != nullptr) ? rawBits->load() : 16.0f;
-    int rate   = (rawRate != nullptr) ? static_cast<int>(rawRate->load()) : 1;
+    float targetRateKHz = apvts.getRawParameterValue("RATE")->load();
+    float targetRateHz = targetRateKHz * 1000.0f;
+    int rate = std::max(1, static_cast<int>(getSampleRate() / targetRateHz));
+    
     if (rate < 1) rate = 1;
 
     float totalLevels = std::pow(2.0f, bits);//2^16 = 65,536 levels. 2^4 = 16 levels.
