@@ -1,4 +1,4 @@
-# SimpleCrush💥
+# SimpleCrush
 
 A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio destruction, and downsampling. Perfect for lo-fi, and adding unique harmonics to bass, drums and chords. Built from the ground up in C++ using the JUCE framework. This plugin is in early development stages, but is fully functional with many more changes to come.
 
