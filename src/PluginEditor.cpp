@@ -49,14 +49,13 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     addAndMakeVisible(rateLabel);
 
     // --- Mix Knob ---
-    mixSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    mixSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+    mixSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 50, 20);
 
     mixSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::red);
     mixSlider.setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colour(0xFF593D));
     mixSlider.setColour(juce::Slider::thumbColourId, juce::Colours::red);
     mixSlider.setColour(juce::Slider::trackColourId, juce::Colours::red);
-
     // Format display to show percentage (0-100%)
     mixSlider.setTextValueSuffix(" %");
     mixSlider.textFromValueFunction = [](double value)
@@ -76,7 +75,6 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
 
     addAndMakeVisible(mixLabel);
 
-    // Widen the window slightly to comfortably fit 3 knobs
     setSize(400, 200);
 }
 
@@ -86,30 +84,28 @@ MyReduxEditor::~MyReduxEditor()
 
 void MyReduxEditor::paint(juce::Graphics &g)
 {
-    g.fillAll(juce::Colour(0xff2d2d2d)); // Simple dark grey background
+    g.fillAll(juce::Colour(0xff2d2d2d)); 
 }
 
 void MyReduxEditor::resized()
 {
     auto bounds = getLocalBounds().reduced(20);
+    auto mixArea = bounds.removeFromBottom(25); 
+    mixLabel.setBounds(mixArea.removeFromLeft(40)); 
+    mixSlider.setBounds(mixArea); 
+    bounds.removeFromBottom(15); 
 
-    // Divide the total width by 3 for three columns
-    auto columnWidth = bounds.getWidth() / 3;
-
-    // Carve out the columns left-to-right
+    // 2. Handle the Main Knobs (Bit Depth & Sample Rate)
+    // Now we divide whatever space is left into TWO columns instead of three
+    auto columnWidth = bounds.getWidth() / 2;
     auto leftColumn = bounds.removeFromLeft(columnWidth);
-    auto centerColumn = bounds.removeFromLeft(columnWidth);
-    auto rightColumn = bounds; // Whatever is left over
+    auto rightColumn = bounds; 
 
     // --- BIT DEPTH ---
     bitLabel.setBounds(leftColumn.removeFromTop(25));
     bitSlider.setBounds(leftColumn);
 
     // --- SAMPLE RATE ---
-    rateLabel.setBounds(centerColumn.removeFromTop(25));
-    rateSlider.setBounds(centerColumn);
-
-    // --- MIX ---
-    mixLabel.setBounds(rightColumn.removeFromTop(25));
-    mixSlider.setBounds(rightColumn);
+    rateLabel.setBounds(rightColumn.removeFromTop(25));
+    rateSlider.setBounds(rightColumn);
 }
