@@ -49,20 +49,18 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     addAndMakeVisible(rateLabel);
 
     // --- Mix Knob ---
-    mixSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-    mixSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 50, 20);
+    mixSlider.setSliderStyle(juce::Slider::LinearVertical);
+    mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
 
     mixSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::red);
     mixSlider.setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colour(0xFF593D));
     mixSlider.setColour(juce::Slider::thumbColourId, juce::Colours::red);
     mixSlider.setColour(juce::Slider::trackColourId, juce::Colours::red);
     // Format display to show percentage (0-100%)
-    mixSlider.setTextValueSuffix(" %");
     mixSlider.textFromValueFunction = [](double value)
     {
         return juce::String(juce::roundToInt(value * 100.0));
     };
-
     addAndMakeVisible(mixSlider);
     mixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         audioProcessor.apvts, "MIX", mixSlider);
@@ -75,7 +73,7 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
 
     addAndMakeVisible(mixLabel);
 
-    setSize(400, 200);
+    setSize(300, 200);
 }
 
 MyReduxEditor::~MyReduxEditor()
@@ -84,28 +82,40 @@ MyReduxEditor::~MyReduxEditor()
 
 void MyReduxEditor::paint(juce::Graphics &g)
 {
-    g.fillAll(juce::Colour(0xff2d2d2d)); 
+    juce::Colour centerColor = juce::Colour(0xFF2A2A2A);
+    juce::Colour edgeColor = juce::Colour(0xFF111111);
+
+    auto center = getLocalBounds().getCentre().toFloat();
+    float radius = juce::jmax(getWidth(), getHeight()) * 0.7f;
+
+    juce::ColourGradient gradient(centerColor, center.x, center.y, 
+                                  edgeColor, center.x, center.y + radius, 
+                                  true); // true makes it radial
+
+    g.setGradientFill(gradient);
+    g.fillAll();
 }
 
 void MyReduxEditor::resized()
 {
     auto bounds = getLocalBounds().reduced(20);
-    auto mixArea = bounds.removeFromBottom(25); 
-    mixLabel.setBounds(mixArea.removeFromLeft(40)); 
+
+    auto mixArea = bounds.removeFromRight(45); 
+    mixLabel.setBounds(mixArea.removeFromTop(25)); 
     mixSlider.setBounds(mixArea); 
-    bounds.removeFromBottom(15); 
 
-    // 2. Handle the Main Knobs (Bit Depth & Sample Rate)
-    // Now we divide whatever space is left into TWO columns instead of three
-    auto columnWidth = bounds.getWidth() / 2;
+    const int gap = 15; 
+    bounds.removeFromRight(gap); 
+
+    auto columnWidth = (bounds.getWidth() - gap) / 2;
+    
     auto leftColumn = bounds.removeFromLeft(columnWidth);
-    auto rightColumn = bounds; 
+    bounds.removeFromLeft(gap); 
+    auto rightColumn = bounds.removeFromLeft(columnWidth); 
 
-    // --- BIT DEPTH ---
     bitLabel.setBounds(leftColumn.removeFromTop(25));
     bitSlider.setBounds(leftColumn);
 
-    // --- SAMPLE RATE ---
     rateLabel.setBounds(rightColumn.removeFromTop(25));
     rateSlider.setBounds(rightColumn);
 }
