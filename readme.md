@@ -25,5 +25,19 @@ This project is structured for modern C++ development using CMake. To compile th
 The compiler will generate a `.vst3` bundle and a standalone `.exe` test application inside your `build/` directory. 
 
 ## Roadmap
-* Introduce a "Jitter" parameter to inject randomized clock variance into the downsampling loop, creating analog-style instability.
 * Implement custom SVG graphics and override the default JUCE `LookAndFeel` for a premium, 3D-modeled hardware aesthetic.
+- Fix knob fine-tuning with control key sometimes jumping around. This can be bypassed with the DAW's fine tune control if needed, but fine tuning is probably niche for this plugin.
+- More features, like a jitter knob and other randomization.
+  
+## Distribution Plan
+### VST File
+- Adept users can place the distributed vst folder in their vst directory.
+- This can be released immediately.
+### Inno Setup (The Industry Standard)
+- This is the most common tool for VST developers. It is a free, script-based installer creator that creates professional-looking, single-file .exe installers.
+- I still need to implement this
+## Planned Distribution Networks
+- GitHub Release
+- https://sheasyve.dev
+- Free plugin hosting websites.
+  
