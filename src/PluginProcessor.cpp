@@ -2,7 +2,6 @@
 #include "PluginEditor.h"
 
 // Plugin Logic
-
 MyReduxProcessor::MyReduxProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
     : AudioProcessor(BusesProperties()
@@ -23,17 +22,8 @@ MyReduxProcessor::MyReduxProcessor()
 
 MyReduxProcessor::~MyReduxProcessor() {}
 
-juce::AudioProcessorEditor *MyReduxProcessor::createEditor()
-{
-    return new MyReduxEditor(*this);
-}
-
-bool MyReduxProcessor::hasEditor() const
-{
-    return true;
-}
-
-// Standard JUCE Boilerplate
+juce::AudioProcessorEditor *MyReduxProcessor::createEditor() { return new MyReduxEditor(*this); }
+bool MyReduxProcessor::hasEditor() const { return true; }
 const juce::String MyReduxProcessor::getName() const { return JucePlugin_Name; }
 bool MyReduxProcessor::acceptsMidi() const { return false; }
 bool MyReduxProcessor::producesMidi() const { return false; }
@@ -51,7 +41,6 @@ bool MyReduxProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const
     auto mainOut = layouts.getMainOutputChannelSet();
     auto mainIn = layouts.getMainInputChannelSet();
 
-    // Allow Mono or Stereo output
     if (mainOut != juce::AudioChannelSet::mono() && mainOut != juce::AudioChannelSet::stereo())
         return false;
 
@@ -61,7 +50,6 @@ bool MyReduxProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const
     return true;
 }
 
-// Save/Load State
 void MyReduxProcessor::getStateInformation(juce::MemoryBlock &destData)
 {
     auto state = apvts.copyState();
@@ -82,7 +70,6 @@ void MyReduxProcessor::setStateInformation(const void *data, int sizeInBytes)
     }
 }
 
-// JUCE Main Instance Creation
 juce::AudioProcessor *JUCE_CALLTYPE createPluginFilter()
 {
     return new MyReduxProcessor();
@@ -93,27 +80,25 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyReduxProcessor::createPara
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
+        juce::ParameterID{"HPF", 1}, "High Pass", 
+        juce::NormalisableRange<float>(0.0f, 20000.0f, 1.0f, 0.3f), 0.0f));
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"BITS", 1}, "Bit Depth", 1.0f, 16.0f, 16.0f));
 
-    // Knob goes from 1.0 kHz to 44.1 kHz, defaulting to 44.1 kHz (Clean)
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"RATE", 1}, "Sample Rate", 1.0f, 44.1f, 44.1f));
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"MIX", 1},
-        "Mix",
-        juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f), // Range
-        1.0f,                                              // Default value
-        juce::String(),                                    // Parameter Label (Leave empty)
-        juce::AudioProcessorParameter::genericParameter,   // Parameter Category
-        [](float value, int)
-        {
-            return juce::String(juce::roundToInt(value * 100.0f)) + "%";
-        },
-        [](const juce::String &text)
-        {
-            return text.getFloatValue() / 100.0f;
-        }));
+        juce::ParameterID{"LPF", 1}, "Low Pass", 
+        juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.3f), 20000.0f));
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>(
+        juce::ParameterID{"MIX", 1}, "Mix",
+        juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f), 1.0f, juce::String(),
+        juce::AudioProcessorParameter::genericParameter,
+        [](float value, int) { return juce::String(juce::roundToInt(value * 100.0f)) + "%"; },
+        [](const juce::String &text) { return text.getFloatValue() / 100.0f; }));
 
     return layout;
 }
@@ -123,10 +108,16 @@ void MyReduxProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     auto numChannels = getTotalNumInputChannels();
     heldSamples.assign(numChannels, 0.0f);
     sampleCounters.assign(numChannels, 0);
+
+    for (int i = 0; i < 2; ++i)
+    {
+        highPassFilters[i].reset();
+        lowPassFilters[i].reset();
+    }
 }
 
 void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages)
-{ // The core logic of the redux effect.
+{
     juce::ScopedNoDenormals noDenormals;
 
     auto totalNumInputChannels = getTotalNumInputChannels();
@@ -139,7 +130,6 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             buffer.clear(i, 0, buffer.getNumSamples());
     }
 
-    // Get params from gui.
     auto *rawBits = apvts.getRawParameterValue("BITS");
     float bits = (rawBits != nullptr) ? rawBits->load() : 16.0f;
     float targetRateKHz = apvts.getRawParameterValue("RATE")->load();
@@ -149,7 +139,7 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
     if (rate < 1)
         rate = 1;
 
-    float totalLevels = std::pow(2.0f, bits); // 2^16 = 65,536 levels. 2^4 = 16 levels.
+    float totalLevels = std::pow(2.0f, bits); 
 
     if (heldSamples.size() < static_cast<size_t>(totalNumInputChannels))
         heldSamples.resize(totalNumInputChannels, 0.0f);
@@ -159,20 +149,49 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
 
     int channelsToProcess = std::min(totalNumInputChannels, actualBufferChannels);
     float mix = apvts.getRawParameterValue("MIX")->load();
+
+    float sampleRate = getSampleRate();
+    if (sampleRate > 0.0)
+    {
+        float hpFreq = apvts.getRawParameterValue("HPF")->load();
+        float lpFreq = apvts.getRawParameterValue("LPF")->load();
+        float maxFreq = sampleRate / 2.0f * 0.99f; 
+
+        auto hpCoeffs = juce::IIRCoefficients::makeHighPass(sampleRate, std::max(20.0f, hpFreq));
+        auto lpCoeffs = juce::IIRCoefficients::makeLowPass(sampleRate, std::min(maxFreq, lpFreq));
+
+        for (int i = 0; i < channelsToProcess; ++i)
+        {
+            if (i < 2) 
+            {
+                highPassFilters[i].setCoefficients(hpCoeffs);
+                lowPassFilters[i].setCoefficients(lpCoeffs);
+            }
+        }
+    }
+
     for (int channel = 0; channel < channelsToProcess; ++channel)
-    { // Core audio loop.
+    { 
         auto *channelData = buffer.getWritePointer(channel);
 
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
-
-            float drySample = channelData[sample]; // 1. SAVE THE DRY SIGNAL.
+            float drySample = channelData[sample];  
+            
             if (sampleCounters[channel] % rate == 0)
-            { // 2. RUIN IT.
+            { 
                 heldSamples[channel] = std::round(drySample * totalLevels) / totalLevels;
             }
+            
             float wetSample = heldSamples[channel];
-            channelData[sample] = (drySample * (1.0f - mix)) + (wetSample * mix); // 3. MIX IT IN.
+
+            if (channel < 2)
+            {
+                wetSample = highPassFilters[channel].processSingleSampleRaw(wetSample);
+                wetSample = lowPassFilters[channel].processSingleSampleRaw(wetSample);
+            }
+
+            channelData[sample] = (drySample * (1.0f - mix)) + (wetSample * mix); 
             sampleCounters[channel]++;
         }
     }

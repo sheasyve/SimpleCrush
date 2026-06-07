@@ -39,6 +39,7 @@ public:
 private:
     std::vector<float> heldSamples;
     std::vector<int> sampleCounters;
-
+    juce::IIRFilter highPassFilters[2];
+    juce::IIRFilter lowPassFilters[2];
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MyReduxProcessor)
 };
