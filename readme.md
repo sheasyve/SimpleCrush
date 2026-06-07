@@ -2,7 +2,7 @@
 
 A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio destruction, and downsampling. Perfect for lo-fi, and adding unique harmonics to bass, drums and chords. Built from the ground up in C++ using the JUCE framework. This plugin is in early development stages, but is fully functional with many more changes to come.
 
-<img width="298" height="231" alt="image" src="https://github.com/user-attachments/assets/e93816bb-cd03-420f-a79d-27d737f7fb37" />
+<img width="329" height="333" alt="image" src="https://github.com/user-attachments/assets/aedcba8b-38d0-4b66-93b2-483c3dd0f9c4" />
 
 ## Features
 * **Bit Depth Reduction:** Crush your signal dynamically from 16-bit down to 1-bit using amplitude quantization.
