@@ -1,27 +1,24 @@
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-namespace PluginTheme
-{
+#include "PluginProcessor.h"
+
+namespace PluginTheme {
     const juce::Colour sliderFill = juce::Colour(0xFFAD7640);    // Retro Caramel
     const juce::Colour sliderOutline = juce::Colour(0xFF6B4226); // Chestnut
     const juce::Colour sliderThumb = juce::Colour(0xFFC99966);   // Vintage Tan
-    const juce::Colour sliderTrack = juce::Colour(0xFF382214);   // Deep Umber
+    const juce::Colour sliderTrack = juce::Colour(0xFF5C3822);   // Lighter warm mocha
     const juce::Colour labelText = juce::Colour(0xFFE3D3B5);
-    const juce::Colour bgCenter = juce::Colour(0xFF4A2E1B);
-    const juce::Colour bgEdge = juce::Colour(0xFF2B170A);
-}
-// ==============================================================================
+    const juce::Colour bgCenter = juce::Colour(0xFF2E1A0F);      // Darker rich cocoa
+    const juce::Colour bgEdge = juce::Colour(0xFF120804);        // Deep espresso/almost black
+} // namespace PluginTheme
 
-MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
-    : AudioProcessorEditor(&p), audioProcessor(p)
-{
+MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), audioProcessor(p) {
     // --- High Pass Knob ---
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     hpSlider.setColour(juce::Slider::rotarySliderFillColourId, PluginTheme::sliderFill);
     hpSlider.setColour(juce::Slider::rotarySliderOutlineColourId, PluginTheme::sliderTrack);
-    hpSlider.setColour(juce::Slider::trackColourId, PluginTheme::sliderTrack); 
+    hpSlider.setColour(juce::Slider::trackColourId, PluginTheme::sliderTrack);
     hpSlider.setColour(juce::Slider::thumbColourId, PluginTheme::sliderThumb);
 
     addAndMakeVisible(hpSlider);
@@ -39,9 +36,9 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     bitSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     bitSlider.setColour(juce::Slider::rotarySliderFillColourId, PluginTheme::sliderFill);
     bitSlider.setColour(juce::Slider::rotarySliderOutlineColourId, PluginTheme::sliderTrack);
-    bitSlider.setColour(juce::Slider::trackColourId, PluginTheme::sliderTrack); 
+    bitSlider.setColour(juce::Slider::trackColourId, PluginTheme::sliderTrack);
     bitSlider.setColour(juce::Slider::thumbColourId, PluginTheme::sliderThumb);
-    
+
     addAndMakeVisible(bitSlider);
     bitAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         audioProcessor.apvts, "BITS", bitSlider);
@@ -57,9 +54,9 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     rateSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     rateSlider.setColour(juce::Slider::rotarySliderFillColourId, PluginTheme::sliderFill);
     rateSlider.setColour(juce::Slider::rotarySliderOutlineColourId, PluginTheme::sliderTrack);
-    rateSlider.setColour(juce::Slider::trackColourId, PluginTheme::sliderTrack); 
+    rateSlider.setColour(juce::Slider::trackColourId, PluginTheme::sliderTrack);
     rateSlider.setColour(juce::Slider::thumbColourId, PluginTheme::sliderThumb);
-    
+
     addAndMakeVisible(rateSlider);
     rateAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         audioProcessor.apvts, "RATE", rateSlider);
@@ -75,9 +72,9 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     lpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     lpSlider.setColour(juce::Slider::rotarySliderFillColourId, PluginTheme::sliderFill);
     lpSlider.setColour(juce::Slider::rotarySliderOutlineColourId, PluginTheme::sliderTrack);
-    lpSlider.setColour(juce::Slider::trackColourId, PluginTheme::sliderTrack); 
+    lpSlider.setColour(juce::Slider::trackColourId, PluginTheme::sliderTrack);
     lpSlider.setColour(juce::Slider::thumbColourId, PluginTheme::sliderThumb);
-    
+
     addAndMakeVisible(lpSlider);
     lpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         audioProcessor.apvts, "LPF", lpSlider);
@@ -95,8 +92,7 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     mixSlider.setColour(juce::Slider::backgroundColourId, PluginTheme::sliderTrack);
     mixSlider.setColour(juce::Slider::thumbColourId, PluginTheme::sliderThumb);
 
-    mixSlider.textFromValueFunction = [](double value)
-    {
+    mixSlider.textFromValueFunction = [](double value) {
         return juce::String(juce::roundToInt(value * 100.0));
     };
     addAndMakeVisible(mixSlider);
@@ -115,54 +111,62 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     rateSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     lpSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     mixSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
-    
-    setSize(550, 200);
+
+    setSize(325, 300);
 }
 
 MyReduxEditor::~MyReduxEditor() {}
 
-void MyReduxEditor::paint(juce::Graphics &g)
-{
+void MyReduxEditor::paint(juce::Graphics &g) {
     auto center = getLocalBounds().getCentre().toFloat();
     float radius = juce::jmax(getWidth(), getHeight()) * 0.7f;
 
-    juce::ColourGradient gradient(PluginTheme::bgCenter, center.x, center.y,
-                                  PluginTheme::bgEdge, center.x, center.y + radius,
-                                  true);
+    juce::ColourGradient gradient(PluginTheme::bgCenter, center.x, center.y, PluginTheme::bgEdge,
+                                  center.x, center.y + radius, true);
 
     g.setGradientFill(gradient);
     g.fillAll();
 }
 
-void MyReduxEditor::resized()
+void MyReduxEditor::resized() 
 {
     auto bounds = getLocalBounds().reduced(20);
-    auto mixArea = bounds.removeFromRight(45);
     const int gap = 15;
 
+    // --- 1. Mix Section ---
+    auto mixArea = bounds.removeFromRight(45);
     mixLabel.setBounds(mixArea.removeFromTop(25));
     mixSlider.setBounds(mixArea);
+
+    // Add a gap specifically between the Mix slider and the rest of the UI
     bounds.removeFromRight(gap);
 
-    auto columnWidth = (bounds.getWidth() - (gap * 3)) / 4;
+    // --- 2. Split vertically into Top (Filters) and Bottom (Main FX) ---
+    auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.45f);
+    bounds.removeFromTop(10); // Vertical gap between the two rows
 
-    auto col1 = bounds.removeFromLeft(columnWidth);
-    bounds.removeFromLeft(gap);
-    auto col2 = bounds.removeFromLeft(columnWidth);
-    bounds.removeFromLeft(gap);
-    auto col3 = bounds.removeFromLeft(columnWidth);
-    bounds.removeFromLeft(gap);
-    auto col4 = bounds.removeFromLeft(columnWidth);
+    // --- 3. Top Area: Filters ---
+    int filterKnobWidth = 70;
+    int filterAreaWidth = (filterKnobWidth * 2) + gap; 
+    auto filterArea = topArea.withSizeKeepingCentre(filterAreaWidth, topArea.getHeight());
+    auto hpArea = filterArea.removeFromLeft(filterKnobWidth);
+    filterArea.removeFromLeft(gap); 
+    auto lpArea = filterArea.removeFromLeft(filterKnobWidth);
+    
+    hpLabel.setBounds(hpArea.removeFromTop(20));
+    hpSlider.setBounds(hpArea);
+    lpLabel.setBounds(lpArea.removeFromTop(20));
+    lpSlider.setBounds(lpArea);
 
-    hpLabel.setBounds(col1.removeFromTop(25));
-    hpSlider.setBounds(col1);
+    // --- 4. Bottom Area: Main Controls ---
+    auto bottomArea = bounds;
+    auto columnWidth = (bottomArea.getWidth() - gap) / 2;
+    auto bitArea = bottomArea.removeFromLeft(columnWidth);
+    bottomArea.removeFromLeft(gap); 
+    auto rateArea = bottomArea.removeFromLeft(columnWidth);
 
-    bitLabel.setBounds(col2.removeFromTop(25));
-    bitSlider.setBounds(col2);
-
-    rateLabel.setBounds(col3.removeFromTop(25));
-    rateSlider.setBounds(col3);
-
-    lpLabel.setBounds(col4.removeFromTop(25));
-    lpSlider.setBounds(col4);
+    bitLabel.setBounds(bitArea.removeFromTop(25));
+    bitSlider.setBounds(bitArea);
+    rateLabel.setBounds(rateArea.removeFromTop(25));
+    rateSlider.setBounds(rateArea);
 }

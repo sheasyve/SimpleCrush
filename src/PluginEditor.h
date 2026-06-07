@@ -1,9 +1,9 @@
 #pragma once
 #include <JuceHeader.h>
+
 #include "PluginProcessor.h"
 
-class MyReduxEditor : public juce::AudioProcessorEditor
-{
+class MyReduxEditor : public juce::AudioProcessorEditor {
 public:
     MyReduxEditor(MyReduxProcessor &);
     ~MyReduxEditor() override;

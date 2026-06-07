@@ -1,8 +1,7 @@
 #pragma once
 #include <JuceHeader.h>
 
-class MyReduxProcessor : public juce::AudioProcessor
-{
+class MyReduxProcessor : public juce::AudioProcessor {
 public:
     MyReduxProcessor();
     ~MyReduxProcessor() override;
