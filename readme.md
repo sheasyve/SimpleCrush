@@ -28,6 +28,8 @@ The compiler will generate a `.vst3` bundle and a standalone `.exe` test applica
 * Implement custom SVG graphics and override the default JUCE `LookAndFeel` for a premium, 3D-modeled hardware aesthetic.
 - Fix knob fine-tuning with control key sometimes jumping around. This can be bypassed with the DAW's fine tune control if needed, but fine tuning is probably niche for this plugin.
 - More features, like a jitter knob and other randomization.
+- Color themes
+- Presets
   
 ## Distribution Plan
 ### VST File
