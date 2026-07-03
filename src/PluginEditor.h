@@ -24,6 +24,13 @@ private:
     juce::Label hpLabel;
     juce::Label lpLabel;
     juce::Slider lpSlider;
+    juce::TextButton settingsButton;
+    juce::ComboBox themeSelector;
+    juce::Label themeLabel;
+    
+    bool isSettingsVisible = false;
+    int currentThemeId = 1; 
+    void updateTheme(int themeId);
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hpAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lpAttachment;
