@@ -24,14 +24,15 @@ private:
     juce::Label hpLabel;
     juce::Label lpLabel;
     juce::Slider lpSlider;
-    juce::TextButton settingsButton;
+    juce::DrawableButton settingsButton{"Settings", juce::DrawableButton::ImageFitted};
     juce::ComboBox themeSelector;
     juce::Label themeLabel;
-    
-    bool isSettingsVisible = false;
-    int currentThemeId = 1; 
-    void updateTheme(int themeId);
 
+    bool isSettingsVisible = false;
+    int currentThemeId = 1;
+    void updateTheme(int themeId);
+    std::unique_ptr<juce::DrawablePath> drawableGear;
+    std::unique_ptr<juce::DrawablePath> drawableGearHover; 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hpAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lpAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bitAttachment;
