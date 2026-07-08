@@ -17,45 +17,51 @@ struct Colors {
 
 inline Colors getColors(int themeId) {
     if (themeId == 1) { // Vaporwave
-        return {
-            juce::Colour(0xFFFF2A6D),                 
-            juce::Colour(0xFF05D9E8),                 
-            juce::Colour(0xFF01FFF4),                 
-            juce::Colour(0xFF240046),                 
-            juce::Colour(0xFF05D9E8),                 
-            juce::Colour(0xFF10002B),                 
-            juce::Colour(0xFF000000),                 
-            juce::Colour(0xFFCCCCCC).withAlpha(0.1f), 
-            juce::Colour(0xFFCCCCCC).withAlpha(0.4f)  
-        };
+        return {juce::Colour(0xFFFF2A6D),
+                juce::Colour(0xFF05D9E8),
+                juce::Colour(0xFF01FFF4),
+                juce::Colour(0xFF240046),
+                juce::Colour(0xFF05D9E8),
+                juce::Colour(0xFF10002B),
+                juce::Colour(0xFF000000),
+                juce::Colour(0xFFCCCCCC).withAlpha(0.3f),
+                juce::Colour(0xFFCCCCCC).withAlpha(0.5f)};
     }
-    
+
     if (themeId == 3) { // Midnight Hacker
-        return {juce::Colour(0xFF00FF41), juce::Colour(0xFF008F11), juce::Colour(0xFFFFFFFF),
-                juce::Colour(0xFF0D0208), juce::Colour(0xFF00FF41), juce::Colour(0xFF0D0208),
-                juce::Colour(0xFF000000), juce::Colour(0xFF00FF41).withAlpha(0.1f), 
+        return {juce::Colour(0xFF00FF41), juce::Colour(0xFF008F11),
+                juce::Colour(0xFFFFFFFF), juce::Colour(0xFF0D0208),
+                juce::Colour(0xFF00FF41), juce::Colour(0xFF0D0208),
+                juce::Colour(0xFF000000), juce::Colour(0xFF00FF41).withAlpha(0.3f),
                 juce::Colour(0xFF00FF41)};
     }
-    
+
     if (themeId == 4) { // Outrun Sunset
-        return {juce::Colour(0xFFFF7E67), juce::Colour(0xFFF9C80E), juce::Colour(0xFFFFFFFF),
-                juce::Colour(0xFF2A003F), juce::Colour(0xFFF9C80E), juce::Colour(0xFF2A003F),
-                juce::Colour(0xFF0F0019), juce::Colour(0xFFFF7E67).withAlpha(0.1f), 
+        return {juce::Colour(0xFFFF7E67), juce::Colour(0xFFF9C80E),
+                juce::Colour(0xFFFFFFFF), juce::Colour(0xFF2A003F),
+                juce::Colour(0xFFF9C80E), juce::Colour(0xFF2A003F),
+                juce::Colour(0xFF0F0019), juce::Colour(0xFFFF7E67).withAlpha(0.3f),
                 juce::Colour(0xFFF9C80E)};
     }
-    
+
     if (themeId == 5) { // Arctic Freeze
-        return {juce::Colour(0xFF74B3CE), juce::Colour(0xFF508991), juce::Colour(0xFFFFFFFF),
-                juce::Colour(0xFF172A3A), juce::Colour(0xFF98C1D9), juce::Colour(0xFF172A3A),
-                juce::Colour(0xFF09141C), juce::Colour(0xFF98C1D9).withAlpha(0.2f), 
+        return {juce::Colour(0xFF74B3CE), juce::Colour(0xFF508991),
+                juce::Colour(0xFFFFFFFF), juce::Colour(0xFF172A3A),
+                juce::Colour(0xFF98C1D9), juce::Colour(0xFF172A3A),
+                juce::Colour(0xFF09141C), juce::Colour(0xFF98C1D9).withAlpha(0.3f),
                 juce::Colour(0xFFFFFFFF)};
     }
 
     // Default / Theme 2: Retro Caramel
-    return {juce::Colour(0xFFAD7640), juce::Colour(0xFF6B4226), juce::Colour(0xFFC99966),
-            juce::Colour(0xFF5C3822), juce::Colour(0xFFE3D3B5), juce::Colour(0xFF2E1A0F),
-            juce::Colour(0xFF120804), juce::Colour(0xFFCCCCCC).withAlpha(0.1f),
-            juce::Colour(0xFFCCCCCC).withAlpha(0.4f)};
+    return {juce::Colour(0xFFAD7640),
+            juce::Colour(0xFF6B4226),
+            juce::Colour(0xFFC99966),
+            juce::Colour(0xFF5C3822),
+            juce::Colour(0xFFE3D3B5),
+            juce::Colour(0xFF2E1A0F),
+            juce::Colour(0xFF120804),
+            juce::Colour(0xFFCCCCCC).withAlpha(0.3f),
+            juce::Colour(0xFFCCCCCC).withAlpha(0.5f)};
 }
 } // namespace PluginTheme
 
@@ -170,7 +176,7 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     // --- Theme Selector Overlay ---
     themeLabel.setText("THEME", juce::dontSendNotification);
     themeLabel.setJustificationType(juce::Justification::centred);
-    addChildComponent(themeLabel); 
+    addChildComponent(themeLabel);
     themeSelector.addItem("Vaporwave", 1);
     themeSelector.addItem("Retro Caramel", 2);
     themeSelector.addItem("Midnight Hacker", 3);
@@ -180,7 +186,7 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     addChildComponent(themeSelector);
 
     themeSelector.onChange = [this]() { updateTheme(themeSelector.getSelectedId()); };
-    updateTheme(1); 
+    updateTheme(1);
 
     setSize(325, 300);
 }
@@ -217,11 +223,12 @@ void MyReduxEditor::updateTheme(int themeId) {
     rateLabel.setColour(juce::Label::textColourId, colors.labelText);
     mixLabel.setColour(juce::Label::textColourId, colors.labelText);
     themeLabel.setColour(juce::Label::textColourId, colors.labelText);
-   
+
     if (drawableGear != nullptr && drawableGearHover != nullptr) {
         drawableGear->setFill(colors.settings);
         drawableGearHover->setFill(colors.settingsHover);
-        settingsButton.setImages(drawableGear.get(), drawableGearHover.get(), drawableGearHover.get());
+        settingsButton.setImages(drawableGear.get(), drawableGearHover.get(),
+                                 drawableGearHover.get());
     }
     repaint();
 }
@@ -235,7 +242,7 @@ void MyReduxEditor::paint(juce::Graphics &g) {
                                   center.y + radius, true);
     g.setGradientFill(gradient);
     g.fillAll();
-    if (isSettingsVisible) { 
+    if (isSettingsVisible) {
         g.fillAll(juce::Colours::black.withAlpha(0.6f));
     }
 }
