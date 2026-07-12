@@ -27,7 +27,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF000000),
             juce::Colour(0xFFCCCCCC).withAlpha(0.3f),
             juce::Colour(0xFFCCCCCC).withAlpha(0.5f),
-            juce::FontOptions(15.0f, juce::Font::bold).withName("Trebuchet MS")};
+            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial")};
     }
     if (themeId == 2) { // Panda Trueno
         return {juce::Colour(0xFFFFFFFF),
@@ -51,7 +51,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFDCDCDC),
             juce::Colour(0xFF222222).withAlpha(0.3f),
             juce::Colour(0xFF333333),
-            juce::FontOptions(16.0f, juce::Font::bold).withName("Segoe UI")};
+            juce::FontOptions(17.0f, juce::Font::bold).withName("Segoe UI")};
     }
     if (themeId == 4) { // Studio Dark
         return {juce::Colour(0xffd6d6d6),
@@ -63,7 +63,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF202020),
             juce::Colour(0xFFD4D4D4).withAlpha(0.3f),
             juce::Colour(0xffd6d6d6),
-            juce::FontOptions(16.0f, juce::Font::plain).withName("Segoe UI")};
+            juce::FontOptions(17.0f, juce::Font::plain).withName("Segoe UI")};
     }
     if (themeId == 5) { // Retro Caramel
         return {juce::Colour(0xFFAD7640),
@@ -77,19 +77,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFCCCCCC).withAlpha(0.5f),
             juce::FontOptions(15.0f, juce::Font::italic | juce::Font::bold).withName("Helvetica")};
     }
-    if (themeId == 6) { // Vintage Analog
-        return {juce::Colour(0xFFE6A822),
-            juce::Colour(0xFF2A2E2A),
-            juce::Colour(0xFFD9D9D9),
-            juce::Colour(0xFF3A3F3A),
-            juce::Colour(0xFFE6A822),
-            juce::Colour(0xFF4A4F4A),
-            juce::Colour(0xFF1D1F1D),
-            juce::Colour(0xFFE6A822).withAlpha(0.3f),
-            juce::Colour(0xFFE6A822),
-            juce::FontOptions(15.0f, juce::Font::bold).withName("Tahoma")};
-    }
-    if (themeId == 7) { // Arctic Freeze
+    if (themeId == 6) { // Arctic Freeze
         return {juce::Colour(0xFF74B3CE),
             juce::Colour(0xFF508991),
             juce::Colour(0xFFFFFFFF),

@@ -4,7 +4,9 @@
 // --- Constructor ---
 MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), audioProcessor(p) {
     setLookAndFeel(&themeLnF);
-    
+
+    infoLabel.setText("SimpleCrush v1.1\n© 2026 Syverson Audio. All rights reserved.\nDeveloped by Shea Syverson", juce::dontSendNotification);
+
     // --- High Pass Knob ---
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
@@ -88,10 +90,16 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     settingsButton.setImages(drawableGear.get(), drawableGearHover.get(), drawableGearHover.get());
     addAndMakeVisible(settingsButton);
 
+    infoLabel.setText(infotext, juce::dontSendNotification);
+    infoLabel.setJustificationType(juce::Justification::centred);
+    infoLabel.setMinimumHorizontalScale(1.0f);
+    addChildComponent(infoLabel);
+
     settingsButton.onClick = [this]() {
         isSettingsVisible = !isSettingsVisible;
         themeSelector.setVisible(isSettingsVisible);
         themeLabel.setVisible(isSettingsVisible);
+        infoLabel.setVisible(isSettingsVisible);
         hpSlider.setVisible(!isSettingsVisible);
         bitSlider.setVisible(!isSettingsVisible);
         rateSlider.setVisible(!isSettingsVisible);
@@ -115,9 +123,8 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     themeSelector.addItem("Studio Light", 3);
     themeSelector.addItem("Studio Dark", 4);
     themeSelector.addItem("Retro Caramel", 5);
-    themeSelector.addItem("Vintage Analog", 6);
-    themeSelector.addItem("Arctic Freeze", 7);
-    themeSelector.addItem("Midnight Hacker", 8);
+    themeSelector.addItem("Arctic Freeze", 6);
+    themeSelector.addItem("Midnight Hacker", 7);
     themeSelector.setSelectedId(1, juce::dontSendNotification);
     addChildComponent(themeSelector);
 
@@ -131,21 +138,21 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
 
     // --- Allow window resizing while keeping it a perfect square ---
     setResizable(true, true);
-    setResizeLimits(300, 300, 900, 900);
+    setResizeLimits(340, 340, 599, 599);
     getConstrainer()->setFixedAspectRatio(1.0);
 
     // --- Apply initial size from settings file ---
     auto savedSize = audioProcessor.getWindowSize();
     setSize(savedSize.x, savedSize.y);
-    
+
     // Call updateTheme after size is set so fonts are scaled correctly from launch
     updateTheme(initialTheme);
 }
 
-MyReduxEditor::~MyReduxEditor() { 
+MyReduxEditor::~MyReduxEditor() {
     // --- Save Window Size When UI Closes ---
     audioProcessor.saveWindowSize(getWidth(), getHeight());
-    setLookAndFeel(nullptr); 
+    setLookAndFeel(nullptr);
 }
 
 void MyReduxEditor::updateTheme(int themeId) {
@@ -185,6 +192,8 @@ void MyReduxEditor::updateTheme(int themeId) {
     rateLabel.setColour(juce::Label::textColourId, theme.labelText);
     mixLabel.setColour(juce::Label::textColourId, theme.labelText);
     themeLabel.setColour(juce::Label::textColourId, theme.labelText);
+    infoLabel.setColour(juce::Label::textColourId, theme.labelText);
+
     hpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
     lpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
     bitSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
@@ -201,15 +210,24 @@ void MyReduxEditor::updateTheme(int themeId) {
     repaint();
 }
 
-// --- Rendering ---
 void MyReduxEditor::paint(juce::Graphics &g) {
     auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
     auto center = getLocalBounds().getCentre().toFloat();
     float radius = juce::jmax(getWidth(), getHeight()) * 0.7f;
     juce::ColourGradient gradient(
         ThemeProps.bgCenter, center.x, center.y, ThemeProps.bgEdge, center.x, center.y + radius, true);
+    
     g.setGradientFill(gradient);
     g.fillAll();
+
+    if (!isSettingsVisible) {
+        float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
+        g.setColour(ThemeProps.labelText);
+        juce::Font logoFont = hpLabel.getLookAndFeel().getLabelFont(hpLabel);
+        g.setFont(logoFont.withHeight(dynamicFontHeight * 2.5f));
+        g.drawText("SimpleCrush", logoBounds.translated(7, -10), juce::Justification::centred);
+    }
+
     if (isSettingsVisible) {
         g.fillAll(juce::Colours::black.withAlpha(0.6f));
     }
@@ -227,46 +245,55 @@ void MyReduxEditor::resized() {
     // Settings overlay
     settingsButton.setBounds(5, 5, 25, 25);
     if (isSettingsVisible) {
-        auto overlayArea = fullBounds.withSizeKeepingCentre(200, 80);
+        auto overlayArea = fullBounds.withSizeKeepingCentre(220, 180);
         themeLabel.setBounds(overlayArea.removeFromTop(30));
         themeSelector.setBounds(overlayArea.removeFromTop(30).reduced(10, 0));
+
+        overlayArea.removeFromTop(15);
+        infoLabel.setBounds(overlayArea);
         return;
     }
 
-    // Mix Section
+    // Main Plugin Area
     auto bounds = fullBounds.reduced(fullBounds.getWidth() * 0.066f);
     const int gap = bounds.getWidth() * 0.05f;
-    
+
+    // Mix Section (Right Side)
     auto mixArea = bounds.removeFromRight(bounds.getWidth() * 0.17f);
-    auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.45f);
-    
-    mixLabel.setBounds(mixArea.removeFromTop(25));
+    mixLabel.setBounds(mixArea.removeFromTop(30));
     mixSlider.setBounds(mixArea);
-    bounds.removeFromTop(10);
 
-    // Top Area: Filters
-    int filterKnobWidth = bounds.getWidth() * 0.28f;
-    int filterAreaWidth = (filterKnobWidth * 2) + gap;
+    // Gap between Mix slider and the rest of the knobs
+    bounds.removeFromRight(gap);
+    logoBounds = bounds.removeFromTop(bounds.getHeight() * 0.12f); 
+
+    // --- Top Area: Filters (Small & Centered) ---
+    auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.40f);
+    int filterKnobWidth = bounds.getWidth() * 0.35f; 
+    int topGap = gap / 3; 
+    int filterAreaWidth = (filterKnobWidth * 2) + topGap;
     auto filterArea = topArea.withSizeKeepingCentre(filterAreaWidth, topArea.getHeight());
-    
     auto hpArea = filterArea.removeFromLeft(filterKnobWidth);
-    auto lpArea = filterArea.removeFromLeft(filterKnobWidth);
-    filterArea.removeFromLeft(gap);
-    
-    hpLabel.setBounds(hpArea.removeFromTop(20));
+    filterArea.removeFromLeft(topGap); 
+    auto lpArea = filterArea;
+    hpLabel.setBounds(hpArea.removeFromTop(30));
     hpSlider.setBounds(hpArea);
-    lpLabel.setBounds(lpArea.removeFromTop(20));
+    lpLabel.setBounds(lpArea.removeFromTop(30));
     lpSlider.setBounds(lpArea);
-
-    // Bottom Area: Main Controls
-    auto bottomArea = bounds;
-    auto columnWidth = (bottomArea.getWidth() - gap) / 2;
-    auto bitArea = bottomArea.removeFromLeft(columnWidth);
-    auto rateArea = bottomArea.removeFromLeft(columnWidth);
-    bottomArea.removeFromLeft(gap);
+    bounds.removeFromTop(bounds.getHeight() * 0.10f);
     
-    bitLabel.setBounds(bitArea.removeFromTop(25));
+    // --- Bottom Area: Main Controls (Big) ---
+    auto bottomArea = bounds;
+    int bottomKnobWidth = bottomArea.getWidth() * 0.45f; 
+    int bottomGap = gap * 0.25f; 
+    int bottomTotalWidth = (bottomKnobWidth * 2) + bottomGap;
+    auto centeredBottomArea = bottomArea.withSizeKeepingCentre(bottomTotalWidth, bottomArea.getHeight());
+    auto bitArea = centeredBottomArea.removeFromLeft(bottomKnobWidth);
+    centeredBottomArea.removeFromLeft(bottomGap);
+    auto rateArea = centeredBottomArea;
+
+    bitLabel.setBounds(bitArea.removeFromTop(30));
     bitSlider.setBounds(bitArea);
-    rateLabel.setBounds(rateArea.removeFromTop(25));
+    rateLabel.setBounds(rateArea.removeFromTop(30));
     rateSlider.setBounds(rateArea);
 }

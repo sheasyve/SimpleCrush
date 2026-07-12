@@ -16,7 +16,6 @@ MyReduxProcessor::MyReduxProcessor()
     : apvts(*this, nullptr, "Parameters", createParameterLayout())
 #endif
 {
-    // Initialize your global properties file system right when the processor boots up
     initPropertiesFile();
 
     apvts.state = juce::ValueTree(juce::Identifier("Parameters"));
@@ -233,9 +232,9 @@ void MyReduxProcessor::saveWindowSize(int width, int height) {
 
 juce::Point<int> MyReduxProcessor::getWindowSize() {
     if (auto *props = appProperties.getUserSettings()) {
-        int w = props->getIntValue("WindowWidth", 400);
-        int h = props->getIntValue("WindowHeight", 400);
+        int w = props->getIntValue("WindowWidth", 340);
+        int h = props->getIntValue("WindowHeight", 340);
         return {w, h};
     }
-    return {400, 400}; // Default fallback
+    return {340, 340}; // Default fallback
 }

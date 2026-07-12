@@ -34,7 +34,9 @@ private:
     juce::DrawableButton settingsButton{"Settings", juce::DrawableButton::ImageFitted};
     juce::ComboBox themeSelector;
     juce::Label themeLabel;
-
+    juce::Label infoLabel;
+    juce::Rectangle<int> logoBounds;
+    std::string infotext;
     bool isSettingsVisible = false;
     int currentThemeId = 1;
     void updateTheme(int themeId);
