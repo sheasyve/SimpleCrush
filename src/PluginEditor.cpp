@@ -4,13 +4,14 @@
 // --- Constructor ---
 MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), audioProcessor(p) {
     setLookAndFeel(&themeLnF);
+    
     // --- High Pass Knob ---
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
     hpSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     addAndMakeVisible(hpSlider);
-    hpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        audioProcessor.apvts, "HPF", hpSlider);
+    hpAttachment =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HPF", hpSlider);
     hpLabel.setText("HIGH PASS", juce::dontSendNotification);
     hpLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(hpLabel);
@@ -20,8 +21,8 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     bitSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     bitSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     addAndMakeVisible(bitSlider);
-    bitAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        audioProcessor.apvts, "BITS", bitSlider);
+    bitAttachment =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "BITS", bitSlider);
     bitLabel.setText("BIT DEPTH", juce::dontSendNotification);
     bitLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(bitLabel);
@@ -42,8 +43,8 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     lpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
     lpSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     addAndMakeVisible(lpSlider);
-    lpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        audioProcessor.apvts, "LPF", lpSlider);
+    lpAttachment =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPF", lpSlider);
     lpLabel.setText("LOW PASS", juce::dontSendNotification);
     lpLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(lpLabel);
@@ -53,8 +54,8 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     mixSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     addAndMakeVisible(mixSlider);
-    mixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        audioProcessor.apvts, "MIX", mixSlider);
+    mixAttachment =
+        std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "MIX", mixSlider);
     mixLabel.setText("MIX", juce::dontSendNotification);
     mixLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(mixLabel);
@@ -113,32 +114,47 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     themeSelector.addItem("Panda Trueno", 2);
     themeSelector.addItem("Studio Light", 3);
     themeSelector.addItem("Studio Dark", 4);
-    themeSelector.addItem("Arctic Freeze", 5);
+    themeSelector.addItem("Retro Caramel", 5);
     themeSelector.addItem("Vintage Analog", 6);
-    themeSelector.addItem("Retro Caramel", 7);
+    themeSelector.addItem("Arctic Freeze", 7);
     themeSelector.addItem("Midnight Hacker", 8);
     themeSelector.setSelectedId(1, juce::dontSendNotification);
     addChildComponent(themeSelector);
 
     int initialTheme = audioProcessor.getSavedThemeId();
     themeSelector.setSelectedId(initialTheme, juce::dontSendNotification);
-    themeSelector.onChange = [this]() { 
+    themeSelector.onChange = [this]() {
         int selectedId = themeSelector.getSelectedId();
-        updateTheme(selectedId); 
-        audioProcessor.saveThemeId(selectedId); 
+        updateTheme(selectedId);
+        audioProcessor.saveThemeId(selectedId);
     };
-    updateTheme(initialTheme);
 
-    setSize(300, 300);
+    // --- Allow window resizing while keeping it a perfect square ---
+    setResizable(true, true);
+    setResizeLimits(300, 300, 900, 900);
+    getConstrainer()->setFixedAspectRatio(1.0);
+
+    // --- Apply initial size from settings file ---
+    auto savedSize = audioProcessor.getWindowSize();
+    setSize(savedSize.x, savedSize.y);
+    
+    // Call updateTheme after size is set so fonts are scaled correctly from launch
+    updateTheme(initialTheme);
 }
 
-MyReduxEditor::~MyReduxEditor() { setLookAndFeel(nullptr); }
+MyReduxEditor::~MyReduxEditor() { 
+    // --- Save Window Size When UI Closes ---
+    audioProcessor.saveWindowSize(getWidth(), getHeight());
+    setLookAndFeel(nullptr); 
+}
 
 void MyReduxEditor::updateTheme(int themeId) {
     currentThemeId = themeId;
     auto theme = PluginTheme::getThemeProps(themeId);
 
-    themeLnF.currentFont = theme.labelFont;
+    // --- Scale font smoothly using a bounded range ---
+    float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
+    themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
     sendLookAndFeelChange();
 
     // --- 2. Apply Slider Graphics Colors ---
@@ -179,19 +195,19 @@ void MyReduxEditor::updateTheme(int themeId) {
     if (drawableGear != nullptr && drawableGearHover != nullptr) {
         drawableGear->setFill(theme.settings);
         drawableGearHover->setFill(theme.settingsHover);
-        settingsButton.setImages(drawableGear.get(), drawableGearHover.get(),
-                                 drawableGearHover.get());
+        settingsButton.setImages(drawableGear.get(), drawableGearHover.get(), drawableGearHover.get());
     }
 
     repaint();
 }
+
 // --- Rendering ---
 void MyReduxEditor::paint(juce::Graphics &g) {
     auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
     auto center = getLocalBounds().getCentre().toFloat();
     float radius = juce::jmax(getWidth(), getHeight()) * 0.7f;
-    juce::ColourGradient gradient(ThemeProps.bgCenter, center.x, center.y, ThemeProps.bgEdge,
-                                  center.x, center.y + radius, true);
+    juce::ColourGradient gradient(
+        ThemeProps.bgCenter, center.x, center.y, ThemeProps.bgEdge, center.x, center.y + radius, true);
     g.setGradientFill(gradient);
     g.fillAll();
     if (isSettingsVisible) {
@@ -200,7 +216,12 @@ void MyReduxEditor::paint(juce::Graphics &g) {
 }
 
 void MyReduxEditor::resized() {
-    //Plugin GUI Layout
+    auto theme = PluginTheme::getThemeProps(currentThemeId);
+    float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
+    themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
+    sendLookAndFeelChange();
+
+    // Plugin GUI Layout
     auto fullBounds = getLocalBounds();
 
     // Settings overlay
@@ -213,21 +234,25 @@ void MyReduxEditor::resized() {
     }
 
     // Mix Section
-    auto bounds = fullBounds.reduced(20);
-    const int gap = 15;
-    auto mixArea = bounds.removeFromRight(45);
+    auto bounds = fullBounds.reduced(fullBounds.getWidth() * 0.066f);
+    const int gap = bounds.getWidth() * 0.05f;
+    
+    auto mixArea = bounds.removeFromRight(bounds.getWidth() * 0.17f);
     auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.45f);
+    
     mixLabel.setBounds(mixArea.removeFromTop(25));
     mixSlider.setBounds(mixArea);
     bounds.removeFromTop(10);
 
-    // Top Area: Filters (Restored your smaller, centered logic!)
-    int filterKnobWidth = 70;
+    // Top Area: Filters
+    int filterKnobWidth = bounds.getWidth() * 0.28f;
     int filterAreaWidth = (filterKnobWidth * 2) + gap;
     auto filterArea = topArea.withSizeKeepingCentre(filterAreaWidth, topArea.getHeight());
+    
     auto hpArea = filterArea.removeFromLeft(filterKnobWidth);
     auto lpArea = filterArea.removeFromLeft(filterKnobWidth);
     filterArea.removeFromLeft(gap);
+    
     hpLabel.setBounds(hpArea.removeFromTop(20));
     hpSlider.setBounds(hpArea);
     lpLabel.setBounds(lpArea.removeFromTop(20));
@@ -239,6 +264,7 @@ void MyReduxEditor::resized() {
     auto bitArea = bottomArea.removeFromLeft(columnWidth);
     auto rateArea = bottomArea.removeFromLeft(columnWidth);
     bottomArea.removeFromLeft(gap);
+    
     bitLabel.setBounds(bitArea.removeFromTop(25));
     bitSlider.setBounds(bitArea);
     rateLabel.setBounds(rateArea.removeFromTop(25));

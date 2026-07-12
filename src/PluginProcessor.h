@@ -35,11 +35,12 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{*this, nullptr, "Parameters", createParameterLayout()};
 
-    int getSavedThemeId() { 
-        return appProperties.getUserSettings()->getIntValue("GlobalThemeId", 1); 
-    }
+    void saveWindowSize(int width, int height);
+    juce::Point<int> getWindowSize();
     
-    void saveThemeId(int themeId) { 
+    int getSavedThemeId() { return appProperties.getUserSettings()->getIntValue("GlobalThemeId", 1); }
+
+    void saveThemeId(int themeId) {
         appProperties.getUserSettings()->setValue("GlobalThemeId", themeId);
         appProperties.getUserSettings()->saveIfNeeded();
     }
