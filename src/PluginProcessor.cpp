@@ -1,5 +1,4 @@
 #include "PluginProcessor.h"
-
 #include "PluginEditor.h"
 
 MyReduxProcessor::MyReduxProcessor()
@@ -7,17 +6,16 @@ MyReduxProcessor::MyReduxProcessor()
     : AudioProcessor(BusesProperties()
 #if !JucePlugin_IsMidiEffect
 #if !JucePlugin_IsSynth
-                         .withInput("Input", juce::AudioChannelSet::stereo(), true)
+              .withInput("Input", juce::AudioChannelSet::stereo(), true)
 #endif
-                         .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+              .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-                         ),
+              ),
       apvts(*this, nullptr, "Parameters", createParameterLayout())
 #else
     : apvts(*this, nullptr, "Parameters", createParameterLayout())
 #endif
 {
-    // Initialize your global properties file system right when the processor boots up
     initPropertiesFile();
 
     apvts.state = juce::ValueTree(juce::Identifier("Parameters"));
@@ -73,49 +71,64 @@ juce::AudioProcessor *JUCE_CALLTYPE createPluginFilter() { return new MyReduxPro
 juce::AudioProcessorValueTreeState::ParameterLayout MyReduxProcessor::createParameterLayout() {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
-    
+
     // --- High Pass (Skew: 0.3f) ---
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"HPF", 1}, "High Pass",
-        juce::NormalisableRange<float>(0.0f, 20000.0f, 1.0f, 0.3f), 0.0f, juce::String(),
+        juce::ParameterID{"HPF", 1},
+        "High Pass",
+        juce::NormalisableRange<float>(0.0f, 20000.0f, 1.0f, 0.3f),
+        0.0f,
+        juce::String(),
         juce::AudioProcessorParameter::genericParameter,
         [](float value, int) { return juce::String(value, 0) + " Hz"; },
         [](const juce::String &text) { return text.getFloatValue(); }));
 
     // --- Bit Depth (Linear) ---
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"BITS", 1}, "Bit Depth",
-        juce::NormalisableRange<float>(1.0f, 16.0f, 0.01f), 16.0f, juce::String(),
+        juce::ParameterID{"BITS", 1},
+        "Bit Depth",
+        juce::NormalisableRange<float>(1.0f, 16.0f, 0.01f),
+        16.0f,
+        juce::String(),
         juce::AudioProcessorParameter::genericParameter,
         [](float value, int) { return juce::String(value, 1); },
         [](const juce::String &text) { return text.getFloatValue(); }));
 
     // --- Sample Rate (Skew: 0.4f) ---
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"RATE", 1}, "Sample Rate",
-        juce::NormalisableRange<float>(1.0f, 44.1f, 0.01f, 0.4f), 44.1f, juce::String(),
+        juce::ParameterID{"RATE", 1},
+        "Sample Rate",
+        juce::NormalisableRange<float>(1.0f, 44.1f, 0.01f, 0.4f),
+        44.1f,
+        juce::String(),
         juce::AudioProcessorParameter::genericParameter,
         [](float value, int) { return juce::String(value, 2); },
         [](const juce::String &text) { return text.getFloatValue(); }));
 
     // --- Low Pass (Skew: 0.3f) ---
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"LPF", 1}, "Low Pass",
-        juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.3f), 20000.0f, juce::String(),
+        juce::ParameterID{"LPF", 1},
+        "Low Pass",
+        juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.3f),
+        20000.0f,
+        juce::String(),
         juce::AudioProcessorParameter::genericParameter,
         [](float value, int) { return juce::String(value, 0) + " Hz"; },
         [](const juce::String &text) { return text.getFloatValue(); }));
 
     // --- Mix (Linear) ---
     layout.add(std::make_unique<juce::AudioParameterFloat>(
-        juce::ParameterID{"MIX", 1}, "Mix", juce::NormalisableRange<float>(0.0f, 1.0f, 0.001f),
-        1.0f, juce::String(), juce::AudioProcessorParameter::genericParameter,
+        juce::ParameterID{"MIX", 1},
+        "Mix",
+        juce::NormalisableRange<float>(0.0f, 1.0f, 0.001f),
+        1.0f,
+        juce::String(),
+        juce::AudioProcessorParameter::genericParameter,
         [](float value, int) { return juce::String(value * 100.0f, 1) + "%"; },
         [](const juce::String &text) { return text.getFloatValue() / 100.0f; }));
 
-    // --- Theme Selector (Added Here!) ---
-    layout.add(std::make_unique<juce::AudioParameterInt>(
-        juce::ParameterID{"THEME_ID", 1}, "Theme ID", 1, 8, 1));
+    // --- Theme Selector ---
+    layout.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{"THEME_ID", 1}, "Theme ID", 1, 8, 1));
 
     return layout;
 }
@@ -130,8 +143,7 @@ void MyReduxProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
     }
 }
 
-void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer,
-                                    juce::MidiBuffer &midiMessages) {
+void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages) {
 
     juce::ScopedNoDenormals noDenormals; // Prevents CPU spikes
     auto totalNumInputChannels = getTotalNumInputChannels();
@@ -167,8 +179,7 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer,
         float hpFreq = apvts.getRawParameterValue("HPF")->load();
         float lpFreq = apvts.getRawParameterValue("LPF")->load();
         float maxFreq =
-            sampleRate / 2.0f *
-            0.99f; // Prevent the low pass from exceeding the Nyquist limit (half the sample rate)
+            sampleRate / 2.0f * 0.99f; // Prevent the low pass from exceeding the Nyquist limit (half the sample rate)
         auto hpCoeffs = juce::IIRCoefficients::makeHighPass(sampleRate, std::max(20.0f, hpFreq));
         auto lpCoeffs = juce::IIRCoefficients::makeLowPass(sampleRate, std::min(maxFreq, lpFreq));
         for (int i = 0; i < channelsToProcess; ++i) {
@@ -185,13 +196,12 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer,
             float drySample = channelData[sample];
             if (sampleCounters[channel] % rate ==
                 0) { // Sample and Hold: Only update held amplitude if the counter hits rate
-                heldSamples[channel] = std::round(drySample * totalLevels) /
-                                       totalLevels; // Bitcrush: Snap the actual amplitude to the
-                                                    // nearest quantized step
+                heldSamples[channel] =
+                    std::round(drySample * totalLevels) / totalLevels; // Bitcrush: Snap the actual amplitude to the
+                                                                       // nearest quantized step
             }
             float wetSample = heldSamples[channel];
-            if (channel <
-                2) { // Apply filters to the crushed audio (only processing L and R channels)
+            if (channel < 2) { // Apply filters to the crushed audio (only processing L and R channels)
                 wetSample = highPassFilters[channel].processSingleSampleRaw(wetSample);
                 wetSample = lowPassFilters[channel].processSingleSampleRaw(wetSample);
             }
@@ -201,13 +211,30 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer,
         }
     }
 }
-void MyReduxProcessor::initPropertiesFile()
-{
+
+void MyReduxProcessor::initPropertiesFile() {
     juce::PropertiesFile::Options options;
-    options.applicationName     = "SimpleCrush";
-    options.filenameSuffix      = ".xml";
-    options.folderName          = "SimpleCrush";
-    options.storageFormat       = juce::PropertiesFile::storeAsXML;
-    
+    options.applicationName = "SimpleCrush";
+    options.filenameSuffix = ".xml";
+    options.folderName = "SimpleCrush";
+    options.storageFormat = juce::PropertiesFile::storeAsXML;
+
     appProperties.setStorageParameters(options);
+}
+
+void MyReduxProcessor::saveWindowSize(int width, int height) {
+    if (auto *props = appProperties.getUserSettings()) {
+        props->setValue("WindowWidth", width);
+        props->setValue("WindowHeight", height);
+        props->saveIfNeeded();
+    }
+}
+
+juce::Point<int> MyReduxProcessor::getWindowSize() {
+    if (auto *props = appProperties.getUserSettings()) {
+        int w = props->getIntValue("WindowWidth", 340);
+        int h = props->getIntValue("WindowHeight", 340);
+        return {w, h};
+    }
+    return {340, 340}; // Default fallback
 }
