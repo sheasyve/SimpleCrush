@@ -1,72 +1,9 @@
 #include "PluginEditor.h"
 #include "PluginProcessor.h"
 
-// --- Theme Data Structure ---
-namespace PluginTheme {
-struct Colors {
-    juce::Colour sliderFill;
-    juce::Colour sliderOutline;
-    juce::Colour sliderThumb;
-    juce::Colour sliderTrack;
-    juce::Colour labelText;
-    juce::Colour bgCenter;
-    juce::Colour bgEdge;
-    juce::Colour settings;
-    juce::Colour settingsHover;
-};
-
-inline Colors getColors(int themeId) {
-    if (themeId == 1) { // Vaporwave
-        return {juce::Colour(0xFFFF2A6D),
-                juce::Colour(0xFF05D9E8),
-                juce::Colour(0xFF01FFF4),
-                juce::Colour(0xFF240046),
-                juce::Colour(0xFF05D9E8),
-                juce::Colour(0xFF10002B),
-                juce::Colour(0xFF000000),
-                juce::Colour(0xFFCCCCCC).withAlpha(0.3f),
-                juce::Colour(0xFFCCCCCC).withAlpha(0.5f)};
-    }
-
-    if (themeId == 3) { // Midnight Hacker
-        return {juce::Colour(0xFF00FF41), juce::Colour(0xFF008F11),
-                juce::Colour(0xFFFFFFFF), juce::Colour(0xFF0D0208),
-                juce::Colour(0xFF00FF41), juce::Colour(0xFF0D0208),
-                juce::Colour(0xFF000000), juce::Colour(0xFF00FF41).withAlpha(0.3f),
-                juce::Colour(0xFF00FF41)};
-    }
-
-    if (themeId == 4) { // Outrun Sunset
-        return {juce::Colour(0xFFFF7E67), juce::Colour(0xFFF9C80E),
-                juce::Colour(0xFFFFFFFF), juce::Colour(0xFF2A003F),
-                juce::Colour(0xFFF9C80E), juce::Colour(0xFF2A003F),
-                juce::Colour(0xFF0F0019), juce::Colour(0xFFFF7E67).withAlpha(0.3f),
-                juce::Colour(0xFFF9C80E)};
-    }
-
-    if (themeId == 5) { // Arctic Freeze
-        return {juce::Colour(0xFF74B3CE), juce::Colour(0xFF508991),
-                juce::Colour(0xFFFFFFFF), juce::Colour(0xFF172A3A),
-                juce::Colour(0xFF98C1D9), juce::Colour(0xFF172A3A),
-                juce::Colour(0xFF09141C), juce::Colour(0xFF98C1D9).withAlpha(0.3f),
-                juce::Colour(0xFFFFFFFF)};
-    }
-
-    // Default / Theme 2: Retro Caramel
-    return {juce::Colour(0xFFAD7640),
-            juce::Colour(0xFF6B4226),
-            juce::Colour(0xFFC99966),
-            juce::Colour(0xFF5C3822),
-            juce::Colour(0xFFE3D3B5),
-            juce::Colour(0xFF2E1A0F),
-            juce::Colour(0xFF120804),
-            juce::Colour(0xFFCCCCCC).withAlpha(0.3f),
-            juce::Colour(0xFFCCCCCC).withAlpha(0.5f)};
-}
-} // namespace PluginTheme
-
 // --- Constructor ---
 MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), audioProcessor(p) {
+    setLookAndFeel(&themeLnF);
     // --- High Pass Knob ---
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
@@ -75,7 +12,6 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     hpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         audioProcessor.apvts, "HPF", hpSlider);
     hpLabel.setText("HIGH PASS", juce::dontSendNotification);
-    hpLabel.setFont(juce::FontOptions(14.0f, juce::Font::bold));
     hpLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(hpLabel);
 
@@ -87,7 +23,6 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     bitAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         audioProcessor.apvts, "BITS", bitSlider);
     bitLabel.setText("BIT DEPTH", juce::dontSendNotification);
-    bitLabel.setFont(juce::FontOptions(14.0f, juce::Font::bold));
     bitLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(bitLabel);
 
@@ -99,7 +34,6 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     rateAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         audioProcessor.apvts, "RATE", rateSlider);
     rateLabel.setText("SAMPLE RATE", juce::dontSendNotification);
-    rateLabel.setFont(juce::FontOptions(14.0f, juce::Font::bold));
     rateLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(rateLabel);
 
@@ -111,7 +45,6 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     lpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         audioProcessor.apvts, "LPF", lpSlider);
     lpLabel.setText("LOW PASS", juce::dontSendNotification);
-    lpLabel.setFont(juce::FontOptions(14.0f, juce::Font::bold));
     lpLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(lpLabel);
 
@@ -123,7 +56,6 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     mixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         audioProcessor.apvts, "MIX", mixSlider);
     mixLabel.setText("MIX", juce::dontSendNotification);
-    mixLabel.setFont(juce::FontOptions(14.0f, juce::Font::bold));
     mixLabel.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(mixLabel);
 
@@ -178,68 +110,88 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p) : AudioProcessorEditor(&p), au
     themeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(themeLabel);
     themeSelector.addItem("Vaporwave", 1);
-    themeSelector.addItem("Retro Caramel", 2);
-    themeSelector.addItem("Midnight Hacker", 3);
-    themeSelector.addItem("Outrun Sunset", 4);
+    themeSelector.addItem("Panda Trueno", 2);
+    themeSelector.addItem("Studio Light", 3);
+    themeSelector.addItem("Studio Dark", 4);
     themeSelector.addItem("Arctic Freeze", 5);
+    themeSelector.addItem("Vintage Analog", 6);
+    themeSelector.addItem("Retro Caramel", 7);
+    themeSelector.addItem("Midnight Hacker", 8);
     themeSelector.setSelectedId(1, juce::dontSendNotification);
     addChildComponent(themeSelector);
 
-    themeSelector.onChange = [this]() { updateTheme(themeSelector.getSelectedId()); };
-    updateTheme(1);
+    int initialTheme = audioProcessor.getSavedThemeId();
+    themeSelector.setSelectedId(initialTheme, juce::dontSendNotification);
+    themeSelector.onChange = [this]() { 
+        int selectedId = themeSelector.getSelectedId();
+        updateTheme(selectedId); 
+        audioProcessor.saveThemeId(selectedId); 
+    };
+    updateTheme(initialTheme);
 
-    setSize(325, 300);
+    setSize(300, 300);
 }
 
-MyReduxEditor::~MyReduxEditor() {}
+MyReduxEditor::~MyReduxEditor() { setLookAndFeel(nullptr); }
 
-// --- Theme Update Logic ---
 void MyReduxEditor::updateTheme(int themeId) {
     currentThemeId = themeId;
-    auto colors = PluginTheme::getColors(themeId);
+    auto theme = PluginTheme::getThemeProps(themeId);
 
-    hpSlider.setColour(juce::Slider::rotarySliderFillColourId, colors.sliderFill);
-    hpSlider.setColour(juce::Slider::rotarySliderOutlineColourId, colors.sliderTrack);
-    hpSlider.setColour(juce::Slider::trackColourId, colors.sliderTrack);
-    hpSlider.setColour(juce::Slider::thumbColourId, colors.sliderThumb);
-    lpSlider.setColour(juce::Slider::rotarySliderFillColourId, colors.sliderFill);
-    lpSlider.setColour(juce::Slider::rotarySliderOutlineColourId, colors.sliderTrack);
-    lpSlider.setColour(juce::Slider::trackColourId, colors.sliderTrack);
-    lpSlider.setColour(juce::Slider::thumbColourId, colors.sliderThumb);
-    bitSlider.setColour(juce::Slider::rotarySliderFillColourId, colors.sliderFill);
-    bitSlider.setColour(juce::Slider::rotarySliderOutlineColourId, colors.sliderTrack);
-    bitSlider.setColour(juce::Slider::trackColourId, colors.sliderTrack);
-    bitSlider.setColour(juce::Slider::thumbColourId, colors.sliderThumb);
-    rateSlider.setColour(juce::Slider::rotarySliderFillColourId, colors.sliderFill);
-    rateSlider.setColour(juce::Slider::rotarySliderOutlineColourId, colors.sliderTrack);
-    rateSlider.setColour(juce::Slider::trackColourId, colors.sliderTrack);
-    rateSlider.setColour(juce::Slider::thumbColourId, colors.sliderThumb);
-    mixSlider.setColour(juce::Slider::trackColourId, colors.sliderFill);
-    mixSlider.setColour(juce::Slider::backgroundColourId, colors.sliderTrack);
-    mixSlider.setColour(juce::Slider::thumbColourId, colors.sliderThumb);
-    hpLabel.setColour(juce::Label::textColourId, colors.labelText);
-    lpLabel.setColour(juce::Label::textColourId, colors.labelText);
-    bitLabel.setColour(juce::Label::textColourId, colors.labelText);
-    rateLabel.setColour(juce::Label::textColourId, colors.labelText);
-    mixLabel.setColour(juce::Label::textColourId, colors.labelText);
-    themeLabel.setColour(juce::Label::textColourId, colors.labelText);
+    themeLnF.currentFont = theme.labelFont;
+    sendLookAndFeelChange();
 
+    // --- 2. Apply Slider Graphics Colors ---
+    hpSlider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
+    hpSlider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
+    hpSlider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
+    hpSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
+    lpSlider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
+    lpSlider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
+    lpSlider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
+    lpSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
+    bitSlider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
+    bitSlider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
+    bitSlider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
+    bitSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
+    rateSlider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
+    rateSlider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
+    rateSlider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
+    rateSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
+    mixSlider.setColour(juce::Slider::trackColourId, theme.sliderFill);
+    mixSlider.setColour(juce::Slider::backgroundColourId, theme.sliderTrack);
+    mixSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
+
+    // --- 3. Apply Text Colors ---
+    hpLabel.setColour(juce::Label::textColourId, theme.labelText);
+    lpLabel.setColour(juce::Label::textColourId, theme.labelText);
+    bitLabel.setColour(juce::Label::textColourId, theme.labelText);
+    rateLabel.setColour(juce::Label::textColourId, theme.labelText);
+    mixLabel.setColour(juce::Label::textColourId, theme.labelText);
+    themeLabel.setColour(juce::Label::textColourId, theme.labelText);
+    hpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
+    lpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
+    bitSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
+    rateSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
+    mixSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
+
+    // --- 4. Apply Settings Icon Colors ---
     if (drawableGear != nullptr && drawableGearHover != nullptr) {
-        drawableGear->setFill(colors.settings);
-        drawableGearHover->setFill(colors.settingsHover);
+        drawableGear->setFill(theme.settings);
+        drawableGearHover->setFill(theme.settingsHover);
         settingsButton.setImages(drawableGear.get(), drawableGearHover.get(),
                                  drawableGearHover.get());
     }
+
     repaint();
 }
-
 // --- Rendering ---
 void MyReduxEditor::paint(juce::Graphics &g) {
-    auto colors = PluginTheme::getColors(currentThemeId);
+    auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
     auto center = getLocalBounds().getCentre().toFloat();
     float radius = juce::jmax(getWidth(), getHeight()) * 0.7f;
-    juce::ColourGradient gradient(colors.bgCenter, center.x, center.y, colors.bgEdge, center.x,
-                                  center.y + radius, true);
+    juce::ColourGradient gradient(ThemeProps.bgCenter, center.x, center.y, ThemeProps.bgEdge,
+                                  center.x, center.y + radius, true);
     g.setGradientFill(gradient);
     g.fillAll();
     if (isSettingsVisible) {
@@ -248,6 +200,7 @@ void MyReduxEditor::paint(juce::Graphics &g) {
 }
 
 void MyReduxEditor::resized() {
+    //Plugin GUI Layout
     auto fullBounds = getLocalBounds();
 
     // Settings overlay
@@ -266,10 +219,9 @@ void MyReduxEditor::resized() {
     auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.45f);
     mixLabel.setBounds(mixArea.removeFromTop(25));
     mixSlider.setBounds(mixArea);
-    bounds.removeFromRight(gap);
     bounds.removeFromTop(10);
 
-    // Top Area: Filters
+    // Top Area: Filters (Restored your smaller, centered logic!)
     int filterKnobWidth = 70;
     int filterAreaWidth = (filterKnobWidth * 2) + gap;
     auto filterArea = topArea.withSizeKeepingCentre(filterAreaWidth, topArea.getHeight());

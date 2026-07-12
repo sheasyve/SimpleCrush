@@ -25,10 +25,10 @@ This project is structured for modern C++ development using CMake. To compile th
 The compiler will generate a `.vst3` bundle and a standalone `.exe` test application inside your `build/` directory. 
 
 ## Roadmap
-* Implement custom SVG graphics and override the default JUCE `LookAndFeel` for a premium, 3D-modeled hardware aesthetic.
-- Fix knob fine-tuning with control key sometimes jumping around. This can be bypassed with the DAW's fine tune control if needed, but fine tuning is probably niche for this plugin.
+* Implement custom SVG graphics and override the default JUCE `LookAndFeel`.
 - More features, like a jitter knob and other randomization.
-- Color themes
+- Resizable option and more settings
+- Hyperlink to website
 - Presets
   
 ## Distribution Plan
