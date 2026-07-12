@@ -2,7 +2,6 @@
 
 #include "PluginEditor.h"
 
-// Plugin Logic
 MyReduxProcessor::MyReduxProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
     : AudioProcessor(BusesProperties()
@@ -18,6 +17,9 @@ MyReduxProcessor::MyReduxProcessor()
     : apvts(*this, nullptr, "Parameters", createParameterLayout())
 #endif
 {
+    // Initialize your global properties file system right when the processor boots up
+    initPropertiesFile();
+
     apvts.state = juce::ValueTree(juce::Identifier("Parameters"));
 }
 
@@ -70,7 +72,8 @@ juce::AudioProcessor *JUCE_CALLTYPE createPluginFilter() { return new MyReduxPro
 
 juce::AudioProcessorValueTreeState::ParameterLayout MyReduxProcessor::createParameterLayout() {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
-
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+    
     // --- High Pass (Skew: 0.3f) ---
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"HPF", 1}, "High Pass",
@@ -110,6 +113,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyReduxProcessor::createPara
         [](float value, int) { return juce::String(value * 100.0f, 1) + "%"; },
         [](const juce::String &text) { return text.getFloatValue() / 100.0f; }));
 
+    // --- Theme Selector (Added Here!) ---
+    layout.add(std::make_unique<juce::AudioParameterInt>(
+        juce::ParameterID{"THEME_ID", 1}, "Theme ID", 1, 8, 1));
+
     return layout;
 }
 
@@ -126,8 +133,7 @@ void MyReduxProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
 void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer,
                                     juce::MidiBuffer &midiMessages) {
 
-    juce::ScopedNoDenormals
-        noDenormals; // Prevents CPU spikes caused by processing extremely small nums
+    juce::ScopedNoDenormals noDenormals; // Prevents CPU spikes
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     auto actualBufferChannels = buffer.getNumChannels();
@@ -141,16 +147,12 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer,
     // --- Parameter Retrieval & Setup ---
     auto *rawBits = apvts.getRawParameterValue("BITS");
     float bits = (rawBits != nullptr) ? rawBits->load() : 16.0f;
-
-    // Convert target kHz to Hz, then wait before grabbing a new value (Downsampling)
     float targetRateKHz = apvts.getRawParameterValue("RATE")->load();
     float targetRateHz = targetRateKHz * 1000.0f;
     int rate = std::max(1, static_cast<int>(getSampleRate() / targetRateHz));
     if (rate < 1)
         rate = 1;
-    float totalLevels = std::pow(2.0f, bits); // Calculate the total number of amplitude steps
-                                              // available for quantization (Bitcrushing)
-
+    float totalLevels = std::pow(2.0f, bits);
     // Ensure state-tracking vectors are large enough for all active channels
     if (heldSamples.size() < static_cast<size_t>(totalNumInputChannels))
         heldSamples.resize(totalNumInputChannels, 0.0f);
@@ -169,8 +171,7 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer,
             0.99f; // Prevent the low pass from exceeding the Nyquist limit (half the sample rate)
         auto hpCoeffs = juce::IIRCoefficients::makeHighPass(sampleRate, std::max(20.0f, hpFreq));
         auto lpCoeffs = juce::IIRCoefficients::makeLowPass(sampleRate, std::min(maxFreq, lpFreq));
-        for (int i = 0; i < channelsToProcess;
-             ++i) { // Apply updated coefficients to our stereo filters (L and R)
+        for (int i = 0; i < channelsToProcess; ++i) {
             if (i < 2) {
                 highPassFilters[i].setCoefficients(hpCoeffs);
                 lowPassFilters[i].setCoefficients(lpCoeffs);
@@ -183,7 +184,7 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer,
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) {
             float drySample = channelData[sample];
             if (sampleCounters[channel] % rate ==
-                0) { // Sample and Hold: Only update our held amplitude if the counter hits rate
+                0) { // Sample and Hold: Only update held amplitude if the counter hits rate
                 heldSamples[channel] = std::round(drySample * totalLevels) /
                                        totalLevels; // Bitcrush: Snap the actual amplitude to the
                                                     // nearest quantized step
@@ -199,4 +200,14 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer,
             sampleCounters[channel]++;
         }
     }
+}
+void MyReduxProcessor::initPropertiesFile()
+{
+    juce::PropertiesFile::Options options;
+    options.applicationName     = "SimpleCrush";
+    options.filenameSuffix      = ".xml";
+    options.folderName          = "SimpleCrush";
+    options.storageFormat       = juce::PropertiesFile::storeAsXML;
+    
+    appProperties.setStorageParameters(options);
 }

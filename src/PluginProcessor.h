@@ -35,7 +35,18 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{*this, nullptr, "Parameters", createParameterLayout()};
 
+    int getSavedThemeId() { 
+        return appProperties.getUserSettings()->getIntValue("GlobalThemeId", 1); 
+    }
+    
+    void saveThemeId(int themeId) { 
+        appProperties.getUserSettings()->setValue("GlobalThemeId", themeId);
+        appProperties.getUserSettings()->saveIfNeeded();
+    }
+
 private:
+    juce::ApplicationProperties appProperties;
+    void initPropertiesFile();
     std::vector<float> heldSamples;
     std::vector<int> sampleCounters;
     juce::IIRFilter highPassFilters[2];
