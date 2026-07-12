@@ -3,6 +3,9 @@
 
 #include "PluginProcessor.h"
 #include "PluginTheme.h"
+#include "PluginControls.h"
+#include "PluginSettings.h"
+
 class ThemeLookAndFeel : public juce::LookAndFeel_V4 {
 public:
     juce::FontOptions currentFont;
@@ -19,24 +22,11 @@ public:
     void resized() override;
 
 private:
-    MyReduxProcessor &audioProcessor; // Reference back to the audio processor
+    MyReduxProcessor &audioProcessor; 
     ThemeLookAndFeel themeLnF;
-    juce::Slider bitSlider; // GUI Components
-    juce::Slider rateSlider;
-    juce::Label bitLabel;
-    juce::Label rateLabel;
-    juce::Slider mixSlider;
-    juce::Label mixLabel;
-    juce::Slider hpSlider;
-    juce::Label hpLabel;
-    juce::Label lpLabel;
-    juce::Slider lpSlider;
-    juce::DrawableButton settingsButton{"Settings", juce::DrawableButton::ImageFitted};
-    juce::ComboBox themeSelector;
-    juce::Label themeLabel;
-    juce::Label infoLabel;
+    PluginControls pluginControls;
+    PluginSettings pluginSettings;
     juce::Rectangle<int> logoBounds;
-    std::string infotext;
     bool isSettingsVisible = false;
     int currentThemeId = 1;
     void updateTheme(int themeId);

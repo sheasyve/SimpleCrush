@@ -8,7 +8,7 @@ cmake_policy(SET CMP0177 NEW)
 add_subdirectory(JUCE)
 
 juce_add_plugin(SimpleCrush
-    COMPANY_NAME "SyversonAudio"
+    COMPANY_NAME "Syverson Audio"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
@@ -26,7 +26,13 @@ target_sources(SimpleCrush PRIVATE
     src/PluginProcessor.cpp
     src/PluginProcessor.h
     src/PluginEditor.cpp
-    src/PluginEditor.h)
+    src/PluginEditor.h
+    src/PluginTheme.h
+    src/PluginControls.h
+    src/PluginControls.cpp
+    src/PluginSettings.h
+    src/PluginSettings.cpp
+)
 
 target_link_libraries(SimpleCrush PRIVATE
     juce::juce_audio_utils
