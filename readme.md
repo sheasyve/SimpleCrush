@@ -14,6 +14,10 @@ A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio d
 * **OS:** Cross Platform (Compiled via MSVC 2026 x64)
 * **DAWs:** Compatible with any major digital audio workstation that supports the 64 bit VST3 format (Ableton Live, FL Studio, Reaper, Bitwig, Cubase, etc.)
 
+## Installing From Zip
+* Extract the zip
+* Place the SimpleCrush.vst3 folder in your DAW's plugin directory, and re-load plugins.
+
 ## Build Instructions
 This project is structured for modern C++ development using CMake. To compile the plugin locally:
 
@@ -23,10 +27,6 @@ This project is structured for modern C++ development using CMake. To compile th
 4. Run the build configuration (or execute a local PowerShell build script like `.\make.ps1`).
 
 The compiler will generate a `.vst3` bundle and a standalone `.exe` test application inside your `build/` directory. 
-
-## Roadmap
-- More features, like a jitter knob and other randomization.
-- Presets
   
 ## Distribution Plan
 ### VST File
@@ -40,3 +40,6 @@ The compiler will generate a `.vst3` bundle and a standalone `.exe` test applica
 - https://sheasyve.dev
 - Free plugin hosting websites.
   
+## Roadmap
+- More features, like a jitter knob and other randomization.
+- Presets
