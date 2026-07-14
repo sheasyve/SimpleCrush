@@ -3,6 +3,7 @@
 PluginSettings::PluginSettings() {
     juce::String infotext = "SimpleCrush v1.1\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson";
     setInterceptsMouseClicks(false, true);
+
     // --- Settings Gear Button ---
     juce::Path gearPath;
     auto svg = juce::XmlDocument::parse(
@@ -15,7 +16,6 @@ PluginSettings::PluginSettings() {
         if (pathElement != nullptr)
             gearPath = juce::Drawable::parseSVGPath(pathElement->getStringAttribute("d"));
     }
-
     drawableGear = std::make_unique<juce::DrawablePath>();
     drawableGear->setPath(gearPath);
     drawableGearHover = std::make_unique<juce::DrawablePath>();
@@ -28,7 +28,6 @@ PluginSettings::PluginSettings() {
     infoLabel.setJustificationType(juce::Justification::centred);
     infoLabel.setMinimumHorizontalScale(1.0f);
     addChildComponent(infoLabel);
-
     linkButton.onClick = [] { juce::URL("https://sheasyve.dev/simplecrush").launchInDefaultBrowser(); };
     linkButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
     linkButton.setAlpha(0.0f);
@@ -38,11 +37,10 @@ PluginSettings::PluginSettings() {
     themeLabel.setText("THEME", juce::dontSendNotification);
     themeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(themeLabel);
-
     themeSelector.addItem("Vaporwave", 1);
-    themeSelector.addItem("Panda Trueno", 2);
+    themeSelector.addItem("Studio Dark", 2);
     themeSelector.addItem("Studio Light", 3);
-    themeSelector.addItem("Studio Dark", 4);
+    themeSelector.addItem("Panda Trueno", 4);
     themeSelector.addItem("Retro Caramel", 5);
     themeSelector.addItem("Arctic Freeze", 6);
     themeSelector.addItem("Midnight Hacker", 7);
@@ -51,15 +49,12 @@ PluginSettings::PluginSettings() {
     // --- Button Actions ---
     settingsButton.onClick = [this]() {
         isSettingsVisible = !isSettingsVisible;
-        
         themeSelector.setVisible(isSettingsVisible);
         themeLabel.setVisible(isSettingsVisible);
         infoLabel.setVisible(isSettingsVisible);
         linkButton.setVisible(isSettingsVisible);
-        
         if (onSettingsToggled != nullptr)
             onSettingsToggled(isSettingsVisible);
-
         resized();
         repaint();
     };
@@ -83,7 +78,6 @@ void PluginSettings::paint(juce::Graphics& g) {
 void PluginSettings::resized() {
     auto bounds = getLocalBounds();
     settingsButton.setBounds(5, 5, 25, 25);
-
     if (isSettingsVisible) {
         auto overlayArea = bounds.withSizeKeepingCentre(220, 180);
         themeLabel.setBounds(overlayArea.removeFromTop(30));

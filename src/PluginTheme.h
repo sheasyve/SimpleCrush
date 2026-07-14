@@ -29,7 +29,32 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFCCCCCC).withAlpha(0.5f),
             juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial")};
     }
-    if (themeId == 2) { // Panda Trueno
+
+    if (themeId == 2) { // Studio Dark
+        return {juce::Colour(0xffd6d6d6),
+            juce::Colour(0xFF4C4C4C),
+            juce::Colour(0xFFD4D4D4),
+            juce::Colour(0xFF2B2B2B),
+            juce::Colour(0xFFD4D4D4),
+            juce::Colour(0xFF202020),
+            juce::Colour(0xFF202020),
+            juce::Colour(0xFFD4D4D4).withAlpha(0.3f),
+            juce::Colour(0xffd6d6d6),
+            juce::FontOptions(15.0f, juce::Font::bold).withName("Arial")};
+    }
+    if (themeId == 3) { // Studio Light
+        return {juce::Colour(0xFF333333),
+            juce::Colour(0xFFAAAAAA),
+            juce::Colour(0xFF333333),
+            juce::Colour(0xffbbbbbb),
+            juce::Colour(0xFF222222),
+            juce::Colour(0xFFF9F9F9),
+            juce::Colour(0xFFDCDCDC),
+            juce::Colour(0xFF222222).withAlpha(0.3f),
+            juce::Colour(0xFF333333),
+            juce::FontOptions(15.0f, juce::Font::bold).withName("Arial")};
+    }
+    if (themeId == 4) { // Panda Trueno
         return {juce::Colour(0xFFFFFFFF),
             juce::Colour(0xFF1A1A1A),
             juce::Colour(0xFFE50000),
@@ -40,30 +65,6 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFFFFFFF).withAlpha(0.3f),
             juce::Colour(0xFFE50000),
             juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial")};
-    }
-    if (themeId == 3) { // Studio Light
-        return {juce::Colour(0xFF333333),
-            juce::Colour(0xFFAAAAAA),
-            juce::Colour(0xFF333333),
-            juce::Colour(0xFFE0E0E0),
-            juce::Colour(0xFF222222),
-            juce::Colour(0xFFF9F9F9),
-            juce::Colour(0xFFDCDCDC),
-            juce::Colour(0xFF222222).withAlpha(0.3f),
-            juce::Colour(0xFF333333),
-            juce::FontOptions(17.0f, juce::Font::bold).withName("Segoe UI")};
-    }
-    if (themeId == 4) { // Studio Dark
-        return {juce::Colour(0xffd6d6d6),
-            juce::Colour(0xFF4C4C4C),
-            juce::Colour(0xFFD4D4D4),
-            juce::Colour(0xFF2B2B2B),
-            juce::Colour(0xFFD4D4D4),
-            juce::Colour(0xFF202020),
-            juce::Colour(0xFF202020),
-            juce::Colour(0xFFD4D4D4).withAlpha(0.3f),
-            juce::Colour(0xffd6d6d6),
-            juce::FontOptions(17.0f, juce::Font::plain).withName("Segoe UI")};
     }
     if (themeId == 5) { // Retro Caramel
         return {juce::Colour(0xFFAD7640),
@@ -100,6 +101,6 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF000000),
         juce::Colour(0xFF00FF41).withAlpha(0.3f),
         juce::Colour(0xFF00FF41),
-        juce::FontOptions(15.0f, juce::Font::bold).withName("Lucida Console")};
+        juce::FontOptions(13.0f, juce::Font::bold).withName("Consolas")};
 }
 } // namespace PluginTheme
