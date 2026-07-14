@@ -91,7 +91,7 @@ void MyReduxEditor::paint(juce::Graphics &g) {
         g.setColour(ThemeProps.labelText);
         juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
         g.setFont(logoFont.withHeight(dynamicFontHeight * 2.5f));
-        g.drawText("SimpleCrush", pluginControls.logoBounds.translated(7, -12), juce::Justification::centred);
+        g.drawText("SimpleCrush", pluginControls.logoBounds.translated(7, -5), juce::Justification::centred);
     }
 }
 
