@@ -27,20 +27,3 @@ This project is structured for modern C++ development using CMake. To compile th
 4. Run the build configuration (or execute a local PowerShell build script like `.\make.ps1`).
 
 The compiler will generate a `.vst3` bundle and a standalone `.exe` test application inside your `build/` directory. 
-  
-## Distribution Plan
-### VST File
-- Adept users can place the distributed vst folder in their vst directory.
-- This can be released immediately.
-### Inno Setup (The Industry Standard)
-- This is the most common tool for VST developers. It is a free, script-based installer creator that creates professional-looking, single-file .exe installers.
-- I still need to implement this
-## Planned Distribution Networks
-- GitHub Release
-- https://sheasyve.dev
-- Free plugin hosting websites.
-  
-## Roadmap
-- More features, like a jitter knob and other randomization.
-- Presets
-- Better scaling
