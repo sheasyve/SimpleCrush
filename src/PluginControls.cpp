@@ -2,6 +2,7 @@
 
 PluginControls::PluginControls(juce::AudioProcessorValueTreeState& apvts) {
     setInterceptsMouseClicks(false, true);
+    
     // --- High Pass Knob ---
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
@@ -58,45 +59,45 @@ void PluginControls::resized() {
     auto bounds = fullBounds.reduced(fullBounds.getWidth() * 0.066f);
     const int gap = bounds.getWidth() * 0.05f;
 
-    // Mix Section (Right Side)
+    // --- Mix Section (Right Side) ---
     auto mixArea = bounds.removeFromRight(bounds.getWidth() * 0.17f);
     mixLabel.setBounds(mixArea.removeFromTop(30));
     mixSlider.setBounds(mixArea);
-
     bounds.removeFromRight(gap);
     logoBounds = bounds.removeFromTop(bounds.getHeight() * 0.12f);
 
     // --- Top Area: Filters (Small & Centered) ---
-    auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.40f);
-    int filterKnobWidth = bounds.getWidth() * 0.35f;
+    auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.45f);
+    int maxTopW = topArea.getWidth() * 0.35f;
+    int maxTopH = topArea.getHeight() - 30; 
+    int filterKnobSize = jmin(maxTopW, maxTopH); 
     int topGap = gap / 3;
-    int filterAreaWidth = (filterKnobWidth * 2) + topGap;
-    auto filterArea = topArea.withSizeKeepingCentre(filterAreaWidth, topArea.getHeight());
-
-    auto hpArea = filterArea.removeFromLeft(filterKnobWidth);
+    int filterAreaWidth = (filterKnobSize * 2) + topGap;
+    int filterAreaHeight = filterKnobSize + 30; 
+    auto filterArea = topArea.withSizeKeepingCentre(filterAreaWidth, filterAreaHeight);
+    auto hpArea = filterArea.removeFromLeft(filterKnobSize);
+    hpLabel.setBounds(hpArea.removeFromTop(30));
+    hpSlider.setBounds(hpArea); 
     filterArea.removeFromLeft(topGap);
     auto lpArea = filterArea;
-
-    hpLabel.setBounds(hpArea.removeFromTop(30));
-    hpSlider.setBounds(hpArea);
     lpLabel.setBounds(lpArea.removeFromTop(30));
-    lpSlider.setBounds(lpArea);
-
+    lpSlider.setBounds(lpArea); 
     bounds.removeFromTop(bounds.getHeight() * 0.10f);
 
     // --- Bottom Area: Main Controls (Big) ---
     auto bottomArea = bounds;
-    int bottomKnobWidth = bottomArea.getWidth() * 0.45f;
+    int maxBottomW = bottomArea.getWidth() * 0.45f;
+    int maxBottomH = bottomArea.getHeight() - 30;
+    int bottomKnobSize = jmin(maxBottomW, maxBottomH);
     int bottomGap = gap * 0.25f;
-    int bottomTotalWidth = (bottomKnobWidth * 2) + bottomGap;
-    auto centeredBottomArea = bottomArea.withSizeKeepingCentre(bottomTotalWidth, bottomArea.getHeight());
-
-    auto bitArea = centeredBottomArea.removeFromLeft(bottomKnobWidth);
-    centeredBottomArea.removeFromLeft(bottomGap);
-    auto rateArea = centeredBottomArea;
-
+    int bottomTotalWidth = (bottomKnobSize * 2) + bottomGap;
+    int bottomTotalHeight = bottomKnobSize + 30;
+    auto centeredBottomArea = bottomArea.withSizeKeepingCentre(bottomTotalWidth, bottomTotalHeight);
+    auto bitArea = centeredBottomArea.removeFromLeft(bottomKnobSize);
     bitLabel.setBounds(bitArea.removeFromTop(30));
     bitSlider.setBounds(bitArea);
+    centeredBottomArea.removeFromLeft(bottomGap);
+    auto rateArea = centeredBottomArea;
     rateLabel.setBounds(rateArea.removeFromTop(30));
     rateSlider.setBounds(rateArea);
 }
