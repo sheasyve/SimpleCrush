@@ -43,3 +43,4 @@ The compiler will generate a `.vst3` bundle and a standalone `.exe` test applica
 ## Roadmap
 - More features, like a jitter knob and other randomization.
 - Presets
+- Better scaling
