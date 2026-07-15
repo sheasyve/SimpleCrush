@@ -34,7 +34,7 @@ inline ThemeProps getThemeProps(int themeId) {
         return {juce::Colour(0xffd6d6d6),
             juce::Colour(0xFF4C4C4C),
             juce::Colour(0xFFD4D4D4),
-            juce::Colour(0xFF2B2B2B),
+            juce::Colour(0xff575757),
             juce::Colour(0xFFD4D4D4),
             juce::Colour(0xFF202020),
             juce::Colour(0xFF202020),
@@ -101,6 +101,6 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF000000),
         juce::Colour(0xFF00FF41).withAlpha(0.3f),
         juce::Colour(0xFF00FF41),
-        juce::FontOptions(13.0f, juce::Font::bold).withName("Consolas")};
+        juce::FontOptions(12.0f, juce::Font::plain).withName("Consolas")};
 }
 } // namespace PluginTheme

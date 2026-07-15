@@ -67,7 +67,7 @@ void PluginControls::resized() {
     logoBounds = bounds.removeFromTop(bounds.getHeight() * 0.12f);
 
     // --- Top Area: Filters (Small & Centered) ---
-    auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.40f);
+    auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.45f);
     int maxTopW = topArea.getWidth() * 0.35f;
     int maxTopH = topArea.getHeight() - 30; 
     int filterKnobSize = jmin(maxTopW, maxTopH); 
