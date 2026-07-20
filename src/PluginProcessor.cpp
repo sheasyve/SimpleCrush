@@ -149,8 +149,6 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     auto actualBufferChannels = buffer.getNumChannels();
-
-    // Clear any unused output channels to prevent garbage noise/artifacts
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
         if (i < actualBufferChannels)
             buffer.clear(i, 0, buffer.getNumSamples());
@@ -197,8 +195,7 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             if (sampleCounters[channel] % rate ==
                 0) { // Sample and Hold: Only update held amplitude if the counter hits rate
                 heldSamples[channel] =
-                    std::round(drySample * totalLevels) / totalLevels; // Bitcrush: Snap the actual amplitude to the
-                                                                       // nearest quantized step
+                    std::round(drySample * totalLevels) / totalLevels;
             }
             float wetSample = heldSamples[channel];
             if (channel < 2) { // Apply filters to the crushed audio (only processing L and R channels)

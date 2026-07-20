@@ -28,6 +28,7 @@ private:
     PluginSettings pluginSettings;
     juce::Rectangle<int> logoBounds;
     bool isSettingsVisible = false;
+    bool isPresetsVisible = false;
     int currentThemeId = 1;
     void updateTheme(int themeId);
     std::unique_ptr<juce::DrawablePath> drawableGear;

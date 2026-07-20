@@ -6,15 +6,14 @@
 MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p), pluginControls(p.apvts) {
     setLookAndFeel(&themeLnF);
-    addAndMakeVisible(pluginSettings); 
-    addAndMakeVisible(pluginControls); 
+    addAndMakeVisible(pluginControls);
+    addAndMakeVisible(pluginSettings);
     pluginSettings.onThemeChanged = [this](int selectedId) {
         updateTheme(selectedId);
         audioProcessor.saveThemeId(selectedId);
     };
-    pluginSettings.onSettingsToggled = [this](bool isVisible) {
-        pluginControls.setVisible(!isVisible);
-    };
+    pluginSettings.onSettingsToggled = [this](bool isVisible) { pluginControls.setVisible(!isVisible); };
+    pluginSettings.onPresetsToggled = [this](bool isVisible) { pluginControls.setVisible(!isVisible); };
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
     setResizable(true, true);
@@ -58,19 +57,24 @@ void MyReduxEditor::updateTheme(int themeId) {
     pluginControls.mixSlider.setColour(juce::Slider::backgroundColourId, theme.sliderTrack);
     pluginControls.mixSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
 
-    // --- Apply Text Colors ---
+    // --- Apply Main UI Text Colors ---
     pluginControls.hpLabel.setColour(juce::Label::textColourId, theme.labelText);
     pluginControls.lpLabel.setColour(juce::Label::textColourId, theme.labelText);
     pluginControls.bitLabel.setColour(juce::Label::textColourId, theme.labelText);
     pluginControls.rateLabel.setColour(juce::Label::textColourId, theme.labelText);
     pluginControls.mixLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginSettings.themeLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginSettings.infoLabel.setColour(juce::Label::textColourId, theme.labelText);
+    
     pluginControls.hpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
     pluginControls.lpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
     pluginControls.bitSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
     pluginControls.rateSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
     pluginControls.mixSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
+
+    // --- Apply Overlay Label Colors ---
+    pluginSettings.themeLabel.setColour(juce::Label::textColourId, theme.labelText);
+    pluginSettings.folderLabel.setColour(juce::Label::textColourId, theme.labelText); 
+    pluginSettings.presetLabel.setColour(juce::Label::textColourId, theme.labelText); 
+    pluginSettings.infoLabel.setColour(juce::Label::textColourId, theme.labelText);
 
     // --- Apply Settings Icon Colors ---
     pluginSettings.updateIconColors(theme.settings, theme.settingsHover);
