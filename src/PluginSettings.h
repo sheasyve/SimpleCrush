@@ -10,7 +10,8 @@ public:
     void resized() override;
     void setInitialTheme(int themeId);
     void updateIconColors(juce::Colour normal, juce::Colour hover);
-
+    void setMenuOpen(bool isOpen);
+    bool isMenuOpen() const { return isSettingsVisible; }
     // Callbacks
     std::function<void(bool)> onSettingsToggled;
     std::function<void(bool)> onPresetsToggled;
@@ -25,11 +26,10 @@ public:
 
     // Components
     juce::DrawableButton settingsButton{"Settings", juce::DrawableButton::ImageFitted};
-    juce::DrawableButton presetsButton{"Presets", juce::DrawableButton::ImageFitted};
     juce::Label themeLabel;
     juce::ComboBox themeSelector;
-    juce::Label settingLabel;
-    juce::ComboBox settingSelector;
+    juce::Label fontSizeLabel;
+    juce::ComboBox fontSizeSelector;
     juce::Label infoLabel;
     juce::TextButton linkButton;
     std::unique_ptr<juce::DrawablePath> drawableGear;

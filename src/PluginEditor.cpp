@@ -8,6 +8,7 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     setLookAndFeel(&themeLnF);
     addAndMakeVisible(pluginControls);
     addAndMakeVisible(pluginSettings);
+    addAndMakeVisible(presetMenu);
     pluginSettings.onThemeChanged = [this](int selectedId) {
         updateTheme(selectedId);
         audioProcessor.saveThemeId(selectedId);
@@ -63,7 +64,7 @@ void MyReduxEditor::updateTheme(int themeId) {
     pluginControls.bitLabel.setColour(juce::Label::textColourId, theme.labelText);
     pluginControls.rateLabel.setColour(juce::Label::textColourId, theme.labelText);
     pluginControls.mixLabel.setColour(juce::Label::textColourId, theme.labelText);
-    
+
     pluginControls.hpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
     pluginControls.lpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
     pluginControls.bitSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
@@ -72,12 +73,14 @@ void MyReduxEditor::updateTheme(int themeId) {
 
     // --- Apply Overlay Label Colors ---
     pluginSettings.themeLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginSettings.folderLabel.setColour(juce::Label::textColourId, theme.labelText); 
-    pluginSettings.presetLabel.setColour(juce::Label::textColourId, theme.labelText); 
+    pluginSettings.presetLabel.setColour(juce::Label::textColourId, theme.labelText);
     pluginSettings.infoLabel.setColour(juce::Label::textColourId, theme.labelText);
 
     // --- Apply Settings Icon Colors ---
     pluginSettings.updateIconColors(theme.settings, theme.settingsHover);
+
+    presetMenu.presetLabel.setColour(juce::Label::textColourId, theme.labelText);
+    presetMenu.updateIconColors(theme.settings, theme.settingsHover);
 
     repaint();
 }
@@ -107,4 +110,5 @@ void MyReduxEditor::resized() {
     auto fullBounds = getLocalBounds();
     pluginControls.setBounds(fullBounds);
     pluginSettings.setBounds(fullBounds);
+    presetMenu.setBounds(fullBounds);
 }

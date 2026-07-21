@@ -1,6 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
-
+#include "PresetMenu.h"
 #include "PluginProcessor.h"
 #include "PluginTheme.h"
 #include "PluginControls.h"
@@ -24,6 +24,7 @@ public:
 private:
     MyReduxProcessor &audioProcessor; 
     ThemeLookAndFeel themeLnF;
+    PresetMenu presetMenu;
     PluginControls pluginControls;
     PluginSettings pluginSettings;
     juce::Rectangle<int> logoBounds;
