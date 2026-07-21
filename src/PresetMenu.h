@@ -1,32 +1,54 @@
 #pragma once
 #include <JuceHeader.h>
 
-class PresetMenu : public juce::Component {
+class PresetMenu : public juce::Component, public juce::ListBoxModel {
 public:
-    PresetMenu();
+    PresetMenu(juce::AudioProcessorValueTreeState& vts);
     ~PresetMenu() override = default;
 
     void paint(juce::Graphics&) override;
     void resized() override;
-    
     void updateIconColors(juce::Colour normal, juce::Colour hover);
-    
-    // External helper to close the menu without triggering callbacks
     void setMenuOpen(bool isOpen);
     bool isMenuOpen() const { return isPresetsVisible; }
+    std::function<void(bool)> onPresetsToggled;
+
+    // --- ListBoxModel Overrides ---
+    int getNumRows() override;
+    void paintListBoxItem(int rowNumber, juce::Graphics& g, int width, int height, bool rowIsSelected) override;
+    void listBoxItemClicked(int row, const juce::MouseEvent&) override;
+
+    struct Preset {
+        juce::String name;
+        juce::File file;
+    };
 
     juce::Label presetLabel;
-    juce::ComboBox presetSelector;
-    std::function<void(bool)> onPresetsToggled;
+    juce::TextEditor saveTextBox;
+    juce::ListBox presetList;
 
 private:
     void updateMenuVisibility();
+    void loadPresetsFromDirectory();
 
+    juce::AudioProcessorValueTreeState& apvts;
+    juce::File presetDirectory;
+
+    // --- Top Menu Buttons ---
     juce::DrawableButton presetsButton { "Presets", juce::DrawableButton::ImageFitted };
-    std::unique_ptr<juce::DrawablePath> drawableList;
-    std::unique_ptr<juce::DrawablePath> drawableListHover;
+    std::unique_ptr<juce::DrawablePath> drawableList, drawableListHover;
 
+    // --- Inner Preset Panel Buttons ---
+    juce::DrawableButton folderButton { "Folder", juce::DrawableButton::ImageFitted };
+    std::unique_ptr<juce::DrawablePath> drawableFolder, drawableFolderHover;
+
+    juce::DrawableButton saveButton { "Save", juce::DrawableButton::ImageFitted };
+    std::unique_ptr<juce::DrawablePath> drawableSave, drawableSaveHover;
+
+    // State & Data
     bool isPresetsVisible = false;
+    std::vector<Preset> presets;
+    std::unique_ptr<juce::FileChooser> fileChooser; 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetMenu)
 };

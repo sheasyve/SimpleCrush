@@ -4,7 +4,7 @@
 
 // --- Constructor ---
 MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
-    : AudioProcessorEditor(&p), audioProcessor(p), pluginControls(p.apvts) {
+    : AudioProcessorEditor(&p), audioProcessor(p), presetMenu(p.apvts), pluginControls(p.apvts) {
     setLookAndFeel(&themeLnF);
     addAndMakeVisible(pluginControls);
     addAndMakeVisible(pluginSettings);
