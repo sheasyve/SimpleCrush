@@ -2,7 +2,7 @@
 
 A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio destruction, and downsampling. Perfect for lo-fi, and adding unique harmonics to bass, drums and chords. Built from the ground up in C++ using the JUCE framework. This plugin is in early development stages, but is fully functional with many more changes to come.
 
-<img width="329" height="333" alt="image" src="https://github.com/user-attachments/assets/aedcba8b-38d0-4b66-93b2-483c3dd0f9c4" />
+<img width="342" height="372" alt="Screenshot 2026-07-14 193133" src="https://github.com/user-attachments/assets/75d1924b-fa81-404b-87a2-9bb9c755fb91" />
 
 ## Features
 * **Bit Depth Reduction:** Crush your signal dynamically from 16-bit down to 1-bit using amplitude quantization.
@@ -14,6 +14,10 @@ A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio d
 * **OS:** Cross Platform (Compiled via MSVC 2026 x64)
 * **DAWs:** Compatible with any major digital audio workstation that supports the 64 bit VST3 format (Ableton Live, FL Studio, Reaper, Bitwig, Cubase, etc.)
 
+## Installing From Zip
+* Extract the zip
+* Place the SimpleCrush.vst3 folder in your DAW's plugin directory, and re-load plugins.
+
 ## Build Instructions
 This project is structured for modern C++ development using CMake. To compile the plugin locally:
 
@@ -23,23 +27,3 @@ This project is structured for modern C++ development using CMake. To compile th
 4. Run the build configuration (or execute a local PowerShell build script like `.\make.ps1`).
 
 The compiler will generate a `.vst3` bundle and a standalone `.exe` test application inside your `build/` directory. 
-
-## Roadmap
-* Implement custom SVG graphics and override the default JUCE `LookAndFeel`.
-- More features, like a jitter knob and other randomization.
-- Resizable option and more settings
-- Hyperlink to website
-- Presets
-  
-## Distribution Plan
-### VST File
-- Adept users can place the distributed vst folder in their vst directory.
-- This can be released immediately.
-### Inno Setup (The Industry Standard)
-- This is the most common tool for VST developers. It is a free, script-based installer creator that creates professional-looking, single-file .exe installers.
-- I still need to implement this
-## Planned Distribution Networks
-- GitHub Release
-- https://sheasyve.dev
-- Free plugin hosting websites.
-  
