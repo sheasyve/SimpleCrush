@@ -31,7 +31,9 @@ private:
     bool isSettingsVisible = false;
     bool isPresetsVisible = false;
     int currentThemeId = 1;
+    int currentFontSizeId = 1;
     void updateTheme(int themeId);
+    void updateFontSize(int fontSizeId);
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hpAttachment;

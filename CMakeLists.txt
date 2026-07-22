@@ -39,6 +39,7 @@ target_sources(SimpleCrush PRIVATE
     src/PluginSettings.cpp
     src/PresetMenu.h
     src/PresetMenu.cpp
+    src/Util.h
 )
 
 target_link_libraries(SimpleCrush PRIVATE

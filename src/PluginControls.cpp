@@ -60,10 +60,12 @@ void PluginControls::resized() {
     const int gap = bounds.getWidth() * 0.05f;
 
     // --- Mix Section (Right Side) ---
-    auto mixArea = bounds.removeFromRight(bounds.getWidth() * 0.17f);
+    int mixWidth = bounds.getWidth() * 0.17f;
+    auto mixPanel = bounds.removeFromRight(mixWidth + gap); 
+    mixPanel.removeFromRight(gap); 
+    auto mixArea = mixPanel;
     mixLabel.setBounds(mixArea.removeFromTop(30));
     mixSlider.setBounds(mixArea);
-    bounds.removeFromRight(gap);
     logoBounds = bounds.removeFromTop(bounds.getHeight() * 0.12f);
 
     // --- Top Area: Filters (Small & Centered) ---

@@ -1,7 +1,9 @@
 #pragma once
 #include <JuceHeader.h>
+#include "Util.h"
 
 class PluginSettings : public juce::Component {
+    
 public:
     PluginSettings();
     ~PluginSettings() override = default;
@@ -9,18 +11,14 @@ public:
     void paint(juce::Graphics &g) override;
     void resized() override;
     void setInitialTheme(int themeId);
+    void setInitialFontSize(int fontSizeId);
     void updateIconColors(juce::Colour normal, juce::Colour hover);
     void setMenuOpen(bool isOpen);
     bool isMenuOpen() const { return isSettingsVisible; }
     // Callbacks
     std::function<void(bool)> onSettingsToggled;
-    std::function<void(bool)> onPresetsToggled;
     std::function<void(int)> onThemeChanged;
-
-    // Preset Page Components
-    juce::Label presetLabel;
-    juce::ComboBox presetSelector;
-
+    std::function<void(int)> onFontSizeChanged;
     // State helper
     void updateMenuVisibility();
 
@@ -31,11 +29,9 @@ public:
     juce::Label fontSizeLabel;
     juce::ComboBox fontSizeSelector;
     juce::Label infoLabel;
-    juce::TextButton linkButton;
+    juce::TextButton infoButton;
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
-    std::unique_ptr<juce::DrawablePath> drawableList;
-    std::unique_ptr<juce::DrawablePath> drawableListHover;
 
 private:
     bool isSettingsVisible = false;

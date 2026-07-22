@@ -14,7 +14,10 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
         audioProcessor.saveThemeId(selectedId);
     };
     pluginSettings.onSettingsToggled = [this](bool isVisible) { pluginControls.setVisible(!isVisible); };
-    pluginSettings.onPresetsToggled = [this](bool isVisible) { pluginControls.setVisible(!isVisible); };
+    pluginSettings.onFontSizeChanged = [this](int selectedId) {
+        //updateFontSize(selectedId);
+        //audioProcessor.saveFontSizeId(selectedId);
+    };
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
     setResizable(true, true);
@@ -73,12 +76,11 @@ void MyReduxEditor::updateTheme(int themeId) {
 
     // --- Apply Overlay Label Colors ---
     pluginSettings.themeLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginSettings.presetLabel.setColour(juce::Label::textColourId, theme.labelText);
+    pluginSettings.fontSizeLabel.setColour(juce::Label::textColourId, theme.labelText);
     pluginSettings.infoLabel.setColour(juce::Label::textColourId, theme.labelText);
 
     // --- Apply Settings Icon Colors ---
     pluginSettings.updateIconColors(theme.settings, theme.settingsHover);
-
     presetMenu.presetLabel.setColour(juce::Label::textColourId, theme.labelText);
     presetMenu.updateIconColors(theme.settings, theme.settingsHover);
 
