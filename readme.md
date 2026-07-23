@@ -8,7 +8,7 @@ A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio d
 * **Bit Depth Reduction:** Crush your signal dynamically from 16-bit down to 1-bit using amplitude quantization.
 * **Sample Rate Downsampling:** Time-quantize your audio, rolling the sampling rate from 44.1 kHz down to 1.0 kHz.
 * **Parallel Processing:** A built-in Mix knob utilizes linear interpolation to blend the crushed wet signal with the clean dry signal, allowing you to retain a bit of your drums, bass chords or other while adding a bit of spice.
-* **Preset Saving and Importing** Save and load presets easily with a new preset menu. Select the folder you want to make importing them easier.
+* **Preset Saving and Importing:** Save and load presets easily with a new preset menu. Select the folder you want to make importing them easier.
 
 ## Compatibility
 * **Format:** VST3 & Standalone Application
