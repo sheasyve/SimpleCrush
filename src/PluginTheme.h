@@ -14,6 +14,21 @@ struct ThemeProps {
     juce::Colour settings;
     juce::Colour settingsHover;
     juce::FontOptions labelFont;
+    juce::Colour overlayBg;
+    juce::Colour scrollbarThumb;
+};
+
+struct SettingsBackground : public juce::Component {
+    juce::Colour currentOverlayColor = juce::Colours::black.withAlpha(0.85f);
+    
+    void setOverlayColor(juce::Colour newColor) {
+        currentOverlayColor = newColor;
+        repaint();
+    }
+
+    void paint(juce::Graphics& g) override {
+        g.fillAll(currentOverlayColor); 
+    }
 };
 
 inline ThemeProps getThemeProps(int themeId) {
@@ -27,7 +42,9 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF000000),
             juce::Colour(0xFFCCCCCC).withAlpha(0.3f),
             juce::Colour(0xFFCCCCCC).withAlpha(0.5f),
-            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial")};
+            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
+            juce::Colours::black.withAlpha(0.9f),    
+            juce::Colour(0xFF01FFF4)};                
     }
 
     if (themeId == 2) { // Studio Dark
@@ -40,7 +57,9 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF202020),
             juce::Colour(0xFFD4D4D4).withAlpha(0.3f),
             juce::Colour(0xffd6d6d6),
-            juce::FontOptions(15.0f, juce::Font::bold).withName("Arial")};
+            juce::FontOptions(15.0f, juce::Font::bold).withName("Arial"),
+            juce::Colours::black.withAlpha(0.9f),    
+            juce::Colour(0xFFD4D4D4)};                
     }
     if (themeId == 3) { // Studio Light
         return {juce::Colour(0xFF333333),
@@ -52,7 +71,9 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFDCDCDC),
             juce::Colour(0xFF222222).withAlpha(0.3f),
             juce::Colour(0xFF333333),
-            juce::FontOptions(15.0f, juce::Font::bold).withName("Arial")};
+            juce::FontOptions(15.0f, juce::Font::bold).withName("Arial"),
+            juce::Colour(0xFFE0E0E0).withAlpha(0.93f), 
+            juce::Colour(0xFF333333)};                 
     }
     if (themeId == 4) { // Panda Trueno
         return {juce::Colour(0xFFFFFFFF),
@@ -64,7 +85,9 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF050505),
             juce::Colour(0xFFFFFFFF).withAlpha(0.3f),
             juce::Colour(0xFFE50000),
-            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial")};
+            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
+            juce::Colours::black.withAlpha(0.90f),     
+            juce::Colour(0xFFE50000)};                 
     }
     if (themeId == 5) { // Retro Caramel
         return {juce::Colour(0xFFAD7640),
@@ -76,7 +99,9 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF120804),
             juce::Colour(0xFFCCCCCC).withAlpha(0.3f),
             juce::Colour(0xFFCCCCCC).withAlpha(0.5f),
-            juce::FontOptions(15.0f, juce::Font::italic | juce::Font::bold).withName("Helvetica")};
+            juce::FontOptions(15.0f, juce::Font::italic | juce::Font::bold).withName("Helvetica"),
+            juce::Colour(0xFF120804).withAlpha(0.9f), 
+            juce::Colour(0xFFC99966)};                 
     }
     if (themeId == 6) { // Arctic Freeze
         return {juce::Colour(0xFF74B3CE),
@@ -88,7 +113,9 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF09141C),
             juce::Colour(0xFF98C1D9).withAlpha(0.3f),
             juce::Colour(0xFFFFFFFF),
-            juce::FontOptions(15.0f, juce::Font::bold).withName("Trebuchet MS")};
+            juce::FontOptions(15.0f, juce::Font::bold).withName("Trebuchet MS"),
+            juce::Colour(0xFF09141C).withAlpha(0.95f), 
+            juce::Colour(0xFFFFFFFF)};                 
     }
 
     // Midnight Hacker
@@ -101,6 +128,8 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF000000),
         juce::Colour(0xFF00FF41).withAlpha(0.3f),
         juce::Colour(0xFF00FF41),
-        juce::FontOptions(12.0f, juce::Font::plain).withName("Consolas")};
+        juce::FontOptions(12.0f, juce::Font::plain).withName("Consolas"),
+        juce::Colours::black.withAlpha(0.95f),        
+        juce::Colour(0xFF00FF41)};                    
 }
 } // namespace PluginTheme

@@ -39,8 +39,6 @@ PluginSettings::PluginSettings() {
 
     settingsButton.onClick = [this]() {
         isSettingsVisible = !isSettingsVisible;
-        if (isSettingsVisible)
-            isPresetsVisible = false;
         updateMenuVisibility();
     };
 
@@ -64,16 +62,13 @@ void PluginSettings::updateMenuVisibility() {
     infoLabel.setVisible(isSettingsVisible);
     infoButton.setVisible(isSettingsVisible);
     if (onSettingsToggled != nullptr)
-        onSettingsToggled(isSettingsVisible || isPresetsVisible);
+        onSettingsToggled(isSettingsVisible);
 
     resized();
     repaint();
 }
 
 void PluginSettings::paint(juce::Graphics &g) {
-    if (isSettingsVisible || isPresetsVisible) {
-        g.fillAll(juce::Colours::black.withAlpha(0.6f));
-    }
 }
 
 void PluginSettings::resized() {

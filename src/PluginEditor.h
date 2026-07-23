@@ -22,6 +22,7 @@ public:
     void resized() override;
 
 private:
+    PluginTheme::SettingsBackground darkOverlay; 
     MyReduxProcessor &audioProcessor; 
     ThemeLookAndFeel themeLnF;
     PresetMenu presetMenu;

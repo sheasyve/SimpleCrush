@@ -1,23 +1,33 @@
 #include "PluginEditor.h"
 #include "PluginProcessor.h"
-// --- Main Gui Class ---
+// --- Main UI Controller File ---
 
 // --- Constructor ---
 MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p), presetMenu(p.apvts), pluginControls(p.apvts) {
     setLookAndFeel(&themeLnF);
     addAndMakeVisible(pluginControls);
+    addChildComponent(darkOverlay);
     addAndMakeVisible(pluginSettings);
     addAndMakeVisible(presetMenu);
+
     pluginSettings.onThemeChanged = [this](int selectedId) {
         updateTheme(selectedId);
         audioProcessor.saveThemeId(selectedId);
     };
-    pluginSettings.onSettingsToggled = [this](bool isVisible) { pluginControls.setVisible(!isVisible); };
+    pluginSettings.onSettingsToggled = [this](bool isOpen) {
+        if (isOpen) presetMenu.setMenuOpen(false);
+        darkOverlay.setVisible(isOpen);
+    };
+    presetMenu.onPresetsToggled = [this](bool isOpen) {
+        if (isOpen) pluginSettings.setMenuOpen(false);
+        darkOverlay.setVisible(isOpen);
+    };
     pluginSettings.onFontSizeChanged = [this](int selectedId) {
         //updateFontSize(selectedId);
         //audioProcessor.saveFontSizeId(selectedId);
     };
+
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
     setResizable(true, true);
@@ -38,6 +48,7 @@ void MyReduxEditor::updateTheme(int themeId) {
     auto theme = PluginTheme::getThemeProps(themeId);
     float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
     themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
+    themeLnF.setColour(juce::ScrollBar::thumbColourId, theme.scrollbarThumb);
     sendLookAndFeelChange();
 
     // --- Apply Slider Graphics Colors ---
@@ -82,7 +93,10 @@ void MyReduxEditor::updateTheme(int themeId) {
     // --- Apply Settings Icon Colors ---
     pluginSettings.updateIconColors(theme.settings, theme.settingsHover);
     presetMenu.presetLabel.setColour(juce::Label::textColourId, theme.labelText);
+
     presetMenu.updateIconColors(theme.settings, theme.settingsHover);
+
+    darkOverlay.setOverlayColor(theme.overlayBg);
 
     repaint();
 }
@@ -110,6 +124,7 @@ void MyReduxEditor::resized() {
     themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
     sendLookAndFeelChange();
     auto fullBounds = getLocalBounds();
+    darkOverlay.setBounds(fullBounds);
     pluginControls.setBounds(fullBounds);
     pluginSettings.setBounds(fullBounds);
     presetMenu.setBounds(fullBounds);

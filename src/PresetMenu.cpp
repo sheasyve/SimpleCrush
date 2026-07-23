@@ -4,13 +4,12 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
 
     // --- Preset Folder ---
-    presetDirectory = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory)
-                          .getChildFile("SimpleCrush")
-                          .getChildFile("Presets");
+    presetDirectory = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
+                      .getChildFile("SimpleCrush")
+                      .getChildFile("Presets");
 
     if (!presetDirectory.exists())
         presetDirectory.createDirectory();
-
     loadPresetsFromDirectory();
 
     // --- Presets List Button ---
@@ -92,6 +91,7 @@ void PresetMenu::updateMenuVisibility() {
     saveTextBox.setVisible(isPresetsVisible);
     saveButton.setVisible(isPresetsVisible);
     presetList.setVisible(isPresetsVisible);
+
     resized();
     repaint();
 }
@@ -102,9 +102,6 @@ void PresetMenu::setMenuOpen(bool isOpen) {
 }
 
 void PresetMenu::paint(juce::Graphics &g) {
-    if (isPresetsVisible) {
-        g.fillAll(juce::Colours::black.withAlpha(0.9f));
-    }
 }
 
 void PresetMenu::resized() {
