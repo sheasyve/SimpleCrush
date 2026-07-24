@@ -17,9 +17,14 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     addAndMakeVisible(presetsButton);
 
     // --- Preset Panel Title ---
-    presetLabel.setText("PRESETS", juce::dontSendNotification);
+    presetLabel.setText("Presets", juce::dontSendNotification);
     presetLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(presetLabel);
+    /*Instead do something like this in paint
+    g.setColour(ThemeProps.labelText);
+        juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
+        g.setFont(logoFont.withHeight(dynamicFontHeight * 2.5f));
+        g.drawText("Presets", pluginControls.logoBounds.translated(7, -5), juce::Justification::centred);*/
 
     // --- Folder Button ---
     parseSvgIcon(folderButton, drawableFolder, drawableFolderHover, SvgAssets::folderIcon);

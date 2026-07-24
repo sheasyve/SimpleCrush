@@ -16,7 +16,7 @@ public:
     juce::AudioProcessorEditor *createEditor() override;
     bool hasEditor() const override;
 
-    // --- Standard Plugin Boilerplate ---
+    // --- Plugin Boilerplate ---
     const juce::String getName() const override;
     bool acceptsMidi() const override;
     bool producesMidi() const override;
