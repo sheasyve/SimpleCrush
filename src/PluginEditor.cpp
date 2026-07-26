@@ -16,12 +16,14 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
         updateTheme(selectedId);
         audioProcessor.saveThemeId(selectedId);
     };
+
     pluginSettings.onSettingsToggled = [this](bool isOpen) {
         settingsOverlay.setVisible(isOpen);
         if (isOpen) {
             presetMenu.setMenuOpen(false);
             presetOverlay.setVisible(false);
         }
+        repaint(); 
     };
 
     presetMenu.onPresetsToggled = [this](bool isOpen) {
@@ -30,14 +32,19 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
             pluginSettings.setMenuOpen(false);
             settingsOverlay.setVisible(false);
         }
+        repaint(); 
     };
+    
     pluginSettings.onFontSizeChanged = [this](int selectedId) {
-        // updateFontSize(selectedId);
-        // audioProcessor.saveFontSizeId(selectedId);
+        updateFontSize(selectedId);
+        audioProcessor.saveFontSizeId(selectedId);
     };
 
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
+    int initialFontSize = 1; 
+    pluginSettings.setInitialFontSize(initialFontSize);
+    currentFontSizeId = initialFontSize;
     setResizable(true, true);
     setResizeLimits(340, 340, 599, 599);
     getConstrainer()->setFixedAspectRatio(1.0);
@@ -54,8 +61,7 @@ MyReduxEditor::~MyReduxEditor() {
 void MyReduxEditor::updateTheme(int themeId) {
     currentThemeId = themeId;
     auto theme = PluginTheme::getThemeProps(themeId);
-    float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
-    themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
+    themeLnF.currentFont = theme.labelFont.withHeight(getDynamicFontHeight());
     themeLnF.setColour(juce::ScrollBar::thumbColourId, theme.scrollbarThumb);
     sendLookAndFeelChange();
 
@@ -101,8 +107,9 @@ void MyReduxEditor::updateTheme(int themeId) {
     // --- Apply Settings Icon Colors ---
     pluginSettings.updateIconColors(theme.settings, theme.settingsHover);
     presetMenu.updateIconColors(theme.settings, theme.settingsHover);
-    pluginSettings.setThemeStyle(theme.labelText, theme.labelFont);
-    presetMenu.setThemeStyle(theme.labelText, theme.labelFont);
+    
+    pluginSettings.setThemeStyle(theme.labelText, themeLnF.currentFont);
+    presetMenu.setThemeStyle(theme.labelText, themeLnF.currentFont);
 
     settingsOverlay.setOverlayColor(theme.setttingsOverlay);
     presetOverlay.setOverlayColor(theme.presetOverlay);
@@ -118,18 +125,11 @@ void MyReduxEditor::paint(juce::Graphics &g) {
         ThemeProps.bgCenter, center.x, center.y, ThemeProps.bgEdge, center.x, center.y + radius, true);
     g.setGradientFill(gradient);
     g.fillAll();
-    if (pluginControls.isVisible()) {
-        float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
-        g.setColour(ThemeProps.labelText);
-        juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
-        g.setFont(logoFont.withHeight(dynamicFontHeight * 2.5f));
-        g.drawText("SimpleCrush", pluginControls.logoBounds.translated(7, -5), juce::Justification::centred);
-    }
 }
 
 void MyReduxEditor::resized() {
     auto theme = PluginTheme::getThemeProps(currentThemeId);
-    float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
+    float dynamicFontHeight = getDynamicFontHeight();
     themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
     sendLookAndFeelChange();
     auto fullBounds = getLocalBounds();
@@ -138,4 +138,43 @@ void MyReduxEditor::resized() {
     pluginControls.setBounds(fullBounds);
     pluginSettings.setBounds(fullBounds);
     presetMenu.setBounds(fullBounds);
+}
+
+void MyReduxEditor::updateFontSize(int fontSizeId) {
+    currentFontSizeId = fontSizeId;
+    updateTheme(currentThemeId); 
+}
+
+float MyReduxEditor::getDynamicFontHeight() const {
+    float baseFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
+    float fontMultiplier = 1.0f; // Normal
+    if (currentFontSizeId == 2) fontMultiplier = 0.85f; // Small
+    if (currentFontSizeId == 3) fontMultiplier = 1.15f; // Large
+    if (currentFontSizeId == 4) fontMultiplier = 1.30f; // Extra Large
+    return baseFontHeight * fontMultiplier;
+}
+
+void MyReduxEditor::paintOverChildren(juce::Graphics &g) {
+    bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
+
+    if (pluginControls.isVisible()) {
+        auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
+        float dynamicFontHeight = getDynamicFontHeight();
+        g.setColour(ThemeProps.labelText);
+        juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
+        float logoScale = isAnyMenuOpen ? 1.5f : 2.5f;
+        g.setFont(logoFont.withHeight(dynamicFontHeight * logoScale));
+        
+        if (isAnyMenuOpen) {
+            int yOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 15.0f, 28.0f);
+            int yPosition = pluginControls.logoBounds.getY() - yOffset;
+            
+            juce::Rectangle<int> centerBounds(0, yPosition, getWidth(), pluginControls.logoBounds.getHeight());
+            g.drawText("SimpleCrush", centerBounds, juce::Justification::centred);
+        } else {
+            // Normal offset
+            int standardOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 5.0f, 9.0f);
+            g.drawText("SimpleCrush", pluginControls.logoBounds.translated(7, -standardOffset), juce::Justification::centred);
+        }
+    }
 }

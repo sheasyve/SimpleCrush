@@ -22,12 +22,12 @@ PluginSettings::PluginSettings() {
 
     fontSizeLabel.setText("Font Size", juce::dontSendNotification);
     fontSizeLabel.setJustificationType(juce::Justification::centred);
-    // addChildComponent(fontSizeLabel);
+    addChildComponent(fontSizeLabel);
     fontSizeSelector.addItem("Normal", 1);
     fontSizeSelector.addItem("Small", 2);
     fontSizeSelector.addItem("Large", 3);
     fontSizeSelector.addItem("Extra Large", 4);
-    // addChildComponent(fontSizeSelector);
+    addChildComponent(fontSizeSelector);
 
     infoLabel.setText(infotext, juce::dontSendNotification);
     infoLabel.setJustificationType(juce::Justification::centred);
@@ -70,10 +70,11 @@ void PluginSettings::updateMenuVisibility() {
 void PluginSettings::paint(juce::Graphics &g) {
     if (isSettingsVisible) {
         g.setColour(textColor);
-        g.setFont(textFont.withHeight(32.0f).withStyle(juce::Font::bold));
+        float titleSize = textFont.getHeight() * 1.2f;
+        g.setFont(textFont.withHeight(titleSize).withStyle(juce::Font::bold));
         auto bounds = getLocalBounds();
-        int textHeight = 40;
-        int yPosition = 15;
+        int textHeight = (int)titleSize + 10;
+        int yPosition = (int)juce::jmap<float>(static_cast<float>(bounds.getHeight()), 340.0f, 600.0f, 40.0f, 79.0f);
         juce::Rectangle<int> titleArea(0, yPosition, bounds.getWidth(), textHeight);
         g.drawText("Settings", titleArea, juce::Justification::centred);
     }
@@ -83,13 +84,14 @@ void PluginSettings::resized() {
     auto bounds = getLocalBounds();
     settingsButton.setBounds(5, 5, 25, 25);
     auto overlayArea = bounds.withSizeKeepingCentre(220, 220);
+    //overlayArea.translate(0, 7);
     if (isSettingsVisible) {
         themeLabel.setBounds(overlayArea.removeFromTop(40)); // 20
         themeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
-        // overlayArea.removeFromTop(15);
-        // fontSizeLabel.setBounds(overlayArea.removeFromTop(20));
-        // fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
-        // overlayArea.removeFromTop(15);
+        overlayArea.removeFromTop(15);
+        fontSizeLabel.setBounds(overlayArea.removeFromTop(20));
+        fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
+        overlayArea.removeFromTop(15);
         infoLabel.setBounds(overlayArea);
         infoButton.setBounds(overlayArea);
     }

@@ -67,21 +67,20 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
             if (xml != nullptr) {
                 if (xml->writeTo(file)) {
                     loadPresetsFromDirectory();
-                    saveTextBox.clear();
                 }
             }
         }
     };
 
     randomButton.onClick = [this]() {
-        if (presets.size() > 0) {
-            int randomIndex = juce::Random::getSystemRandom().nextInt((int)presets.size());
-            auto file = presets[randomIndex].file;
-            std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(file);
-            if (xml != nullptr) {
-                apvts.replaceState(juce::ValueTree::fromXml(*xml));
-                juce::Logger::writeToLog("Loaded random preset: " + presets[randomIndex].name);
-                presetList.selectRow(randomIndex); 
+        auto& rng = juce::Random::getSystemRandom();
+        for (auto child : apvts.state) {
+            if (child.hasProperty("id")) {
+                juce::String paramID = child.getProperty("id").toString();
+                if (auto* param = apvts.getParameter(paramID)) {
+                    float randomNormalizedValue = rng.nextFloat();
+                    param->setValueNotifyingHost(randomNormalizedValue);
+                }
             }
         }
     };
@@ -116,10 +115,11 @@ void PresetMenu::setMenuOpen(bool isOpen) {
 void PresetMenu::paint(juce::Graphics &g) {
     if (isPresetsVisible) {
         g.setColour(textColor);
-        g.setFont(textFont.withHeight(32.0f).withStyle(juce::Font::bold));
+        float titleSize = textFont.getHeight() * 1.2f; 
+        g.setFont(textFont.withHeight(titleSize).withStyle(juce::Font::bold));
         auto bounds = getLocalBounds();
-        int textHeight = 40;
-        int yPosition = 15;
+        int textHeight = (int)titleSize + 10;
+        int yPosition = (int)juce::jmap<float>(static_cast<float>(bounds.getHeight()), 340.0f, 600.0f, 40.0f, 79.0f);
         juce::Rectangle<int> titleArea(0, yPosition, bounds.getWidth(), textHeight);
         g.drawText("Presets", titleArea, juce::Justification::centred);
     }
@@ -131,7 +131,7 @@ void PresetMenu::resized() {
     
     if (isPresetsVisible) {
         auto overlayArea = bounds.withSizeKeepingCentre(260, 240); 
-        overlayArea.translate(0, 20);
+        overlayArea.translate(0, 25);
         auto topBar = overlayArea.removeFromTop(25);
         // Left side
         folderButton.setBounds(topBar.removeFromLeft(25).reduced(2));
@@ -180,9 +180,8 @@ void PresetMenu::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, i
         if (rowIsSelected) {
             g.fillAll(juce::Colours::white.withAlpha(0.2f));
         }
-        
         g.setColour(textColor);
-        g.setFont(juce::Font(14.0f));
+        g.setFont(textFont);
         g.drawText(presets[rowNumber].name, 5, 0, width - 10, height, juce::Justification::centredLeft, true);
     }
 }
@@ -195,6 +194,7 @@ void PresetMenu::listBoxItemClicked(int row, const juce::MouseEvent &) {
         if (xml != nullptr) {
             apvts.replaceState(juce::ValueTree::fromXml(*xml));
             juce::Logger::writeToLog("Loaded preset: " + presets[row].name);
+            saveTextBox.setText(presets[row].name, juce::dontSendNotification);
         }
     }
 }

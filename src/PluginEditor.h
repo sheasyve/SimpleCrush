@@ -1,10 +1,10 @@
 #pragma once
-#include <JuceHeader.h>
-#include "PresetMenu.h"
-#include "PluginProcessor.h"
-#include "PluginTheme.h"
 #include "PluginControls.h"
+#include "PluginProcessor.h"
 #include "PluginSettings.h"
+#include "PluginTheme.h"
+#include "PresetMenu.h"
+#include <JuceHeader.h>
 
 class ThemeLookAndFeel : public juce::LookAndFeel_V4 {
 public:
@@ -19,12 +19,13 @@ public:
     ~MyReduxEditor() override;
 
     void paint(juce::Graphics &) override;
+    void paintOverChildren(juce::Graphics&) override;
     void resized() override;
 
 private:
-    PluginTheme::SettingsBackground settingsOverlay; 
-    PluginTheme::SettingsBackground presetOverlay; 
-    MyReduxProcessor &audioProcessor; 
+    PluginTheme::SettingsBackground settingsOverlay;
+    PluginTheme::SettingsBackground presetOverlay;
+    MyReduxProcessor &audioProcessor;
     ThemeLookAndFeel themeLnF;
     PresetMenu presetMenu;
     PluginControls pluginControls;
@@ -34,6 +35,7 @@ private:
     bool isPresetsVisible = false;
     int currentThemeId = 1;
     int currentFontSizeId = 1;
+    float getDynamicFontHeight() const;
     void updateTheme(int themeId);
     void updateFontSize(int fontSizeId);
     std::unique_ptr<juce::DrawablePath> drawableGear;
