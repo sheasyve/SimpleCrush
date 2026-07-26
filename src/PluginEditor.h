@@ -38,6 +38,7 @@ private:
     float getDynamicFontHeight() const;
     void updateTheme(int themeId);
     void updateFontSize(int fontSizeId);
+    void setLabelsVisible(bool shouldBeVisible);
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hpAttachment;

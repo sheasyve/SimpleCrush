@@ -149,25 +149,28 @@ void PresetMenu::resized() {
 }
 
 void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
+    juce::Colour brightNormal = normal.brighter(0.3f); 
+    juce::Colour brightHover = hover.brighter(0.3f);
+
     if (drawableList != nullptr) {
-        drawableList->setFill(normal);
-        drawableListHover->setFill(hover);
+        drawableList->setFill(brightNormal);
+        drawableListHover->setFill(brightHover);
         presetsButton.setImages(drawableList.get(), drawableListHover.get(), drawableListHover.get());
     }
     if (drawableFolder != nullptr) {
-        drawableFolder->setFill(normal);
-        drawableFolderHover->setFill(hover);
+        drawableFolder->setFill(brightNormal);
+        drawableFolderHover->setFill(brightHover);
         folderButton.setImages(drawableFolder.get(), drawableFolderHover.get(), drawableFolderHover.get());
     }
     if (drawableSave != nullptr) {
-        drawableSave->setFill(normal);
-        drawableSaveHover->setFill(hover);
+        drawableSave->setFill(brightNormal);
+        drawableSaveHover->setFill(brightHover);
         saveButton.setImages(drawableSave.get(), drawableSaveHover.get(), drawableSaveHover.get());
     }
     
     if (drawableRandom != nullptr) {
-        drawableRandom->setFill(normal);
-        drawableRandomHover->setFill(hover);
+        drawableRandom->setFill(brightNormal);
+        drawableRandomHover->setFill(brightHover);
         randomButton.setImages(drawableRandom.get(), drawableRandomHover.get(), drawableRandomHover.get());
     }
 }

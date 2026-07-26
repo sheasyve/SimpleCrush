@@ -23,6 +23,8 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
             presetMenu.setMenuOpen(false);
             presetOverlay.setVisible(false);
         }
+        bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
+        setLabelsVisible(!isAnyMenuOpen);
         repaint(); 
     };
 
@@ -32,6 +34,8 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
             pluginSettings.setMenuOpen(false);
             settingsOverlay.setVisible(false);
         }
+        bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
+        setLabelsVisible(!isAnyMenuOpen);
         repaint(); 
     };
     
@@ -177,4 +181,12 @@ void MyReduxEditor::paintOverChildren(juce::Graphics &g) {
             g.drawText("SimpleCrush", pluginControls.logoBounds.translated(7, -standardOffset), juce::Justification::centred);
         }
     }
+}
+
+void MyReduxEditor::setLabelsVisible(bool shouldBeVisible) {
+    pluginControls.hpLabel.setVisible(shouldBeVisible);
+    pluginControls.lpLabel.setVisible(shouldBeVisible);
+    pluginControls.bitLabel.setVisible(shouldBeVisible);
+    pluginControls.rateLabel.setVisible(shouldBeVisible);
+    pluginControls.mixLabel.setVisible(shouldBeVisible);
 }
