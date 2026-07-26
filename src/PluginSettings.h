@@ -23,6 +23,8 @@ public:
     void updateMenuVisibility();
 
     // Components
+    juce::Colour textColor = juce::Colours::white; 
+    juce::Font textFont;
     juce::DrawableButton settingsButton{"Settings", juce::DrawableButton::ImageFitted};
     juce::Label themeLabel;
     juce::ComboBox themeSelector;
@@ -32,6 +34,12 @@ public:
     juce::TextButton infoButton;
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
+
+    void setThemeStyle(juce::Colour newColor, juce::Font newFont) {
+        textColor = newColor;
+        textFont = newFont;
+        repaint(); 
+    }
 
 private:
     bool isSettingsVisible = false;

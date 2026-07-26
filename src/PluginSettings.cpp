@@ -1,5 +1,5 @@
 #include "PluginSettings.h"
-
+#include "PluginTheme.h"
 PluginSettings::PluginSettings() {
     juce::String infotext = "SimpleCrush v1.1\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson";
     setInterceptsMouseClicks(false, true);
@@ -22,12 +22,12 @@ PluginSettings::PluginSettings() {
 
     fontSizeLabel.setText("Font Size", juce::dontSendNotification);
     fontSizeLabel.setJustificationType(juce::Justification::centred);
-    //addChildComponent(fontSizeLabel);
+    // addChildComponent(fontSizeLabel);
     fontSizeSelector.addItem("Normal", 1);
     fontSizeSelector.addItem("Small", 2);
     fontSizeSelector.addItem("Large", 3);
     fontSizeSelector.addItem("Extra Large", 4);
-    //addChildComponent(fontSizeSelector);
+    // addChildComponent(fontSizeSelector);
 
     infoLabel.setText(infotext, juce::dontSendNotification);
     infoLabel.setJustificationType(juce::Justification::centred);
@@ -63,12 +63,20 @@ void PluginSettings::updateMenuVisibility() {
     infoButton.setVisible(isSettingsVisible);
     if (onSettingsToggled != nullptr)
         onSettingsToggled(isSettingsVisible);
-
     resized();
     repaint();
 }
 
 void PluginSettings::paint(juce::Graphics &g) {
+    if (isSettingsVisible) {
+        g.setColour(textColor);
+        g.setFont(textFont.withHeight(32.0f).withStyle(juce::Font::bold));
+        auto bounds = getLocalBounds();
+        int textHeight = 40;
+        int yPosition = 15;
+        juce::Rectangle<int> titleArea(0, yPosition, bounds.getWidth(), textHeight);
+        g.drawText("Settings", titleArea, juce::Justification::centred);
+    }
 }
 
 void PluginSettings::resized() {
@@ -76,15 +84,15 @@ void PluginSettings::resized() {
     settingsButton.setBounds(5, 5, 25, 25);
     auto overlayArea = bounds.withSizeKeepingCentre(220, 220);
     if (isSettingsVisible) {
-        themeLabel.setBounds(overlayArea.removeFromTop(40));//20
+        themeLabel.setBounds(overlayArea.removeFromTop(40)); // 20
         themeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
-        //overlayArea.removeFromTop(15);
-        //fontSizeLabel.setBounds(overlayArea.removeFromTop(20));
-        //fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
-        //overlayArea.removeFromTop(15);
+        // overlayArea.removeFromTop(15);
+        // fontSizeLabel.setBounds(overlayArea.removeFromTop(20));
+        // fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
+        // overlayArea.removeFromTop(15);
         infoLabel.setBounds(overlayArea);
         infoButton.setBounds(overlayArea);
-    } 
+    }
 }
 
 void PluginSettings::setMenuOpen(bool isOpen) {
@@ -101,4 +109,6 @@ void PluginSettings::updateIconColors(juce::Colour normal, juce::Colour hover) {
 }
 
 void PluginSettings::setInitialTheme(int themeId) { themeSelector.setSelectedId(themeId, juce::dontSendNotification); }
-void PluginSettings::setInitialFontSize(int fontSizeId) { fontSizeSelector.setSelectedId(fontSizeId, juce::dontSendNotification); }
+void PluginSettings::setInitialFontSize(int fontSizeId) {
+    fontSizeSelector.setSelectedId(fontSizeId, juce::dontSendNotification);
+}

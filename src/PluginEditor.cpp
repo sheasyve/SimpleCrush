@@ -7,7 +7,8 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p), presetMenu(p.apvts), pluginControls(p.apvts) {
     setLookAndFeel(&themeLnF);
     addAndMakeVisible(pluginControls);
-    addChildComponent(darkOverlay);
+    addChildComponent(settingsOverlay);
+    addChildComponent(presetOverlay);
     addAndMakeVisible(pluginSettings);
     addAndMakeVisible(presetMenu);
 
@@ -16,16 +17,23 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
         audioProcessor.saveThemeId(selectedId);
     };
     pluginSettings.onSettingsToggled = [this](bool isOpen) {
-        if (isOpen) presetMenu.setMenuOpen(false);
-        darkOverlay.setVisible(isOpen);
+        settingsOverlay.setVisible(isOpen);
+        if (isOpen) {
+            presetMenu.setMenuOpen(false);
+            presetOverlay.setVisible(false);
+        }
     };
+
     presetMenu.onPresetsToggled = [this](bool isOpen) {
-        if (isOpen) pluginSettings.setMenuOpen(false);
-        darkOverlay.setVisible(isOpen);
+        presetOverlay.setVisible(isOpen);
+        if (isOpen) {
+            pluginSettings.setMenuOpen(false);
+            settingsOverlay.setVisible(false);
+        }
     };
     pluginSettings.onFontSizeChanged = [this](int selectedId) {
-        //updateFontSize(selectedId);
-        //audioProcessor.saveFontSizeId(selectedId);
+        // updateFontSize(selectedId);
+        // audioProcessor.saveFontSizeId(selectedId);
     };
 
     int initialTheme = audioProcessor.getSavedThemeId();
@@ -92,11 +100,12 @@ void MyReduxEditor::updateTheme(int themeId) {
 
     // --- Apply Settings Icon Colors ---
     pluginSettings.updateIconColors(theme.settings, theme.settingsHover);
-    presetMenu.presetLabel.setColour(juce::Label::textColourId, theme.labelText);
-
     presetMenu.updateIconColors(theme.settings, theme.settingsHover);
+    pluginSettings.setThemeStyle(theme.labelText, theme.labelFont);
+    presetMenu.setThemeStyle(theme.labelText, theme.labelFont);
 
-    darkOverlay.setOverlayColor(theme.overlayBg);
+    settingsOverlay.setOverlayColor(theme.setttingsOverlay);
+    presetOverlay.setOverlayColor(theme.presetOverlay);
 
     repaint();
 }
@@ -124,7 +133,8 @@ void MyReduxEditor::resized() {
     themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
     sendLookAndFeelChange();
     auto fullBounds = getLocalBounds();
-    darkOverlay.setBounds(fullBounds);
+    settingsOverlay.setBounds(fullBounds);
+    presetOverlay.setBounds(fullBounds);
     pluginControls.setBounds(fullBounds);
     pluginSettings.setBounds(fullBounds);
     presetMenu.setBounds(fullBounds);

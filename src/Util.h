@@ -40,4 +40,6 @@ namespace SvgAssets
         ".61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3-1.57-3-3.5s1.07-3.5 3-3.5 3 1.57 3 "
         "3.5-1.07 3.5-3 3.5z'/>"
         "</svg>";
+    static constexpr const char* diceIcon = "";
+
 }

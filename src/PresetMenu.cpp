@@ -16,19 +16,13 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     parseSvgIcon(presetsButton, drawableList, drawableListHover, SvgAssets::listIcon);
     addAndMakeVisible(presetsButton);
 
-    // --- Preset Panel Title ---
-    presetLabel.setText("Presets", juce::dontSendNotification);
-    presetLabel.setJustificationType(juce::Justification::centred);
-    addChildComponent(presetLabel);
-    /*Instead do something like this in paint
-    g.setColour(ThemeProps.labelText);
-        juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
-        g.setFont(logoFont.withHeight(dynamicFontHeight * 2.5f));
-        g.drawText("Presets", pluginControls.logoBounds.translated(7, -5), juce::Justification::centred);*/
-
     // --- Folder Button ---
     parseSvgIcon(folderButton, drawableFolder, drawableFolderHover, SvgAssets::folderIcon);
     addChildComponent(folderButton);
+
+    // --- Random Button ---
+    parseSvgIcon(randomButton, drawableRandom, drawableRandomHover, SvgAssets::diceIcon);
+    addChildComponent(randomButton);
 
     // --- Save  ---
     saveTextBox.setTextToShowWhenEmpty("New Preset Name...", juce::Colours::grey);
@@ -78,6 +72,19 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
             }
         }
     };
+
+    randomButton.onClick = [this]() {
+        if (presets.size() > 0) {
+            int randomIndex = juce::Random::getSystemRandom().nextInt((int)presets.size());
+            auto file = presets[randomIndex].file;
+            std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(file);
+            if (xml != nullptr) {
+                apvts.replaceState(juce::ValueTree::fromXml(*xml));
+                juce::Logger::writeToLog("Loaded random preset: " + presets[randomIndex].name);
+                presetList.selectRow(randomIndex); 
+            }
+        }
+    };
 }
 
 void PresetMenu::loadPresetsFromDirectory() {
@@ -91,10 +98,10 @@ void PresetMenu::loadPresetsFromDirectory() {
 }
 
 void PresetMenu::updateMenuVisibility() {
-    presetLabel.setVisible(isPresetsVisible);
     folderButton.setVisible(isPresetsVisible);
     saveTextBox.setVisible(isPresetsVisible);
     saveButton.setVisible(isPresetsVisible);
+    randomButton.setVisible(isPresetsVisible); 
     presetList.setVisible(isPresetsVisible);
 
     resized();
@@ -107,19 +114,34 @@ void PresetMenu::setMenuOpen(bool isOpen) {
 }
 
 void PresetMenu::paint(juce::Graphics &g) {
+    if (isPresetsVisible) {
+        g.setColour(textColor);
+        g.setFont(textFont.withHeight(32.0f).withStyle(juce::Font::bold));
+        auto bounds = getLocalBounds();
+        int textHeight = 40;
+        int yPosition = 15;
+        juce::Rectangle<int> titleArea(0, yPosition, bounds.getWidth(), textHeight);
+        g.drawText("Presets", titleArea, juce::Justification::centred);
+    }
 }
 
 void PresetMenu::resized() {
     auto bounds = getLocalBounds();
     presetsButton.setBounds(bounds.getWidth() - 30, 5, 25, 25);
+    
     if (isPresetsVisible) {
-        auto overlayArea = bounds.withSizeKeepingCentre(260, 260);
-        presetLabel.setBounds(overlayArea.removeFromTop(30));
+        auto overlayArea = bounds.withSizeKeepingCentre(260, 240); 
+        overlayArea.translate(0, 20);
         auto topBar = overlayArea.removeFromTop(25);
+        // Left side
         folderButton.setBounds(topBar.removeFromLeft(25).reduced(2));
         topBar.removeFromLeft(5); // gap
+        // Right side (Random button is furthest right)
+        randomButton.setBounds(topBar.removeFromRight(25).reduced(2));
+        topBar.removeFromRight(5); // gap between random and save
         saveButton.setBounds(topBar.removeFromRight(25).reduced(2));
-        topBar.removeFromRight(5);
+        topBar.removeFromRight(5); // gap between save and textbox
+        // Textbox takes remaining middle space
         saveTextBox.setBounds(topBar);
         overlayArea.removeFromTop(10);
         presetList.setBounds(overlayArea);
@@ -142,16 +164,24 @@ void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
         drawableSaveHover->setFill(hover);
         saveButton.setImages(drawableSave.get(), drawableSaveHover.get(), drawableSaveHover.get());
     }
+    
+    if (drawableRandom != nullptr) {
+        drawableRandom->setFill(normal);
+        drawableRandomHover->setFill(hover);
+        randomButton.setImages(drawableRandom.get(), drawableRandomHover.get(), drawableRandomHover.get());
+    }
 }
 
 int PresetMenu::getNumRows() { return (int)presets.size(); }
 
 void PresetMenu::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) {
+    // --- The preset list ---
     if (juce::isPositiveAndBelow(rowNumber, (int)presets.size())) {
         if (rowIsSelected) {
-            g.fillAll(juce::Colours::white.withAlpha(0.2f)); // Highlight color
+            g.fillAll(juce::Colours::white.withAlpha(0.2f));
         }
-        g.setColour(presetLabel.findColour(juce::Label::textColourId));
+        
+        g.setColour(textColor);
         g.setFont(juce::Font(14.0f));
         g.drawText(presets[rowNumber].name, 5, 0, width - 10, height, juce::Justification::centredLeft, true);
     }
@@ -168,3 +198,4 @@ void PresetMenu::listBoxItemClicked(int row, const juce::MouseEvent &) {
         }
     }
 }
+
