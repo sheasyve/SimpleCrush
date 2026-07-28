@@ -4,10 +4,21 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
 
     // --- Preset Folder ---
-    presetDirectory = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
-                      .getChildFile("SimpleCrush")
-                      .getChildFile("Presets");
-
+    auto appDataDir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
+    presetDirectory = appDataDir.getChildFile("Presets");
+    auto settingsFile = appDataDir.getChildFile("settings.xml");
+    if (settingsFile.existsAsFile()) {
+        if (std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile)) {
+            juce::String savedPath = xml->getStringAttribute("PresetFolder");
+            if (savedPath.isNotEmpty()) {
+                juce::File savedDir(savedPath);
+                // Only use the saved path if it actually exists on the user's computer
+                if (savedDir.exists() && savedDir.isDirectory()) {
+                    presetDirectory = savedDir;
+                }
+            }
+        }
+    }
     if (!presetDirectory.exists())
         presetDirectory.createDirectory();
     loadPresetsFromDirectory();
@@ -48,12 +59,21 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     folderButton.onClick = [this]() {
         fileChooser = std::make_unique<juce::FileChooser>("Select Preset Folder", presetDirectory);
         auto browserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectDirectories;
+        
         fileChooser->launchAsync(browserFlags, [this](const juce::FileChooser &fc) {
             auto result = fc.getResult();
             if (result.exists()) {
                 presetDirectory = result;
                 loadPresetsFromDirectory();
-                juce::Logger::writeToLog("Folder selected: " + result.getFullPathName());
+                auto appDataDir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
+                auto settingsFile = appDataDir.getChildFile("settings.xml");
+                std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile);
+                if (xml == nullptr) {
+                    xml = std::make_unique<juce::XmlElement>("SimpleCrushSettings");
+                }
+                xml->setAttribute("PresetFolder", presetDirectory.getFullPathName());
+                xml->writeTo(settingsFile);
+                juce::Logger::writeToLog("Folder selected and saved: " + result.getFullPathName());
             }
         });
     };
@@ -127,22 +147,17 @@ void PresetMenu::paint(juce::Graphics &g) {
 
 void PresetMenu::resized() {
     auto bounds = getLocalBounds();
+    // --- Top Right Stack ---
     presetsButton.setBounds(bounds.getWidth() - 30, 5, 25, 25);
+    saveButton.setBounds(bounds.getWidth() - 27.5, 30, 22.5, 22.5);
+    randomButton.setBounds(bounds.getWidth() - 27.5, 55, 22.5, 22.5);
+    folderButton.setBounds(5, 30, 25, 25); 
     
     if (isPresetsVisible) {
         auto overlayArea = bounds.withSizeKeepingCentre(260, 240); 
         overlayArea.translate(0, 25);
         auto topBar = overlayArea.removeFromTop(25);
-        // Left side
-        folderButton.setBounds(topBar.removeFromLeft(25).reduced(2));
-        topBar.removeFromLeft(5); // gap
-        // Right side (Random button is furthest right)
-        randomButton.setBounds(topBar.removeFromRight(25).reduced(2));
-        topBar.removeFromRight(5); // gap between random and save
-        saveButton.setBounds(topBar.removeFromRight(25).reduced(2));
-        topBar.removeFromRight(5); // gap between save and textbox
-        // Textbox takes remaining middle space
-        saveTextBox.setBounds(topBar);
+        saveTextBox.setBounds(topBar.reduced(10, 2));
         overlayArea.removeFromTop(10);
         presetList.setBounds(overlayArea);
     }

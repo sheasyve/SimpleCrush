@@ -45,7 +45,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFCCCCCC).withAlpha(0.7f),
             juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
             juce::Colours::black.withAlpha(0.9f),
-            juce::Colours::black.withAlpha(0.7f),        
+            juce::Colours::black.withAlpha(0.8f),        
             juce::Colour(0xFF01FFF4)};                
     }
 
@@ -61,7 +61,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xfff0f0f0),
             juce::FontOptions(15.0f, juce::Font::bold).withName("Arial"),
             juce::Colours::black.withAlpha(0.9f),    
-            juce::Colours::black.withAlpha(0.7f),    
+            juce::Colours::black.withAlpha(0.8f),    
             juce::Colour(0xFFD4D4D4)};                
     }
     if (themeId == 3) { // Studio Light
@@ -76,7 +76,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xff0e0e0e),
             juce::FontOptions(15.0f, juce::Font::bold).withName("Arial"),
             juce::Colour(0xFFE0E0E0).withAlpha(0.93f),
-            juce::Colour(0xFFE0E0E0).withAlpha(0.7f), 
+            juce::Colour(0xFFE0E0E0).withAlpha(0.8f), 
             juce::Colour(0xFF333333)};                 
     }
     if (themeId == 4) { // Panda Trueno
@@ -91,7 +91,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFE50000),
             juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
             juce::Colours::black.withAlpha(0.90f),  
-            juce::Colours::black.withAlpha(0.7f),     
+            juce::Colours::black.withAlpha(0.8f),     
             juce::Colour(0xFFE50000)};                 
     }
     if (themeId == 5) { // Retro Caramel
@@ -106,7 +106,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFCCCCCC).withAlpha(0.7f),
             juce::FontOptions(15.0f, juce::Font::italic | juce::Font::bold).withName("Helvetica"),
             juce::Colour(0xFF120804).withAlpha(0.9f), 
-            juce::Colour(0xFF120804).withAlpha(0.7f), 
+            juce::Colour(0xFF120804).withAlpha(0.8f), 
             juce::Colour(0xFFC99966)};                 
     }
     if (themeId == 6) { // Arctic Freeze
@@ -121,7 +121,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF98C1D9).withAlpha(0.7f),
             juce::FontOptions(15.0f, juce::Font::bold).withName("Trebuchet MS"),
             juce::Colour(0xFF09141C).withAlpha(0.95f), 
-            juce::Colour(0xFF09141C).withAlpha(0.7f), 
+            juce::Colour(0xFF09141C).withAlpha(0.8f), 
             juce::Colour(0xFFFFFFFF)};                 
     }
 
@@ -137,7 +137,7 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF00FF41).withAlpha(0.7f),
         juce::FontOptions(12.0f, juce::Font::plain).withName("Consolas"),
         juce::Colours::black.withAlpha(0.95f),
-        juce::Colours::black.withAlpha(0.7f),              
+        juce::Colours::black.withAlpha(0.8f),              
         juce::Colour(0xFF00FF41)};                    
 }
 } // namespace PluginTheme

@@ -100,7 +100,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyReduxProcessor::createPara
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"RATE", 1},
         "Sample Rate",
-        juce::NormalisableRange<float>(1.0f, 44.1f, 0.01f, 0.4f),
+        juce::NormalisableRange<float>(1.0f, 44.1f, 0.01f, 0.6f),
         44.1f,
         juce::String(),
         juce::AudioProcessorParameter::genericParameter,

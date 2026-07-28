@@ -13,7 +13,7 @@ add_subdirectory(JUCE)
 
 juce_add_plugin(SimpleCrush
     COMPANY_NAME "Syverson Audio"
-    BUNDLE_ID "com.SyversonAudio.SimpleCrush" # explicitly set to avoid spaces
+    BUNDLE_ID "com.SyversonAudio.SimpleCrush"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
