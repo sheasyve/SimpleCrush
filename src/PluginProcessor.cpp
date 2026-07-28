@@ -43,11 +43,9 @@ bool MyReduxProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const 
     auto mainOut = layouts.getMainOutputChannelSet();
     auto mainIn = layouts.getMainInputChannelSet();
 
-    if (mainOut != juce::AudioChannelSet::mono() && mainOut != juce::AudioChannelSet::stereo())
-        return false;
+    if (mainOut != juce::AudioChannelSet::mono() && mainOut != juce::AudioChannelSet::stereo()) return false;
 
-    if (mainOut != mainIn)
-        return false;
+    if (mainOut != mainIn) return false;
 
     return true;
 }
@@ -55,16 +53,13 @@ bool MyReduxProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const 
 void MyReduxProcessor::getStateInformation(juce::MemoryBlock &destData) {
     auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml(state.createXml());
-    if (xml != nullptr)
-        copyXmlToBinary(*xml, destData);
+    if (xml != nullptr) copyXmlToBinary(*xml, destData);
 }
 
 void MyReduxProcessor::setStateInformation(const void *data, int sizeInBytes) {
     std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
     if (xmlState != nullptr) {
-        if (xmlState->hasTagName(apvts.state.getType())) {
-            apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
-        }
+        if (xmlState->hasTagName(apvts.state.getType())) { apvts.replaceState(juce::ValueTree::fromXml(*xmlState)); }
     }
 }
 
@@ -152,8 +147,7 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     auto actualBufferChannels = buffer.getNumChannels();
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i) {
-        if (i < actualBufferChannels)
-            buffer.clear(i, 0, buffer.getNumSamples());
+        if (i < actualBufferChannels) buffer.clear(i, 0, buffer.getNumSamples());
     }
 
     // --- Parameter Retrieval & Setup ---
@@ -162,8 +156,7 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
     float targetRateKHz = apvts.getRawParameterValue("RATE")->load();
     float targetRateHz = targetRateKHz * 1000.0f;
     int rate = std::max(1, static_cast<int>(getSampleRate() / targetRateHz));
-    if (rate < 1)
-        rate = 1;
+    if (rate < 1) rate = 1;
     float totalLevels = std::pow(2.0f, bits);
     // Ensure state-tracking vectors are large enough for all active channels
     if (heldSamples.size() < static_cast<size_t>(totalNumInputChannels))
@@ -196,8 +189,7 @@ void MyReduxProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Midi
             float drySample = channelData[sample];
             if (sampleCounters[channel] % rate ==
                 0) { // Sample and Hold: Only update held amplitude if the counter hits rate
-                heldSamples[channel] =
-                    std::round(drySample * totalLevels) / totalLevels;
+                heldSamples[channel] = std::round(drySample * totalLevels) / totalLevels;
             }
             float wetSample = heldSamples[channel];
             if (channel < 2) { // Apply filters to the crushed audio (only processing L and R channels)

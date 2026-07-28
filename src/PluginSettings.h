@@ -1,9 +1,9 @@
 #pragma once
-#include <JuceHeader.h>
 #include "Util.h"
+#include <JuceHeader.h>
 
 class PluginSettings : public juce::Component {
-    
+
 public:
     PluginSettings();
     ~PluginSettings() override = default;
@@ -23,7 +23,7 @@ public:
     void updateMenuVisibility();
 
     // Components
-    juce::Colour textColor = juce::Colours::white; 
+    juce::Colour textColor = juce::Colours::white;
     juce::Font textFont;
     juce::DrawableButton settingsButton{"Settings", juce::DrawableButton::ImageFitted};
     juce::Label themeLabel;
@@ -38,7 +38,7 @@ public:
     void setThemeStyle(juce::Colour newColor, juce::Font newFont) {
         textColor = newColor;
         textFont = newFont;
-        repaint(); 
+        repaint();
     }
 
 private:

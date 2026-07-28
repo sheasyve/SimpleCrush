@@ -4,7 +4,8 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
 
     // --- Preset Folder ---
-    auto appDataDir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
+    auto appDataDir =
+        juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
     presetDirectory = appDataDir.getChildFile("Presets");
     auto settingsFile = appDataDir.getChildFile("settings.xml");
     if (settingsFile.existsAsFile()) {
@@ -13,14 +14,11 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
             if (savedPath.isNotEmpty()) {
                 juce::File savedDir(savedPath);
                 // Only use the saved path if it actually exists on the user's computer
-                if (savedDir.exists() && savedDir.isDirectory()) {
-                    presetDirectory = savedDir;
-                }
+                if (savedDir.exists() && savedDir.isDirectory()) { presetDirectory = savedDir; }
             }
         }
     }
-    if (!presetDirectory.exists())
-        presetDirectory.createDirectory();
+    if (!presetDirectory.exists()) presetDirectory.createDirectory();
     loadPresetsFromDirectory();
 
     // --- Presets List Button ---
@@ -30,6 +28,10 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     // --- Folder Button ---
     parseSvgIcon(folderButton, drawableFolder, drawableFolderHover, SvgAssets::folderIcon);
     addChildComponent(folderButton);
+
+    // --- Delete Button ---
+    parseSvgIcon(deleteButton, drawableDelete, drawableDeleteHover, SvgAssets::deleteIcon);
+    addChildComponent(deleteButton);
 
     // --- Random Button ---
     parseSvgIcon(randomButton, drawableRandom, drawableRandomHover, SvgAssets::diceIcon);
@@ -52,30 +54,41 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     presetsButton.onClick = [this]() {
         isPresetsVisible = !isPresetsVisible;
         updateMenuVisibility();
-        if (onPresetsToggled != nullptr)
-            onPresetsToggled(isPresetsVisible);
+        if (onPresetsToggled != nullptr) onPresetsToggled(isPresetsVisible);
     };
 
     folderButton.onClick = [this]() {
         fileChooser = std::make_unique<juce::FileChooser>("Select Preset Folder", presetDirectory);
         auto browserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectDirectories;
-        
+
         fileChooser->launchAsync(browserFlags, [this](const juce::FileChooser &fc) {
             auto result = fc.getResult();
             if (result.exists()) {
                 presetDirectory = result;
                 loadPresetsFromDirectory();
-                auto appDataDir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
+                auto appDataDir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
+                                      .getChildFile("SimpleCrush");
                 auto settingsFile = appDataDir.getChildFile("settings.xml");
                 std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile);
-                if (xml == nullptr) {
-                    xml = std::make_unique<juce::XmlElement>("SimpleCrushSettings");
-                }
+                if (xml == nullptr) { xml = std::make_unique<juce::XmlElement>("SimpleCrushSettings"); }
                 xml->setAttribute("PresetFolder", presetDirectory.getFullPathName());
                 xml->writeTo(settingsFile);
                 juce::Logger::writeToLog("Folder selected and saved: " + result.getFullPathName());
             }
         });
+    };
+
+    deleteButton.onClick = [this]() {
+        int selectedRow = presetList.getSelectedRow();
+        if (juce::isPositiveAndBelow(selectedRow, (int)presets.size())) {
+            auto file = presets[selectedRow].file;
+            if (file.existsAsFile()) {
+                file.deleteFile();
+                loadPresetsFromDirectory();
+                saveTextBox.setText("", juce::dontSendNotification);
+                juce::Logger::writeToLog("Deleted preset: " + file.getFileName());
+            }
+        }
     };
 
     saveButton.onClick = [this]() {
@@ -85,19 +98,17 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
             auto state = apvts.copyState();
             std::unique_ptr<juce::XmlElement> xml(state.createXml());
             if (xml != nullptr) {
-                if (xml->writeTo(file)) {
-                    loadPresetsFromDirectory();
-                }
+                if (xml->writeTo(file)) { loadPresetsFromDirectory(); }
             }
         }
     };
 
     randomButton.onClick = [this]() {
-        auto& rng = juce::Random::getSystemRandom();
+        auto &rng = juce::Random::getSystemRandom();
         for (auto child : apvts.state) {
             if (child.hasProperty("id")) {
                 juce::String paramID = child.getProperty("id").toString();
-                if (auto* param = apvts.getParameter(paramID)) {
+                if (auto *param = apvts.getParameter(paramID)) {
                     float randomNormalizedValue = rng.nextFloat();
                     param->setValueNotifyingHost(randomNormalizedValue);
                 }
@@ -110,17 +121,16 @@ void PresetMenu::loadPresetsFromDirectory() {
     presets.clear();
     juce::Array<juce::File> results;
     presetDirectory.findChildFiles(results, juce::File::findFiles, false, "*.preset");
-    for (auto &f : results) {
-        presets.push_back({f.getFileNameWithoutExtension(), f});
-    }
+    for (auto &f : results) { presets.push_back({f.getFileNameWithoutExtension(), f}); }
     presetList.updateContent();
 }
 
 void PresetMenu::updateMenuVisibility() {
     folderButton.setVisible(isPresetsVisible);
+    deleteButton.setVisible(isPresetsVisible); // Added delete button visibility
     saveTextBox.setVisible(isPresetsVisible);
     saveButton.setVisible(isPresetsVisible);
-    randomButton.setVisible(isPresetsVisible); 
+    randomButton.setVisible(isPresetsVisible);
     presetList.setVisible(isPresetsVisible);
 
     resized();
@@ -135,7 +145,7 @@ void PresetMenu::setMenuOpen(bool isOpen) {
 void PresetMenu::paint(juce::Graphics &g) {
     if (isPresetsVisible) {
         g.setColour(textColor);
-        float titleSize = textFont.getHeight() * 1.2f; 
+        float titleSize = textFont.getHeight() * 1.2f;
         g.setFont(textFont.withHeight(titleSize).withStyle(juce::Font::bold));
         auto bounds = getLocalBounds();
         int textHeight = (int)titleSize + 10;
@@ -151,10 +161,13 @@ void PresetMenu::resized() {
     presetsButton.setBounds(bounds.getWidth() - 30, 5, 25, 25);
     saveButton.setBounds(bounds.getWidth() - 27.5, 30, 22.5, 22.5);
     randomButton.setBounds(bounds.getWidth() - 27.5, 55, 22.5, 22.5);
-    folderButton.setBounds(5, 30, 25, 25); 
-    
+
+    // --- Top Left Stack ---
+    folderButton.setBounds(5, 30, 25, 25);
+    deleteButton.setBounds(5, 55, 25, 25); // Positioned directly below folderButton
+
     if (isPresetsVisible) {
-        auto overlayArea = bounds.withSizeKeepingCentre(260, 240); 
+        auto overlayArea = bounds.withSizeKeepingCentre(260, 240);
         overlayArea.translate(0, 25);
         auto topBar = overlayArea.removeFromTop(25);
         saveTextBox.setBounds(topBar.reduced(10, 2));
@@ -164,7 +177,7 @@ void PresetMenu::resized() {
 }
 
 void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
-    juce::Colour brightNormal = normal.brighter(0.3f); 
+    juce::Colour brightNormal = normal.brighter(0.3f);
     juce::Colour brightHover = hover.brighter(0.3f);
 
     if (drawableList != nullptr) {
@@ -177,12 +190,16 @@ void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
         drawableFolderHover->setFill(brightHover);
         folderButton.setImages(drawableFolder.get(), drawableFolderHover.get(), drawableFolderHover.get());
     }
+    if (drawableDelete != nullptr) {
+        drawableDelete->setFill(brightNormal);
+        drawableDeleteHover->setFill(brightHover);
+        deleteButton.setImages(drawableDelete.get(), drawableDeleteHover.get(), drawableDeleteHover.get());
+    }
     if (drawableSave != nullptr) {
         drawableSave->setFill(brightNormal);
         drawableSaveHover->setFill(brightHover);
         saveButton.setImages(drawableSave.get(), drawableSaveHover.get(), drawableSaveHover.get());
     }
-    
     if (drawableRandom != nullptr) {
         drawableRandom->setFill(brightNormal);
         drawableRandomHover->setFill(brightHover);
@@ -195,9 +212,7 @@ int PresetMenu::getNumRows() { return (int)presets.size(); }
 void PresetMenu::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) {
     // --- The preset list ---
     if (juce::isPositiveAndBelow(rowNumber, (int)presets.size())) {
-        if (rowIsSelected) {
-            g.fillAll(juce::Colours::white.withAlpha(0.2f));
-        }
+        if (rowIsSelected) { g.fillAll(juce::Colours::white.withAlpha(0.2f)); }
         g.setColour(textColor);
         g.setFont(textFont);
         g.drawText(presets[rowNumber].name, 5, 0, width - 10, height, juce::Justification::centredLeft, true);
@@ -216,4 +231,3 @@ void PresetMenu::listBoxItemClicked(int row, const juce::MouseEvent &) {
         }
     }
 }
-

@@ -10,7 +10,6 @@ public:
     juce::Rectangle<int> logoBounds;
     juce::Slider hpSlider, lpSlider, bitSlider, rateSlider, mixSlider;
     juce::Label hpLabel, lpLabel, bitLabel, rateLabel, mixLabel;
-   
 
 private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hpAttachment;

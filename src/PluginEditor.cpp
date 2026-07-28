@@ -25,7 +25,7 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
         }
         bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
         setLabelsVisible(!isAnyMenuOpen);
-        repaint(); 
+        repaint();
     };
 
     presetMenu.onPresetsToggled = [this](bool isOpen) {
@@ -36,9 +36,9 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
         }
         bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
         setLabelsVisible(!isAnyMenuOpen);
-        repaint(); 
+        repaint();
     };
-    
+
     pluginSettings.onFontSizeChanged = [this](int selectedId) {
         updateFontSize(selectedId);
         audioProcessor.saveFontSizeId(selectedId);
@@ -46,7 +46,7 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
 
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
-    int initialFontSize = 1; 
+    int initialFontSize = 1;
     pluginSettings.setInitialFontSize(initialFontSize);
     currentFontSizeId = initialFontSize;
     setResizable(true, true);
@@ -65,59 +65,79 @@ MyReduxEditor::~MyReduxEditor() {
 void MyReduxEditor::updateTheme(int themeId) {
     currentThemeId = themeId;
     auto theme = PluginTheme::getThemeProps(themeId);
+
     themeLnF.currentFont = theme.labelFont.withHeight(getDynamicFontHeight());
     themeLnF.setColour(juce::ScrollBar::thumbColourId, theme.scrollbarThumb);
+
+    // Standard Buttons
+    themeLnF.setColour(juce::TextButton::buttonColourId, theme.buttonColor);
+    themeLnF.setColour(juce::TextButton::buttonOnColourId, theme.buttonHoverColor);
+    themeLnF.setColour(juce::TextButton::textColourOffId, theme.labelText);
+    themeLnF.setColour(juce::TextButton::textColourOnId, theme.labelText);
+
+    // Toggle Buttons / Checkboxes
+    themeLnF.setColour(juce::ToggleButton::tickColourId, theme.buttonColor);
+    themeLnF.setColour(juce::ToggleButton::tickDisabledColourId, theme.buttonColor.withAlpha(0.5f));
+
+    // ComboBoxes (Dropdown Menus) & Popups
+    themeLnF.setColour(juce::ComboBox::backgroundColourId, theme.bgCenter);
+    themeLnF.setColour(juce::ComboBox::outlineColourId, theme.buttonColor);
+    themeLnF.setColour(juce::ComboBox::arrowColourId, theme.buttonColor);
+    themeLnF.setColour(juce::ComboBox::textColourId, theme.labelText);
+    themeLnF.setColour(juce::PopupMenu::textColourId, theme.labelText);
+    themeLnF.setColour(juce::PopupMenu::highlightedTextColourId, theme.bgCenter);
+    themeLnF.setColour(juce::PopupMenu::backgroundColourId, theme.bgCenter);
+    themeLnF.setColour(juce::PopupMenu::highlightedBackgroundColourId, theme.buttonColor);
+
     sendLookAndFeelChange();
 
-    // --- Apply Slider Graphics Colors ---
-    pluginControls.hpSlider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
-    pluginControls.hpSlider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
-    pluginControls.hpSlider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
-    pluginControls.hpSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
-    pluginControls.lpSlider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
-    pluginControls.lpSlider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
-    pluginControls.lpSlider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
-    pluginControls.lpSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
-    pluginControls.bitSlider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
-    pluginControls.bitSlider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
-    pluginControls.bitSlider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
-    pluginControls.bitSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
-    pluginControls.rateSlider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
-    pluginControls.rateSlider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
-    pluginControls.rateSlider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
-    pluginControls.rateSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
+    auto applyRotaryTheme = [&](juce::Slider &slider) {
+        slider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
+        slider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
+        slider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
+        slider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
+        slider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
+    };
+
+    auto applyLabelTheme = [&](juce::Label &label) { label.setColour(juce::Label::textColourId, theme.labelText); };
+
+    // Rotary Sliders
+    applyRotaryTheme(pluginControls.hpSlider);
+    applyRotaryTheme(pluginControls.lpSlider);
+    applyRotaryTheme(pluginControls.bitSlider);
+    applyRotaryTheme(pluginControls.rateSlider);
+
+    // Mix Slider (Uses different layout properties than rotaries)
     pluginControls.mixSlider.setColour(juce::Slider::trackColourId, theme.sliderFill);
     pluginControls.mixSlider.setColour(juce::Slider::backgroundColourId, theme.sliderTrack);
     pluginControls.mixSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
-
-    // --- Apply Main UI Text Colors ---
-    pluginControls.hpLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginControls.lpLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginControls.bitLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginControls.rateLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginControls.mixLabel.setColour(juce::Label::textColourId, theme.labelText);
-
-    pluginControls.hpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
-    pluginControls.lpSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
-    pluginControls.bitSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
-    pluginControls.rateSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
     pluginControls.mixSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
 
-    // --- Apply Overlay Label Colors ---
-    pluginSettings.themeLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginSettings.fontSizeLabel.setColour(juce::Label::textColourId, theme.labelText);
-    pluginSettings.infoLabel.setColour(juce::Label::textColourId, theme.labelText);
+    // Main UI Labels
+    applyLabelTheme(pluginControls.hpLabel);
+    applyLabelTheme(pluginControls.lpLabel);
+    applyLabelTheme(pluginControls.bitLabel);
+    applyLabelTheme(pluginControls.rateLabel);
+    applyLabelTheme(pluginControls.mixLabel);
 
-    // --- Apply Settings Icon Colors ---
-    pluginSettings.updateIconColors(theme.settings, theme.settingsHover);
-    presetMenu.updateIconColors(theme.settings, theme.settingsHover);
-    
+    // Overlay Labels
+    applyLabelTheme(pluginSettings.themeLabel);
+    applyLabelTheme(pluginSettings.fontSizeLabel);
+    applyLabelTheme(pluginSettings.infoLabel);
+
+    // Icons
+    pluginSettings.updateIconColors(theme.buttonColor, theme.buttonHoverColor);
+    presetMenu.updateIconColors(theme.buttonColor, theme.buttonHoverColor);
+
+    // Menu Styling & Fonts
     pluginSettings.setThemeStyle(theme.labelText, themeLnF.currentFont);
     presetMenu.setThemeStyle(theme.labelText, themeLnF.currentFont);
 
+    // Overlay Background Colors
     settingsOverlay.setOverlayColor(theme.setttingsOverlay);
     presetOverlay.setOverlayColor(theme.presetOverlay);
 
+    // Refresh UI
     repaint();
 }
 
@@ -146,12 +166,12 @@ void MyReduxEditor::resized() {
 
 void MyReduxEditor::updateFontSize(int fontSizeId) {
     currentFontSizeId = fontSizeId;
-    updateTheme(currentThemeId); 
+    updateTheme(currentThemeId);
 }
 
 float MyReduxEditor::getDynamicFontHeight() const {
     float baseFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
-    float fontMultiplier = 1.0f; // Normal
+    float fontMultiplier = 1.0f;                        // Normal
     if (currentFontSizeId == 2) fontMultiplier = 0.85f; // Small
     if (currentFontSizeId == 3) fontMultiplier = 1.15f; // Large
     if (currentFontSizeId == 4) fontMultiplier = 1.30f; // Extra Large
@@ -168,17 +188,18 @@ void MyReduxEditor::paintOverChildren(juce::Graphics &g) {
         juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
         float logoScale = isAnyMenuOpen ? 1.5f : 2.5f;
         g.setFont(logoFont.withHeight(dynamicFontHeight * logoScale));
-        
+
         if (isAnyMenuOpen) {
             int yOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 15.0f, 28.0f);
             int yPosition = pluginControls.logoBounds.getY() - yOffset;
-            
+
             juce::Rectangle<int> centerBounds(0, yPosition, getWidth(), pluginControls.logoBounds.getHeight());
             g.drawText("SimpleCrush", centerBounds, juce::Justification::centred);
         } else {
             // Normal offset
             int standardOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 5.0f, 9.0f);
-            g.drawText("SimpleCrush", pluginControls.logoBounds.translated(7, -standardOffset), juce::Justification::centred);
+            g.drawText(
+                "SimpleCrush", pluginControls.logoBounds.translated(7, -standardOffset), juce::Justification::centred);
         }
     }
 }

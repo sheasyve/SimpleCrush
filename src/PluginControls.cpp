@@ -1,8 +1,8 @@
 #include "PluginControls.h"
 
-PluginControls::PluginControls(juce::AudioProcessorValueTreeState& apvts) {
+PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     setInterceptsMouseClicks(false, true);
-    
+
     // --- High Pass Knob ---
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
@@ -61,8 +61,8 @@ void PluginControls::resized() {
 
     // --- Mix Section (Right Side) ---
     int mixWidth = bounds.getWidth() * 0.17f;
-    auto mixPanel = bounds.removeFromRight(mixWidth + gap); 
-    mixPanel.removeFromRight(gap); 
+    auto mixPanel = bounds.removeFromRight(mixWidth + gap);
+    mixPanel.removeFromRight(gap);
     auto mixArea = mixPanel;
     mixLabel.setBounds(mixArea.removeFromTop(30));
     mixSlider.setBounds(mixArea);
@@ -71,19 +71,19 @@ void PluginControls::resized() {
     // --- Top Area: Filters (Small & Centered) ---
     auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.45f);
     int maxTopW = topArea.getWidth() * 0.35f;
-    int maxTopH = topArea.getHeight() - 30; 
-    int filterKnobSize = jmin(maxTopW, maxTopH); 
+    int maxTopH = topArea.getHeight() - 30;
+    int filterKnobSize = jmin(maxTopW, maxTopH);
     int topGap = gap / 3;
     int filterAreaWidth = (filterKnobSize * 2) + topGap;
-    int filterAreaHeight = filterKnobSize + 30; 
+    int filterAreaHeight = filterKnobSize + 30;
     auto filterArea = topArea.withSizeKeepingCentre(filterAreaWidth, filterAreaHeight);
     auto hpArea = filterArea.removeFromLeft(filterKnobSize);
     hpLabel.setBounds(hpArea.removeFromTop(30));
-    hpSlider.setBounds(hpArea); 
+    hpSlider.setBounds(hpArea);
     filterArea.removeFromLeft(topGap);
     auto lpArea = filterArea;
     lpLabel.setBounds(lpArea.removeFromTop(30));
-    lpSlider.setBounds(lpArea); 
+    lpSlider.setBounds(lpArea);
     bounds.removeFromTop(bounds.getHeight() * 0.10f);
 
     // --- Bottom Area: Main Controls (Big) ---
