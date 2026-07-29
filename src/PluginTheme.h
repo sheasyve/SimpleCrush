@@ -31,28 +31,29 @@ struct SettingsBackground : public juce::Component {
 };
 
 inline ThemeProps getThemeProps(int themeId) {
-    if (themeId == 1) { // Vaporwave
-        return {juce::Colour(0xFFFF2A6D),
-            juce::Colour(0xFF05D9E8),
-            juce::Colour(0xFF01FFF4),
-            juce::Colour(0xff14505f),
-            juce::Colour(0xFF05D9E8),
-            juce::Colour(0xFF390B8A),
-            juce::Colour(0xFF000000),
-            juce::Colour(0xFF05D9E8),
-            juce::Colour(0xFFFF2A6D),
-            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
-            juce::Colours::black.withAlpha(0.8f),
-            juce::Colours::black.withAlpha(0.78f),
-            juce::Colour(0xFF01FFF4)};
-    }
 
+    if (themeId == 1) { // Panda Trueno
+        return {juce::Colour(0xFFFFFFFF),
+            juce::Colour(0xFF1A1A1A),
+            juce::Colour(0xFFE50000),
+            juce::Colour(0xFF333333),
+            juce::Colour(0xFFFFFFFF),
+            juce::Colour(0xFF2B2B2B),
+            juce::Colour(0xFF050505),
+            juce::Colour(0xbdffffff),
+            juce::Colour(0xFFE50000),
+            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
+            juce::Colours::black.withAlpha(0.90f),
+            juce::Colours::black.withAlpha(0.8f),
+            juce::Colour(0xFFE50000)};
+    }
+    
     if (themeId == 2) { // Studio Dark
         return {juce::Colour(0xffd6d6d6),
             juce::Colour(0xFF4C4C4C),
             juce::Colour(0xFFD4D4D4),
             juce::Colour(0xff575757),
-            juce::Colour(0xffececec),
+            juce::Colour(0xfff1f1f1),
             juce::Colour(0xFF202020),
             juce::Colour(0xff131313),
             juce::Colour(0xdea1a1a1),
@@ -71,28 +72,28 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF222222),
             juce::Colour(0xFFF9F9F9),
             juce::Colour(0xFFDCDCDC),
-            juce::Colour(0xFF888888),
             juce::Colour(0xFF333333),
+            juce::Colour(0xff0f0f0f),
             juce::FontOptions(15.0f, juce::Font::bold).withName("Arial"),
             juce::Colour(0xFFE0E0E0).withAlpha(0.83f),
-            juce::Colour(0xFFE0E0E0).withAlpha(0.7f),
+            juce::Colour(0xFFE0E0E0).withAlpha(0.f),
             juce::Colour(0xFF333333)};
     }
 
-    if (themeId == 4) { // Panda Trueno
-        return {juce::Colour(0xFFFFFFFF),
-            juce::Colour(0xFF1A1A1A),
-            juce::Colour(0xFFE50000),
-            juce::Colour(0xFF333333),
-            juce::Colour(0xFFFFFFFF),
-            juce::Colour(0xFF2B2B2B),
-            juce::Colour(0xFF050505),
-            juce::Colour(0xbdffffff),
-            juce::Colour(0xFFE50000),
+    if (themeId == 4) { // Vaporwave
+        return {juce::Colour(0xFFFF2A6D),
+            juce::Colour(0xFF05D9E8),
+            juce::Colour(0xFF01FFF4),
+            juce::Colour(0xff14505f),
+            juce::Colour(0xFF05D9E8),
+            juce::Colour(0xFF390B8A),
+            juce::Colour(0xFF000000),
+            juce::Colour(0xFF05D9E8),
+            juce::Colour(0xFFFF2A6D),
             juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
-            juce::Colours::black.withAlpha(0.90f),
             juce::Colours::black.withAlpha(0.8f),
-            juce::Colour(0xFFE50000)};
+            juce::Colours::black.withAlpha(0.78f),
+            juce::Colour(0xFF01FFF4)};
     }
 
     if (themeId == 5) { // Retro Caramel

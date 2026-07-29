@@ -11,10 +11,11 @@ PluginSettings::PluginSettings() {
     themeLabel.setText("Theme", juce::dontSendNotification);
     themeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(themeLabel);
-    themeSelector.addItem("Vaporwave", 1);
+
+    themeSelector.addItem("Panda Trueno", 1);
     themeSelector.addItem("Studio Dark", 2);
     themeSelector.addItem("Studio Light", 3);
-    themeSelector.addItem("Panda Trueno", 4);
+    themeSelector.addItem("Vaporwave", 4);
     themeSelector.addItem("Retro Caramel", 5);
     themeSelector.addItem("Arctic Freeze", 6);
     themeSelector.addItem("Midnight Hacker", 7);
@@ -109,8 +110,8 @@ void PluginSettings::setMenuOpen(bool isOpen) {
 
 void PluginSettings::updateIconColors(juce::Colour normal, juce::Colour hover) {
     if (drawableGear != nullptr && drawableGearHover != nullptr) {
-        drawableGear->setFill(normal);
-        drawableGearHover->setFill(hover);
+        drawableGear->setFill(normal.brighter(0.3f));
+        drawableGearHover->setFill(hover.brighter(0.3f));
         settingsButton.setImages(drawableGear.get(), drawableGearHover.get(), drawableGearHover.get());
     }
 }

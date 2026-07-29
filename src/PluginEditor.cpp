@@ -81,8 +81,8 @@ void MyReduxEditor::updateTheme(int themeId) {
 
     // ComboBoxes (Dropdown Menus) & Popups
     themeLnF.setColour(juce::ComboBox::backgroundColourId, theme.bgCenter);
-    themeLnF.setColour(juce::ComboBox::outlineColourId, theme.buttonColor);
-    themeLnF.setColour(juce::ComboBox::arrowColourId, theme.buttonColor);
+    themeLnF.setColour(juce::ComboBox::outlineColourId, theme.buttonHoverColor);
+    themeLnF.setColour(juce::ComboBox::arrowColourId, theme.buttonHoverColor);
     themeLnF.setColour(juce::ComboBox::textColourId, theme.labelText);
     themeLnF.setColour(juce::PopupMenu::textColourId, theme.labelText);
     themeLnF.setColour(juce::PopupMenu::highlightedTextColourId, theme.bgCenter);
