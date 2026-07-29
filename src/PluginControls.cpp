@@ -45,7 +45,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
 
     // --- Mix Knob ---
     mixSlider.setSliderStyle(juce::Slider::LinearVertical);
-    mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 65, 20);
     mixSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
     addAndMakeVisible(mixSlider);
     mixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "MIX", mixSlider);
@@ -102,4 +102,14 @@ void PluginControls::resized() {
     auto rateArea = centeredBottomArea;
     rateLabel.setBounds(rateArea.removeFromTop(30));
     rateSlider.setBounds(rateArea);
+}
+
+void PluginControls::lookAndFeelChanged() {
+    float currentFontHeight = getLookAndFeel().getLabelFont(mixLabel).getHeight();
+    int dynamicHeight = juce::jmax(20, (int)currentFontHeight + 6);
+    mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 65, dynamicHeight);
+    hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, dynamicHeight);
+    lpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, dynamicHeight);
+    bitSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, dynamicHeight);
+    rateSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, dynamicHeight);
 }

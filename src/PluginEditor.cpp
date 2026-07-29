@@ -46,7 +46,7 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
 
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
-    int initialFontSize = 1;
+    int initialFontSize = audioProcessor.getSavedFontSizeId(); 
     pluginSettings.setInitialFontSize(initialFontSize);
     currentFontSizeId = initialFontSize;
     setResizable(true, true);
@@ -171,32 +171,29 @@ void MyReduxEditor::updateFontSize(int fontSizeId) {
 
 float MyReduxEditor::getDynamicFontHeight() const {
     float baseFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
-    float fontMultiplier = 1.0f;                        // Normal
-    if (currentFontSizeId == 2) fontMultiplier = 0.85f; // Small
-    if (currentFontSizeId == 3) fontMultiplier = 1.15f; // Large
-    if (currentFontSizeId == 4) fontMultiplier = 1.30f; // Extra Large
+    float fontMultiplier = 1.1f;                        // Normal
+    if (currentFontSizeId == 2) fontMultiplier = 0.9f; // Small
+    if (currentFontSizeId == 3) fontMultiplier = 1.2f; // Large
+    if (currentFontSizeId == 4) fontMultiplier = 1.27f; // Extra Large
     return baseFontHeight * fontMultiplier;
 }
 
+
 void MyReduxEditor::paintOverChildren(juce::Graphics &g) {
     bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
-
     if (pluginControls.isVisible()) {
         auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
-        float dynamicFontHeight = getDynamicFontHeight();
+        float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
         g.setColour(ThemeProps.labelText);
         juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
         float logoScale = isAnyMenuOpen ? 1.5f : 2.5f;
         g.setFont(logoFont.withHeight(dynamicFontHeight * logoScale));
-
         if (isAnyMenuOpen) {
             int yOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 15.0f, 28.0f);
             int yPosition = pluginControls.logoBounds.getY() - yOffset;
-
             juce::Rectangle<int> centerBounds(0, yPosition, getWidth(), pluginControls.logoBounds.getHeight());
             g.drawText("SimpleCrush", centerBounds, juce::Justification::centred);
         } else {
-            // Normal offset
             int standardOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 5.0f, 9.0f);
             g.drawText(
                 "SimpleCrush", pluginControls.logoBounds.translated(7, -standardOffset), juce::Justification::centred);

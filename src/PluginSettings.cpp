@@ -80,17 +80,25 @@ void PluginSettings::paint(juce::Graphics &g) {
 void PluginSettings::resized() {
     auto bounds = getLocalBounds();
     settingsButton.setBounds(5, 5, 25, 25);
-    auto overlayArea = bounds.withSizeKeepingCentre(220, 220);
-    overlayArea.translate(0, 7);
     if (isSettingsVisible) {
-        themeLabel.setBounds(overlayArea.removeFromTop(40)); // 20
+        int topY = bounds.getCentreY() - 110 + 7; 
+        int availableHeight = bounds.getBottom() - topY - 10; 
+        auto overlayArea = juce::Rectangle<int>(
+            bounds.getCentreX() - 110, 
+            topY, 
+            220, 
+            std::max(220, availableHeight) 
+        );
+        overlayArea.removeFromTop(5);
+        themeLabel.setBounds(overlayArea.removeFromTop(40));
         themeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
         overlayArea.removeFromTop(15);
         fontSizeLabel.setBounds(overlayArea.removeFromTop(20));
         fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
-        overlayArea.removeFromTop(15);
-        infoLabel.setBounds(overlayArea);
-        infoButton.setBounds(overlayArea);
+        int labelHeight = 100; 
+        auto centeredInfoBounds = overlayArea.withSizeKeepingCentre(overlayArea.getWidth(), labelHeight);
+        infoLabel.setBounds(centeredInfoBounds);
+        infoButton.setBounds(centeredInfoBounds);
     }
 }
 
@@ -108,6 +116,7 @@ void PluginSettings::updateIconColors(juce::Colour normal, juce::Colour hover) {
 }
 
 void PluginSettings::setInitialTheme(int themeId) { themeSelector.setSelectedId(themeId, juce::dontSendNotification); }
+
 void PluginSettings::setInitialFontSize(int fontSizeId) {
     fontSizeSelector.setSelectedId(fontSizeId, juce::dontSendNotification);
 }

@@ -39,11 +39,8 @@ public:
         appProperties.getUserSettings()->setValue("GlobalThemeId", themeId);
         appProperties.getUserSettings()->saveIfNeeded();
     }
-    int getSavedFontSizeId() { return appProperties.getUserSettings()->getIntValue("GlobalFontSizeId", 1); }
-    void saveFontSizeId(int fontSizeId) {
-        appProperties.getUserSettings()->setValue("GlobalFontSizeId", fontSizeId);
-        appProperties.getUserSettings()->saveIfNeeded();
-    }
+    void saveFontSizeId(int fontSizeId);
+    int getSavedFontSizeId();
 
 private:
     juce::ApplicationProperties appProperties;

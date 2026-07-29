@@ -12,6 +12,7 @@ public:
     juce::Label hpLabel, lpLabel, bitLabel, rateLabel, mixLabel;
 
 private:
+    void lookAndFeelChanged() override;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hpAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lpAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> bitAttachment;

@@ -229,3 +229,17 @@ juce::Point<int> MyReduxProcessor::getWindowSize() {
     }
     return {340, 340}; // Default fallback
 }
+
+void MyReduxProcessor::saveFontSizeId(int fontSizeId) {
+    if (auto *props = appProperties.getUserSettings()) {
+        props->setValue("FontSizeId", fontSizeId);
+        props->saveIfNeeded();
+    }
+}
+
+int MyReduxProcessor::getSavedFontSizeId() {
+    if (auto *props = appProperties.getUserSettings()) {
+        return props->getIntValue("FontSizeId", 1); 
+    }
+    return 1;
+}

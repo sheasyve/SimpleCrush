@@ -157,6 +157,7 @@ void PresetMenu::paint(juce::Graphics &g) {
 
 void PresetMenu::resized() {
     auto bounds = getLocalBounds();
+
     // --- Top Right Stack ---
     presetsButton.setBounds(bounds.getWidth() - 30, 5, 25, 25);
     saveButton.setBounds(bounds.getWidth() - 27.5, 30, 22.5, 22.5);
@@ -164,13 +165,12 @@ void PresetMenu::resized() {
 
     // --- Top Left Stack ---
     folderButton.setBounds(5, 30, 25, 25);
-    deleteButton.setBounds(5, 55, 25, 25); // Positioned directly below folderButton
-
+    deleteButton.setBounds(5, 55, 25, 25);
     if (isPresetsVisible) {
         auto overlayArea = bounds.withSizeKeepingCentre(260, 240);
         overlayArea.translate(0, 25);
-        auto topBar = overlayArea.removeFromTop(25);
-        saveTextBox.setBounds(topBar.reduced(10, 2));
+        auto topBar = overlayArea.removeFromTop(26); 
+        saveTextBox.setBounds(topBar.reduced(10, 0)); 
         overlayArea.removeFromTop(10);
         presetList.setBounds(overlayArea);
     }

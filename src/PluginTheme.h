@@ -40,10 +40,10 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF390B8A),
             juce::Colour(0xFF000000),
             juce::Colour(0xFFFF2A6D),
-            juce::Colour(0xFF05D9E8),
+            juce::Colour(0xffff9dbc),
             juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
-            juce::Colours::black.withAlpha(0.9f),
             juce::Colours::black.withAlpha(0.8f),
+            juce::Colours::black.withAlpha(0.78f),
             juce::Colour(0xFF01FFF4)};
     }
 
@@ -52,9 +52,9 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF4C4C4C),
             juce::Colour(0xFFD4D4D4),
             juce::Colour(0xff575757),
-            juce::Colour(0xFFD4D4D4),
+            juce::Colour(0xffececec),
             juce::Colour(0xFF202020),
-            juce::Colour(0xFF202020),
+            juce::Colour(0xff131313),
             juce::Colour(0xdea1a1a1),
             juce::Colour(0xffebebeb),
             juce::FontOptions(15.0f, juce::Font::bold).withName("Arial"),
@@ -74,8 +74,8 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF888888),
             juce::Colour(0xFF333333),
             juce::FontOptions(15.0f, juce::Font::bold).withName("Arial"),
-            juce::Colour(0xFFE0E0E0).withAlpha(0.93f),
-            juce::Colour(0xFFE0E0E0).withAlpha(0.8f),
+            juce::Colour(0xFFE0E0E0).withAlpha(0.83f),
+            juce::Colour(0xFFE0E0E0).withAlpha(0.7f),
             juce::Colour(0xFF333333)};
     }
 
@@ -137,7 +137,7 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF000000),
         juce::Colour(0xFF008F11),
         juce::Colour(0xFF00FF41),
-        juce::FontOptions(11.0f, juce::Font::plain).withName("Consolas"),
+        juce::FontOptions(10.0f, juce::Font::plain).withName("Consolas"),
         juce::Colours::black.withAlpha(0.95f),
         juce::Colours::black.withAlpha(0.8f),
         juce::Colour(0xFF00FF41)};
