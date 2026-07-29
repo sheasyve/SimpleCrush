@@ -1,7 +1,7 @@
 #include "PluginSettings.h"
 #include "PluginTheme.h"
 PluginSettings::PluginSettings() {
-    juce::String infotext = "SimpleCrush v1.1.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
+    juce::String infotext = "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
     setInterceptsMouseClicks(false, true);
 
     // --- Settings Gear Button ---

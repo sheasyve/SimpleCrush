@@ -39,8 +39,8 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF05D9E8),
             juce::Colour(0xFF390B8A),
             juce::Colour(0xFF000000),
-            juce::Colour(0xFF05D9E8),
             juce::Colour(0xFFFF2A6D),
+            juce::Colour(0xFF05D9E8),
             juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
             juce::Colours::black.withAlpha(0.9f),
             juce::Colours::black.withAlpha(0.8f),
@@ -121,7 +121,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF09141C),
             juce::Colour(0xFF508991),
             juce::Colour(0xFF74B3CE),
-            juce::FontOptions(15.0f, juce::Font::bold).withName("Trebuchet MS"),
+            juce::FontOptions(16.0f, juce::Font::bold).withName("Trebuchet MS"),
             juce::Colour(0xFF09141C).withAlpha(0.95f),
             juce::Colour(0xFF09141C).withAlpha(0.8f),
             juce::Colour(0xFFFFFFFF)};
@@ -137,7 +137,7 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF000000),
         juce::Colour(0xFF008F11),
         juce::Colour(0xFF00FF41),
-        juce::FontOptions(12.0f, juce::Font::plain).withName("Consolas"),
+        juce::FontOptions(11.0f, juce::Font::plain).withName("Consolas"),
         juce::Colours::black.withAlpha(0.95f),
         juce::Colours::black.withAlpha(0.8f),
         juce::Colour(0xFF00FF41)};
