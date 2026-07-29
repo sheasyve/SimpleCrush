@@ -32,23 +32,7 @@ struct SettingsBackground : public juce::Component {
 
 inline ThemeProps getThemeProps(int themeId) {
 
-    if (themeId == 1) { // Panda Trueno
-        return {juce::Colour(0xFFFFFFFF),
-            juce::Colour(0xFF1A1A1A),
-            juce::Colour(0xFFE50000),
-            juce::Colour(0xFF333333),
-            juce::Colour(0xFFFFFFFF),
-            juce::Colour(0xFF2B2B2B),
-            juce::Colour(0xFF050505),
-            juce::Colour(0xbdffffff),
-            juce::Colour(0xFFE50000),
-            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
-            juce::Colours::black.withAlpha(0.90f),
-            juce::Colours::black.withAlpha(0.8f),
-            juce::Colour(0xFFE50000)};
-    }
-    
-    if (themeId == 2) { // Studio Dark
+    if (themeId == 1) { // Studio Dark
         return {juce::Colour(0xffd6d6d6),
             juce::Colour(0xFF4C4C4C),
             juce::Colour(0xFFD4D4D4),
@@ -64,7 +48,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFD4D4D4)};
     }
 
-    if (themeId == 3) { // Studio Light
+    if (themeId == 2) { // Studio Light
         return {juce::Colour(0xFF333333),
             juce::Colour(0xFFAAAAAA),
             juce::Colour(0xFF333333),
@@ -78,6 +62,22 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFE0E0E0).withAlpha(0.83f),
             juce::Colour(0xFFE0E0E0).withAlpha(0.f),
             juce::Colour(0xFF333333)};
+    }
+
+    if (themeId == 3) { // Panda Trueno
+        return {juce::Colour(0xFFFFFFFF),
+            juce::Colour(0xFF1A1A1A),
+            juce::Colour(0xFFE50000),
+            juce::Colour(0xFF333333),
+            juce::Colour(0xFFFFFFFF),
+            juce::Colour(0xFF2B2B2B),
+            juce::Colour(0xFF050505),
+            juce::Colour(0xbdffffff),
+            juce::Colour(0xFFE50000),
+            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
+            juce::Colours::black.withAlpha(0.90f),
+            juce::Colours::black.withAlpha(0.8f),
+            juce::Colour(0xFFE50000)};
     }
 
     if (themeId == 4) { // Vaporwave
@@ -105,7 +105,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF2E1A0F),
             juce::Colour(0xFF120804),
             juce::Colour(0xFFC99966),
-            juce::Colour(0xFFAD7640),
+            juce::Colour(0xff6d5135),
             juce::FontOptions(15.0f, juce::Font::italic | juce::Font::bold).withName("Helvetica"),
             juce::Colour(0xFF120804).withAlpha(0.9f),
             juce::Colour(0xFF120804).withAlpha(0.8f),
@@ -138,7 +138,9 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF000000),
         juce::Colour(0xFF008F11),
         juce::Colour(0xFF00FF41),
-        juce::FontOptions("Lucidia Console", 10.0f, juce::Font::bold),// This does the exact same thing as in theme 6, but the code is different for no reason. 
+        juce::FontOptions("Lucidia Console",
+            10.0f,
+            juce::Font::bold), // This does the exact same thing as in theme 6, but the code is different for no reason.
         juce::Colours::black.withAlpha(0.95f),
         juce::Colours::black.withAlpha(0.8f),
         juce::Colour(0xFF00FF41)};

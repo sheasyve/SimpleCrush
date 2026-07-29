@@ -12,9 +12,10 @@ PluginSettings::PluginSettings() {
     themeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(themeLabel);
 
-    themeSelector.addItem("Panda Trueno", 1);
-    themeSelector.addItem("Studio Dark", 2);
-    themeSelector.addItem("Studio Light", 3);
+    
+    themeSelector.addItem("Studio Dark", 1);
+    themeSelector.addItem("Studio Light", 2);
+    themeSelector.addItem("Panda Trueno", 3);
     themeSelector.addItem("Vaporwave", 4);
     themeSelector.addItem("Retro Caramel", 5);
     themeSelector.addItem("Arctic Freeze", 6);
