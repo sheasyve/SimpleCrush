@@ -31,8 +31,24 @@ struct SettingsBackground : public juce::Component {
 };
 
 inline ThemeProps getThemeProps(int themeId) {
+    
+    if (themeId == 1) { // Panda Trueno
+        return {juce::Colour(0xFFFFFFFF),
+            juce::Colour(0xFF1A1A1A),
+            juce::Colour(0xFFE50000),
+            juce::Colour(0xFF333333),
+            juce::Colour(0xFFFFFFFF),
+            juce::Colour(0xFF2B2B2B),
+            juce::Colour(0xFF050505),
+            juce::Colour(0xbdffffff),
+            juce::Colour(0xFFE50000),
+            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
+            juce::Colours::black.withAlpha(0.90f),
+            juce::Colours::black.withAlpha(0.8f),
+            juce::Colour(0xFFE50000)};
+    }
 
-    if (themeId == 1) { // Studio Dark
+    if (themeId == 2) { // Studio Dark
         return {juce::Colour(0xffd6d6d6),
             juce::Colour(0xFF4C4C4C),
             juce::Colour(0xFFD4D4D4),
@@ -48,7 +64,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFD4D4D4)};
     }
 
-    if (themeId == 2) { // Studio Light
+    if (themeId == 3) { // Studio Light
         return {juce::Colour(0xFF333333),
             juce::Colour(0xFFAAAAAA),
             juce::Colour(0xFF333333),
@@ -62,22 +78,6 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFE0E0E0).withAlpha(0.83f),
             juce::Colour(0xFFE0E0E0).withAlpha(0.f),
             juce::Colour(0xFF333333)};
-    }
-
-    if (themeId == 3) { // Panda Trueno
-        return {juce::Colour(0xFFFFFFFF),
-            juce::Colour(0xFF1A1A1A),
-            juce::Colour(0xFFE50000),
-            juce::Colour(0xFF333333),
-            juce::Colour(0xFFFFFFFF),
-            juce::Colour(0xFF2B2B2B),
-            juce::Colour(0xFF050505),
-            juce::Colour(0xbdffffff),
-            juce::Colour(0xFFE50000),
-            juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
-            juce::Colours::black.withAlpha(0.90f),
-            juce::Colours::black.withAlpha(0.8f),
-            juce::Colour(0xFFE50000)};
     }
 
     if (themeId == 4) { // Vaporwave

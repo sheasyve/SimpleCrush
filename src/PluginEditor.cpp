@@ -87,7 +87,7 @@ void MyReduxEditor::updateTheme(int themeId) {
     themeLnF.setColour(juce::PopupMenu::textColourId, theme.labelText);
     themeLnF.setColour(juce::PopupMenu::highlightedTextColourId, theme.bgCenter);
     themeLnF.setColour(juce::PopupMenu::backgroundColourId, theme.bgCenter);
-    themeLnF.setColour(juce::PopupMenu::highlightedBackgroundColourId, theme.buttonColor);
+    themeLnF.setColour(juce::PopupMenu::highlightedBackgroundColourId, theme.buttonHoverColor);
 
     sendLookAndFeelChange();
 
