@@ -39,8 +39,8 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF05D9E8),
             juce::Colour(0xFF390B8A),
             juce::Colour(0xFF000000),
+            juce::Colour(0xFF05D9E8),
             juce::Colour(0xFFFF2A6D),
-            juce::Colour(0xffff9dbc),
             juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
             juce::Colours::black.withAlpha(0.8f),
             juce::Colours::black.withAlpha(0.78f),
@@ -137,7 +137,7 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF000000),
         juce::Colour(0xFF008F11),
         juce::Colour(0xFF00FF41),
-        juce::FontOptions(10.0f, juce::Font::plain).withName("Consolas"),
+        juce::FontOptions("Lucidia Console", 10.0f, juce::Font::bold),// This does the exact same thing as in theme 6, but the code is different for no reason. 
         juce::Colours::black.withAlpha(0.95f),
         juce::Colours::black.withAlpha(0.8f),
         juce::Colour(0xFF00FF41)};
