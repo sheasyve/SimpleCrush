@@ -1,23 +1,21 @@
 #pragma once
-#include "ui/main/plugin_controls.h"
 #include "dsp/plugin_processor.h"
 #include "ui/components/plugin_settings.h"
-#include "ui/style/plugin_theme.h"
 #include "ui/components/preset_menu.h"
+#include "ui/main/plugin_controls.h"
+#include "ui/style/plugin_theme.h"
 #include <JuceHeader.h>
 
 class ThemeLookAndFeel : public juce::LookAndFeel_V4 {
 public:
     juce::FontOptions currentFont;
-
     juce::Font getLabelFont(juce::Label &) override { return juce::Font(currentFont); }
 };
 
-class MyReduxEditor : public juce::AudioProcessorEditor {
+class MyPluginEditor : public juce::AudioProcessorEditor {
 public:
-    MyReduxEditor(MyReduxProcessor &);
-    ~MyReduxEditor() override;
-
+    MyPluginEditor(MyPluginProcessor &);
+    ~MyPluginEditor() override;
     void paint(juce::Graphics &) override;
     void paintOverChildren(juce::Graphics &) override;
     void resized() override;
@@ -25,7 +23,7 @@ public:
 private:
     PluginTheme::SettingsBackground settingsOverlay;
     PluginTheme::SettingsBackground presetOverlay;
-    MyReduxProcessor &audioProcessor;
+    MyPluginProcessor &audioProcessor;
     ThemeLookAndFeel themeLnF;
     PresetMenu presetMenu;
     PluginControls pluginControls;
@@ -47,5 +45,5 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> rateAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mixAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> themeAttachment;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MyReduxEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MyPluginEditor)
 };

@@ -1,10 +1,10 @@
 #pragma once
 #include <JuceHeader.h>
 
-class MyReduxProcessor : public juce::AudioProcessor {
+class MyPluginProcessor : public juce::AudioProcessor {
 public:
-    MyReduxProcessor();
-    ~MyReduxProcessor() override;
+    MyPluginProcessor();
+    ~MyPluginProcessor() override;
 
     // --- Core Audio Processing ---
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
@@ -49,5 +49,5 @@ private:
     std::vector<int> sampleCounters;
     juce::IIRFilter highPassFilters[2];
     juce::IIRFilter lowPassFilters[2];
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MyReduxProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MyPluginProcessor)
 };

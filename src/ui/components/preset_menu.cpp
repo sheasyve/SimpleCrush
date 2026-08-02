@@ -1,5 +1,7 @@
 #include "preset_menu.h"
 
+// --- PRESET MENU ---
+
 PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
 
@@ -59,7 +61,6 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     folderButton.onClick = [this]() {
         fileChooser = std::make_unique<juce::FileChooser>("Select Preset Folder", presetDirectory);
         auto browserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectDirectories;
-
         fileChooser->launchAsync(browserFlags, [this](const juce::FileChooser &fc) {
             auto result = fc.getResult();
             if (result.exists()) {
@@ -126,7 +127,7 @@ void PresetMenu::loadPresetsFromDirectory() {
 
 void PresetMenu::updateMenuVisibility() {
     folderButton.setVisible(isPresetsVisible);
-    deleteButton.setVisible(isPresetsVisible); 
+    deleteButton.setVisible(isPresetsVisible);
     saveTextBox.setVisible(isPresetsVisible);
     saveButton.setVisible(isPresetsVisible);
     randomButton.setVisible(isPresetsVisible);
@@ -168,8 +169,8 @@ void PresetMenu::resized() {
     if (isPresetsVisible) {
         auto overlayArea = bounds.withSizeKeepingCentre(260, 240);
         overlayArea.translate(0, 25);
-        auto topBar = overlayArea.removeFromTop(26); 
-        saveTextBox.setBounds(topBar.reduced(10, 0)); 
+        auto topBar = overlayArea.removeFromTop(26);
+        saveTextBox.setBounds(topBar.reduced(10, 0));
         overlayArea.removeFromTop(10);
         presetList.setBounds(overlayArea);
     }

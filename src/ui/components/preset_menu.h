@@ -48,13 +48,10 @@ private:
     // --- Inner Preset Panel Buttons ---
     juce::DrawableButton folderButton{"Folder", juce::DrawableButton::ImageFitted};
     std::unique_ptr<juce::DrawablePath> drawableFolder, drawableFolderHover;
-
     juce::DrawableButton saveButton{"Save", juce::DrawableButton::ImageFitted};
     std::unique_ptr<juce::DrawablePath> drawableSave, drawableSaveHover;
-
     juce::DrawableButton deleteButton{"Delete", juce::DrawableButton::ImageFitted};
     std::unique_ptr<juce::DrawablePath> drawableDelete, drawableDeleteHover;
-
     juce::DrawableButton randomButton{"Random", juce::DrawableButton::ImageFitted};
     std::unique_ptr<juce::DrawablePath> drawableRandom, drawableRandomHover;
 

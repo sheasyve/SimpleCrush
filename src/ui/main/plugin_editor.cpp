@@ -3,7 +3,7 @@
 // --- Main UI Controller File ---
 
 // --- Constructor ---
-MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
+MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p), presetMenu(p.apvts), pluginControls(p.apvts) {
     setLookAndFeel(&themeLnF);
     addAndMakeVisible(pluginControls);
@@ -46,7 +46,7 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
 
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
-    int initialFontSize = audioProcessor.getSavedFontSizeId(); 
+    int initialFontSize = audioProcessor.getSavedFontSizeId();
     pluginSettings.setInitialFontSize(initialFontSize);
     currentFontSizeId = initialFontSize;
     setResizable(true, true);
@@ -57,15 +57,14 @@ MyReduxEditor::MyReduxEditor(MyReduxProcessor &p)
     updateTheme(initialTheme);
 }
 
-MyReduxEditor::~MyReduxEditor() {
+MyPluginEditor::~MyPluginEditor() {
     audioProcessor.saveWindowSize(getWidth(), getHeight());
     setLookAndFeel(nullptr);
 }
 
-void MyReduxEditor::updateTheme(int themeId) {
+void MyPluginEditor::updateTheme(int themeId) {
     currentThemeId = themeId;
     auto theme = PluginTheme::getThemeProps(themeId);
-
     themeLnF.currentFont = theme.labelFont.withHeight(getDynamicFontHeight());
     themeLnF.setColour(juce::ScrollBar::thumbColourId, theme.scrollbarThumb);
 
@@ -141,7 +140,7 @@ void MyReduxEditor::updateTheme(int themeId) {
     repaint();
 }
 
-void MyReduxEditor::paint(juce::Graphics &g) {
+void MyPluginEditor::paint(juce::Graphics &g) {
     auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
     auto center = getLocalBounds().getCentre().toFloat();
     float radius = juce::jmax(getWidth(), getHeight()) * 0.7f;
@@ -151,7 +150,7 @@ void MyReduxEditor::paint(juce::Graphics &g) {
     g.fillAll();
 }
 
-void MyReduxEditor::resized() {
+void MyPluginEditor::resized() {
     auto theme = PluginTheme::getThemeProps(currentThemeId);
     float dynamicFontHeight = getDynamicFontHeight();
     themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
@@ -164,22 +163,21 @@ void MyReduxEditor::resized() {
     presetMenu.setBounds(fullBounds);
 }
 
-void MyReduxEditor::updateFontSize(int fontSizeId) {
+void MyPluginEditor::updateFontSize(int fontSizeId) {
     currentFontSizeId = fontSizeId;
     updateTheme(currentThemeId);
 }
 
-float MyReduxEditor::getDynamicFontHeight() const {
+float MyPluginEditor::getDynamicFontHeight() const {
     float baseFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
     float fontMultiplier = 1.1f;                        // Normal
-    if (currentFontSizeId == 2) fontMultiplier = 0.9f; // Small
-    if (currentFontSizeId == 3) fontMultiplier = 1.2f; // Large
+    if (currentFontSizeId == 2) fontMultiplier = 0.9f;  // Small
+    if (currentFontSizeId == 3) fontMultiplier = 1.2f;  // Large
     if (currentFontSizeId == 4) fontMultiplier = 1.27f; // Extra Large
     return baseFontHeight * fontMultiplier;
 }
 
-
-void MyReduxEditor::paintOverChildren(juce::Graphics &g) {
+void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
     bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
     if (pluginControls.isVisible()) {
         auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
@@ -201,7 +199,7 @@ void MyReduxEditor::paintOverChildren(juce::Graphics &g) {
     }
 }
 
-void MyReduxEditor::setLabelsVisible(bool shouldBeVisible) {
+void MyPluginEditor::setLabelsVisible(bool shouldBeVisible) {
     pluginControls.hpLabel.setVisible(shouldBeVisible);
     pluginControls.lpLabel.setVisible(shouldBeVisible);
     pluginControls.bitLabel.setVisible(shouldBeVisible);

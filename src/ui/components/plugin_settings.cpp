@@ -1,13 +1,11 @@
 #include "ui/components/plugin_settings.h"
 
 PluginSettings::PluginSettings() {
-    juce::String infotext = "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
+    juce::String infotext =
+        "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
     setInterceptsMouseClicks(false, true);
-
-    // --- Settings Gear Button ---
     parseSvgIcon(settingsButton, drawableGear, drawableGearHover, SvgAssets::gearIcon);
     addAndMakeVisible(settingsButton);
-
     themeLabel.setText("Theme", juce::dontSendNotification);
     themeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(themeLabel);
@@ -42,11 +40,9 @@ PluginSettings::PluginSettings() {
         isSettingsVisible = !isSettingsVisible;
         updateMenuVisibility();
     };
-
     themeSelector.onChange = [this]() {
         if (onThemeChanged != nullptr) onThemeChanged(themeSelector.getSelectedId());
     };
-
     fontSizeSelector.onChange = [this]() {
         if (onFontSizeChanged != nullptr) onFontSizeChanged(fontSizeSelector.getSelectedId());
     };
@@ -82,21 +78,16 @@ void PluginSettings::resized() {
     auto bounds = getLocalBounds();
     settingsButton.setBounds(5, 5, 25, 25);
     if (isSettingsVisible) {
-        int topY = bounds.getCentreY() - 110 + 7; 
-        int availableHeight = bounds.getBottom() - topY - 10; 
-        auto overlayArea = juce::Rectangle<int>(
-            bounds.getCentreX() - 110, 
-            topY, 
-            220, 
-            std::max(220, availableHeight) 
-        );
+        int topY = bounds.getCentreY() - 110 + 7;
+        int availableHeight = bounds.getBottom() - topY - 10;
+        auto overlayArea = juce::Rectangle<int>(bounds.getCentreX() - 110, topY, 220, std::max(220, availableHeight));
         overlayArea.removeFromTop(5);
         themeLabel.setBounds(overlayArea.removeFromTop(40));
         themeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
         overlayArea.removeFromTop(15);
         fontSizeLabel.setBounds(overlayArea.removeFromTop(20));
         fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
-        int labelHeight = 100; 
+        int labelHeight = 100;
         auto centeredInfoBounds = overlayArea.withSizeKeepingCentre(overlayArea.getWidth(), labelHeight);
         infoLabel.setBounds(centeredInfoBounds);
         infoButton.setBounds(centeredInfoBounds);

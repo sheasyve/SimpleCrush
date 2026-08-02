@@ -16,10 +16,12 @@ public:
     void updateIconColors(juce::Colour normal, juce::Colour hover);
     void setMenuOpen(bool isOpen);
     bool isMenuOpen() const { return isSettingsVisible; }
+
     // Callbacks
     std::function<void(bool)> onSettingsToggled;
     std::function<void(int)> onThemeChanged;
     std::function<void(int)> onFontSizeChanged;
+
     // State helper
     void updateMenuVisibility();
 

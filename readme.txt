@@ -4,7 +4,5 @@ Installation Instructions
 
 About SimpleCrush:
 
-	SimpleCrush is a free, bitcrusher/redux vst designed for producers who want professional results without any bloat. 
-	High-quality, simple, zero cost, total control.
-
-Download the latest version here: https://sheasyve.dev/simplecrush
+	SimpleCrush is a free, bitcrusher/redux vst.
+	Download the latest version and read more here: https://sheasyve.dev/simplecrush

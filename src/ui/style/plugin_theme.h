@@ -21,17 +21,15 @@ struct ThemeProps {
 
 struct SettingsBackground : public juce::Component {
     juce::Colour currentOverlayColor = juce::Colours::black.withAlpha(0.85f);
-
     void setOverlayColor(juce::Colour newColor) {
         currentOverlayColor = newColor;
         repaint();
     }
-
     void paint(juce::Graphics &g) override { g.fillAll(currentOverlayColor); }
 };
 
 inline ThemeProps getThemeProps(int themeId) {
-    
+
     if (themeId == 1) { // Panda Trueno
         return {juce::Colour(0xFFFFFFFF),
             juce::Colour(0xFF1A1A1A),
@@ -140,7 +138,7 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF00FF41),
         juce::FontOptions("Lucidia Console",
             10.0f,
-            juce::Font::bold), // This does the exact same thing as in theme 6, but the code is different for no reason.
+            juce::Font::bold), // This does the exact same thing as in theme 6, but the code is different for no reason!
         juce::Colours::black.withAlpha(0.95f),
         juce::Colours::black.withAlpha(0.8f),
         juce::Colour(0xFF00FF41)};
