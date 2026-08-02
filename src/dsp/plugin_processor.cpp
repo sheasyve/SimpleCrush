@@ -1,5 +1,5 @@
-#include "PluginProcessor.h"
-#include "PluginEditor.h"
+#include "plugin_processor.h"
+#include "ui/main/plugin_editor.h"
 
 // -- Core Processor File ---
 

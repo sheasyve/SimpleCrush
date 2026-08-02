@@ -1,5 +1,5 @@
-#include "PluginEditor.h"
-#include "PluginProcessor.h"
+#include "ui/main/plugin_editor.h"
+#include "dsp/plugin_processor.h"
 // --- Main UI Controller File ---
 
 // --- Constructor ---

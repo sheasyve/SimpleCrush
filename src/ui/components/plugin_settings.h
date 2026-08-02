@@ -1,5 +1,6 @@
 #pragma once
-#include "Util.h"
+#include "ui/style/plugin_theme.h"
+#include "ui/style/svg.h"
 #include <JuceHeader.h>
 
 class PluginSettings : public juce::Component {

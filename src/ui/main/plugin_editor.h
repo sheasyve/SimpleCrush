@@ -1,9 +1,9 @@
 #pragma once
-#include "PluginControls.h"
-#include "PluginProcessor.h"
-#include "PluginSettings.h"
-#include "PluginTheme.h"
-#include "PresetMenu.h"
+#include "ui/main/plugin_controls.h"
+#include "dsp/plugin_processor.h"
+#include "ui/components/plugin_settings.h"
+#include "ui/style/plugin_theme.h"
+#include "ui/components/preset_menu.h"
 #include <JuceHeader.h>
 
 class ThemeLookAndFeel : public juce::LookAndFeel_V4 {

@@ -1,4 +1,4 @@
-#include "PluginControls.h"
+#include "plugin_controls.h"
 
 PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     setInterceptsMouseClicks(false, true);

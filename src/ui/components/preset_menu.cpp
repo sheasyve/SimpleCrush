@@ -1,4 +1,4 @@
-#include "PresetMenu.h"
+#include "preset_menu.h"
 
 PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
@@ -13,7 +13,6 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
             juce::String savedPath = xml->getStringAttribute("PresetFolder");
             if (savedPath.isNotEmpty()) {
                 juce::File savedDir(savedPath);
-                // Only use the saved path if it actually exists on the user's computer
                 if (savedDir.exists() && savedDir.isDirectory()) { presetDirectory = savedDir; }
             }
         }
@@ -127,7 +126,7 @@ void PresetMenu::loadPresetsFromDirectory() {
 
 void PresetMenu::updateMenuVisibility() {
     folderButton.setVisible(isPresetsVisible);
-    deleteButton.setVisible(isPresetsVisible); // Added delete button visibility
+    deleteButton.setVisible(isPresetsVisible); 
     saveTextBox.setVisible(isPresetsVisible);
     saveButton.setVisible(isPresetsVisible);
     randomButton.setVisible(isPresetsVisible);
