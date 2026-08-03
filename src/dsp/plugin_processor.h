@@ -42,6 +42,9 @@ public:
     void saveFontSizeId(int fontSizeId);
     int getSavedFontSizeId();
 
+    void saveTooltipState(bool isEnabled);
+    bool getSavedTooltipState();
+
 private:
     juce::ApplicationProperties appProperties;
     void initPropertiesFile();

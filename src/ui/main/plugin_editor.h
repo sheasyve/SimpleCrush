@@ -16,10 +16,11 @@ class MyPluginEditor : public juce::AudioProcessorEditor {
 public:
     MyPluginEditor(MyPluginProcessor &);
     ~MyPluginEditor() override;
+    void updateTooltipState(bool shouldShowTooltips);
     void paint(juce::Graphics &) override;
     void paintOverChildren(juce::Graphics &) override;
     void resized() override;
-
+    
 private:
     PluginTheme::SettingsBackground settingsOverlay;
     PluginTheme::SettingsBackground presetOverlay;
@@ -37,6 +38,8 @@ private:
     void updateTheme(int themeId);
     void updateFontSize(int fontSizeId);
     void setLabelsVisible(bool shouldBeVisible);
+    
+    std::unique_ptr<juce::TooltipWindow> tooltipWindow;
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hpAttachment;

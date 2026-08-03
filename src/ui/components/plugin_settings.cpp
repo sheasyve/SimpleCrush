@@ -36,6 +36,13 @@ PluginSettings::PluginSettings() {
     infoButton.setAlpha(0.0f);
     addChildComponent(infoButton);
 
+    addChildComponent(tooltipToggle);
+    tooltipToggle.onClick = [this]() {
+        if (onTooltipToggled != nullptr) {
+            onTooltipToggled(tooltipToggle.getToggleState());
+        }
+    };
+
     settingsButton.onClick = [this]() {
         isSettingsVisible = !isSettingsVisible;
         updateMenuVisibility();
@@ -56,6 +63,7 @@ void PluginSettings::updateMenuVisibility() {
     fontSizeSelector.setVisible(isSettingsVisible);
     infoLabel.setVisible(isSettingsVisible);
     infoButton.setVisible(isSettingsVisible);
+    tooltipToggle.setVisible(isSettingsVisible);
     if (onSettingsToggled != nullptr) onSettingsToggled(isSettingsVisible);
     resized();
     repaint();
@@ -87,6 +95,8 @@ void PluginSettings::resized() {
         overlayArea.removeFromTop(15);
         fontSizeLabel.setBounds(overlayArea.removeFromTop(20));
         fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
+        overlayArea.removeFromTop(15);
+        tooltipToggle.setBounds(overlayArea.removeFromTop(25).reduced(30, 0));
         int labelHeight = 100;
         auto centeredInfoBounds = overlayArea.withSizeKeepingCentre(overlayArea.getWidth(), labelHeight);
         infoLabel.setBounds(centeredInfoBounds);
@@ -111,4 +121,8 @@ void PluginSettings::setInitialTheme(int themeId) { themeSelector.setSelectedId(
 
 void PluginSettings::setInitialFontSize(int fontSizeId) {
     fontSizeSelector.setSelectedId(fontSizeId, juce::dontSendNotification);
+}
+
+void PluginSettings::setInitialTooltipState(bool isEnabled) {
+    tooltipToggle.setToggleState(isEnabled, juce::dontSendNotification);
 }

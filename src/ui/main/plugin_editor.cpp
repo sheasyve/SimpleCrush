@@ -44,6 +44,11 @@ MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
         audioProcessor.saveFontSizeId(selectedId);
     };
 
+    pluginSettings.onTooltipToggled = [this](bool isEnabled) {
+        updateTooltipState(isEnabled);
+        audioProcessor.saveTooltipState(isEnabled);
+    };
+
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
     int initialFontSize = audioProcessor.getSavedFontSizeId();
@@ -54,6 +59,9 @@ MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     getConstrainer()->setFixedAspectRatio(1.0);
     auto savedSize = audioProcessor.getWindowSize();
     setSize(savedSize.x, savedSize.y);
+    bool initialTooltipState = audioProcessor.getSavedTooltipState();
+    pluginSettings.setInitialTooltipState(initialTooltipState);
+    updateTooltipState(initialTooltipState);
     updateTheme(initialTheme);
 }
 
@@ -77,6 +85,7 @@ void MyPluginEditor::updateTheme(int themeId) {
     // Toggle Buttons / Checkboxes
     themeLnF.setColour(juce::ToggleButton::tickColourId, theme.buttonColor);
     themeLnF.setColour(juce::ToggleButton::tickDisabledColourId, theme.buttonColor.withAlpha(0.5f));
+    themeLnF.setColour(juce::ToggleButton::textColourId, theme.labelText);
 
     // ComboBoxes (Dropdown Menus) & Popups
     themeLnF.setColour(juce::ComboBox::backgroundColourId, theme.bgCenter);
@@ -87,6 +96,9 @@ void MyPluginEditor::updateTheme(int themeId) {
     themeLnF.setColour(juce::PopupMenu::highlightedTextColourId, theme.bgCenter);
     themeLnF.setColour(juce::PopupMenu::backgroundColourId, theme.bgCenter);
     themeLnF.setColour(juce::PopupMenu::highlightedBackgroundColourId, theme.buttonHoverColor);
+    themeLnF.setColour(juce::TooltipWindow::backgroundColourId, theme.bgCenter.withAlpha(0.8f));
+    themeLnF.setColour(juce::TooltipWindow::textColourId, theme.labelText);
+    themeLnF.setColour(juce::TooltipWindow::outlineColourId, theme.bgCenter.withAlpha(0.8f));
 
     sendLookAndFeelChange();
 
@@ -205,4 +217,12 @@ void MyPluginEditor::setLabelsVisible(bool shouldBeVisible) {
     pluginControls.bitLabel.setVisible(shouldBeVisible);
     pluginControls.rateLabel.setVisible(shouldBeVisible);
     pluginControls.mixLabel.setVisible(shouldBeVisible);
+}
+
+void MyPluginEditor::updateTooltipState(bool shouldShowTooltips) {
+    if (shouldShowTooltips) {
+        if (tooltipWindow == nullptr) { tooltipWindow = std::make_unique<juce::TooltipWindow>(this, 700); }
+    } else {
+        tooltipWindow.reset();
+    }
 }

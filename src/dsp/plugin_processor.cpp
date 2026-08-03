@@ -124,6 +124,19 @@ int MyPluginProcessor::getSavedFontSizeId() {
     }
     return 1;
 }
+void MyPluginProcessor::saveTooltipState(bool isEnabled) {
+    if (auto *props = appProperties.getUserSettings()) {
+        props->setValue("ShowTooltips", isEnabled);
+        props->saveIfNeeded();
+    }
+}
+
+bool MyPluginProcessor::getSavedTooltipState() {
+    if (auto *props = appProperties.getUserSettings()) {
+        return props->getBoolValue("ShowTooltips", true); 
+    }
+    return true;
+}
 
 // ==============================================================================
 // JUCE BOILERPLATE

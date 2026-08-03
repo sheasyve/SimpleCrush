@@ -37,7 +37,11 @@ public:
     juce::TextButton infoButton;
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
+    juce::ToggleButton tooltipToggle{"Show Tooltips"};
 
+    std::function<void(bool)> onTooltipToggled;
+
+    void setInitialTooltipState(bool isEnabled);
     void setThemeStyle(juce::Colour newColor, juce::Font newFont) {
         textColor = newColor;
         textFont = newFont;

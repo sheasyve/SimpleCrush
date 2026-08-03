@@ -7,6 +7,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
     hpSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    hpSlider.setTooltip("Removes low frequencies.");
     addAndMakeVisible(hpSlider);
     hpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "HPF", hpSlider);
     hpLabel.setText("HIGH PASS", juce::dontSendNotification);
