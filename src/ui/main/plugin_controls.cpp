@@ -7,7 +7,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
     hpSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
-    hpSlider.setTooltip("Removes low frequencies.");
+    hpSlider.setTooltip(PluginTooltips::highPass);
     addAndMakeVisible(hpSlider);
     hpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "HPF", hpSlider);
     hpLabel.setText("HIGH PASS", juce::dontSendNotification);
@@ -18,6 +18,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     lpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     lpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
     lpSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    lpSlider.setTooltip(PluginTooltips::lowPass);
     addAndMakeVisible(lpSlider);
     lpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "LPF", lpSlider);
     lpLabel.setText("LOW PASS", juce::dontSendNotification);
@@ -28,6 +29,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     bitSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     bitSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     bitSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    bitSlider.setTooltip(PluginTooltips::bitDepth);
     addAndMakeVisible(bitSlider);
     bitAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "BITS", bitSlider);
     bitLabel.setText("BIT DEPTH", juce::dontSendNotification);
@@ -38,6 +40,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     rateSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     rateSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     rateSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    rateSlider.setTooltip(PluginTooltips::sampleRate);
     addAndMakeVisible(rateSlider);
     rateAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "RATE", rateSlider);
     rateLabel.setText("SAMPLE RATE", juce::dontSendNotification);
@@ -48,6 +51,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     mixSlider.setSliderStyle(juce::Slider::LinearVertical);
     mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 65, 20);
     mixSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    mixSlider.setTooltip(PluginTooltips::mix);
     addAndMakeVisible(mixSlider);
     mixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "MIX", mixSlider);
     mixLabel.setText("MIX", juce::dontSendNotification);

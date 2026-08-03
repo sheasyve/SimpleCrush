@@ -1,5 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
+#include "ui/style/tooltips.h"
 
 class PluginControls : public juce::Component {
 public:

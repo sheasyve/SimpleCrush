@@ -124,6 +124,7 @@ int MyPluginProcessor::getSavedFontSizeId() {
     }
     return 1;
 }
+
 void MyPluginProcessor::saveTooltipState(bool isEnabled) {
     if (auto *props = appProperties.getUserSettings()) {
         props->setValue("ShowTooltips", isEnabled);
@@ -133,9 +134,9 @@ void MyPluginProcessor::saveTooltipState(bool isEnabled) {
 
 bool MyPluginProcessor::getSavedTooltipState() {
     if (auto *props = appProperties.getUserSettings()) {
-        return props->getBoolValue("ShowTooltips", true); 
+        return props->getBoolValue("ShowTooltips", false); 
     }
-    return true;
+    return false;
 }
 
 // ==============================================================================

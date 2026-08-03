@@ -3,9 +3,13 @@
 PluginSettings::PluginSettings() {
     juce::String infotext =
         "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
+    
     setInterceptsMouseClicks(false, true);
+    
     parseSvgIcon(settingsButton, drawableGear, drawableGearHover, SvgAssets::gearIcon);
+    settingsButton.setTooltip(SettingsTooltips::settingsBtn);
     addAndMakeVisible(settingsButton);
+    
     themeLabel.setText("Theme", juce::dontSendNotification);
     themeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(themeLabel);
@@ -17,25 +21,31 @@ PluginSettings::PluginSettings() {
     themeSelector.addItem("Retro Caramel", 5);
     themeSelector.addItem("Arctic Freeze", 6);
     themeSelector.addItem("Midnight Hacker", 7);
+    themeSelector.setTooltip(SettingsTooltips::theme);
     addChildComponent(themeSelector);
 
     fontSizeLabel.setText("Font Size", juce::dontSendNotification);
     fontSizeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(fontSizeLabel);
+    
     fontSizeSelector.addItem("Normal", 1);
     fontSizeSelector.addItem("Small", 2);
     fontSizeSelector.addItem("Large", 3);
     fontSizeSelector.addItem("Extra Large", 4);
+    fontSizeSelector.setTooltip(SettingsTooltips::fontSize);
     addChildComponent(fontSizeSelector);
 
     infoLabel.setText(infotext, juce::dontSendNotification);
     infoLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(infoLabel);
+    
     infoButton.onClick = [] { juce::URL("https://sheasyve.dev/simplecrush").launchInDefaultBrowser(); };
     infoButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
     infoButton.setAlpha(0.0f);
+    infoButton.setTooltip(SettingsTooltips::info);
     addChildComponent(infoButton);
 
+    tooltipToggle.setTooltip(SettingsTooltips::tooltips);
     addChildComponent(tooltipToggle);
     tooltipToggle.onClick = [this]() {
         if (onTooltipToggled != nullptr) {

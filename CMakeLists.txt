@@ -39,6 +39,7 @@ target_sources(SimpleCrush PRIVATE
     src/ui/components/plugin_settings.cpp
     src/ui/components/preset_menu.h
     src/ui/components/preset_menu.cpp
+    src/ui/components/preset_actions.cpp
 )
 
 target_link_libraries(SimpleCrush PRIVATE

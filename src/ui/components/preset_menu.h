@@ -1,5 +1,6 @@
 #pragma once
 #include "ui/style/plugin_theme.h"
+#include "ui/style/tooltips.h"
 #include "ui/style/svg.h"
 #include <JuceHeader.h>
 
@@ -35,6 +36,7 @@ public:
 private:
     void updateMenuVisibility();
     void loadPresetsFromDirectory();
+    void presetCallbacks();
 
     juce::AudioProcessorValueTreeState &apvts;
     juce::File presetDirectory;
