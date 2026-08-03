@@ -96,9 +96,9 @@ void MyPluginEditor::updateTheme(int themeId) {
     themeLnF.setColour(juce::PopupMenu::highlightedTextColourId, theme.bgCenter);
     themeLnF.setColour(juce::PopupMenu::backgroundColourId, theme.bgCenter);
     themeLnF.setColour(juce::PopupMenu::highlightedBackgroundColourId, theme.buttonHoverColor);
-    themeLnF.setColour(juce::TooltipWindow::backgroundColourId, theme.bgCenter.withAlpha(0.0f));
+    themeLnF.setColour(juce::TooltipWindow::backgroundColourId, theme.bgCenter.withAlpha(0.8f));
     themeLnF.setColour(juce::TooltipWindow::textColourId, theme.labelText);
-    themeLnF.setColour(juce::TooltipWindow::outlineColourId, juce::Colours::transparentBlack);
+    themeLnF.setColour(juce::TooltipWindow::outlineColourId, theme.bgCenter.withAlpha(0.8f));
 
     sendLookAndFeelChange();
 
@@ -222,7 +222,7 @@ void MyPluginEditor::setLabelsVisible(bool shouldBeVisible) {
 void MyPluginEditor::updateTooltipState(bool shouldShowTooltips) {
     if (shouldShowTooltips) {
         if (tooltipWindow == nullptr) {
-            tooltipWindow = std::make_unique<juce::TooltipWindow>(this, 700);
+            tooltipWindow = std::make_unique<juce::TooltipWindow>(this, 1700);
             tooltipWindow->setOpaque(false);
         }
     } else {
