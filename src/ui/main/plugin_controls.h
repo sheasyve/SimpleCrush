@@ -1,6 +1,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "ui/style/tooltips.h"
+#include "../../dsp/knobs.h"
 
 class PluginControls : public juce::Component {
 public:
@@ -9,7 +10,11 @@ public:
 
     void resized() override;
     juce::Rectangle<int> logoBounds;
-    juce::Slider hpSlider, lpSlider, bitSlider, rateSlider, mixSlider;
+    AbsoluteFineTuneKnob hpSlider;
+    AbsoluteFineTuneKnob lpSlider;
+    AbsoluteFineTuneKnob bitSlider;
+    AbsoluteFineTuneKnob rateSlider;
+    AbsoluteFineTuneKnob mixSlider;
     juce::Label hpLabel, lpLabel, bitLabel, rateLabel, mixLabel;
 
 private:

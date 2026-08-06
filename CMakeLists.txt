@@ -29,6 +29,7 @@ target_sources(SimpleCrush PRIVATE
     src/dsp/plugin_processor.cpp
     src/dsp/plugin_processor.h
     src/dsp/main_processing.cpp
+    src/dsp/knobs.h
     src/ui/main/plugin_editor.cpp
     src/ui/main/plugin_editor.h
     src/ui/main/plugin_controls.h

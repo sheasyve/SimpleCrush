@@ -48,7 +48,6 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     saveTextBox.setReturnKeyStartsNewLine(false);
     saveTextBox.setTooltip(PresetTooltips::saveInput);
     addChildComponent(saveTextBox);
-    
     parseSvgIcon(saveButton, drawableSave, drawableSaveHover, SvgAssets::saveIcon);
     saveButton.setTooltip(PresetTooltips::saveButton);
     addChildComponent(saveButton);
@@ -76,7 +75,6 @@ void PresetMenu::updateMenuVisibility() {
     saveButton.setVisible(isPresetsVisible);
     randomButton.setVisible(isPresetsVisible);
     presetList.setVisible(isPresetsVisible);
-
     resized();
     repaint();
 }
