@@ -70,16 +70,12 @@ void MyPluginProcessor::setStateInformation(const void *data, int sizeInBytes) {
 
 inline juce::NormalisableRange<float> makeCustomSkewRange(float min, float max, float skew) {
     return juce::NormalisableRange<float>(
-        min,
-        max,
-        // 1. convertFrom0To1Func: Normalized (0.0 - 1.0) -> Real Value
+        min, max,
         [skew](float start, float end, float norm) { return start + (end - start) * std::pow(norm, 1.0f / skew); },
-        // 2. convertTo0To1Func: Real Value -> Normalized (0.0 - 1.0)
         [skew](float start, float end, float val) {
             float normalized = (val - start) / (end - start);
             return std::pow(std::max(0.0f, normalized), skew);
         },
-        // 3. snapToLegalValueFunc: Bypasses the interval system entirely for continuous DAW fine-tuning
         [](float start, float end, float val) { return juce::jlimit(start, end, val); });
 }
 
@@ -196,9 +192,7 @@ bool MyPluginProcessor::getSavedTooltipState() {
     return false;
 }
 
-// ==============================================================================
 // JUCE BOILERPLATE
-// ==============================================================================
 
 const juce::String MyPluginProcessor::getName() const { return JucePlugin_Name; }
 bool MyPluginProcessor::acceptsMidi() const { return false; }

@@ -1,8 +1,19 @@
 #pragma once
 #include "ui/style/plugin_theme.h"
-#include "ui/style/tooltips.h"
 #include "ui/style/svg.h"
+#include "ui/style/tooltips.h"
 #include <JuceHeader.h>
+
+const std::vector<std::pair<juce::String, int>> fontSizes = {
+    {"Normal", 1}, {"Small", 2}, {"Large", 3}, {"Extra Large", 4}};
+
+const std::vector<std::pair<juce::String, int>> themes = {{"Panda Trueno", 1},
+    {"Studio Dark", 2},
+    {"Studio Light", 3},
+    {"Vaporwave", 4},
+    {"Retro Caramel", 5},
+    {"Arctic Freeze", 6},
+    {"Midnight Hacker", 7}};
 
 class PluginSettings : public juce::Component {
 

@@ -136,9 +136,7 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFF000000),
         juce::Colour(0xFF008F11),
         juce::Colour(0xFF00FF41),
-        juce::FontOptions("Lucidia Console",
-            10.0f,
-            juce::Font::bold), // This does the exact same thing as in theme 6, but the code is different for no reason!
+        juce::FontOptions("Lucidia Console", 10.0f, juce::Font::bold),
         juce::Colours::black.withAlpha(0.95f),
         juce::Colours::black.withAlpha(0.8f),
         juce::Colour(0xFF00FF41)};

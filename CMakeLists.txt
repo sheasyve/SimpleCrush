@@ -1,9 +1,10 @@
+#C:\Users\sheam\Documents\redux-plugin\SimpleCrush
 cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build" FORCE)
 
-project(SimpleCrush VERSION 1.0.1)
+project(SimpleCrush VERSION 1.0.3)
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/std:c++latest>")
 
 cmake_policy(SET CMP0177 NEW)

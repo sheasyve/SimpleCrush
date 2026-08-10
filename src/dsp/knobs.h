@@ -24,8 +24,8 @@ public:
             newValue = std::round(newValue / stepSize) * stepSize;
             newValue = juce::jlimit(getMinimum(), getMaximum(), newValue);
             setValue(newValue, juce::sendNotificationSync);
-
-        } else {
+        } 
+        else {
             juce::Slider::mouseDrag(e);
             dragStartValue = getValue();
         }

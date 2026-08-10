@@ -3,41 +3,26 @@
 PluginSettings::PluginSettings() {
     juce::String infotext =
         "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
-    setInterceptsMouseClicks(false, true);
 
+    setInterceptsMouseClicks(false, true);
     parseSvgIcon(settingsButton, drawableGear, drawableGearHover, SvgAssets::gearIcon);
     settingsButton.setTooltip(SettingsTooltips::settingsBtn);
     addAndMakeVisible(settingsButton);
-    
-    themeLabel.setText("Theme", juce::dontSendNotification);
-    themeLabel.setJustificationType(juce::Justification::centred);
-    addChildComponent(themeLabel);
 
-    themeSelector.addItem("Panda Trueno", 1);
-    themeSelector.addItem("Studio Dark", 2);
-    themeSelector.addItem("Studio Light", 3);
-    themeSelector.addItem("Vaporwave", 4);
-    themeSelector.addItem("Retro Caramel", 5);
-    themeSelector.addItem("Arctic Freeze", 6);
-    themeSelector.addItem("Midnight Hacker", 7);
+    for (const auto &theme : themes) { themeSelector.addItem(theme.first, theme.second); }
     themeSelector.setTooltip(SettingsTooltips::theme);
     addChildComponent(themeSelector);
-
     fontSizeLabel.setText("Font Size", juce::dontSendNotification);
     fontSizeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(fontSizeLabel);
-    
-    fontSizeSelector.addItem("Normal", 1);
-    fontSizeSelector.addItem("Small", 2);
-    fontSizeSelector.addItem("Large", 3);
-    fontSizeSelector.addItem("Extra Large", 4);
+
+    for (const auto &size : fontSizes) { fontSizeSelector.addItem(size.first, size.second); }
     fontSizeSelector.setTooltip(SettingsTooltips::fontSize);
     addChildComponent(fontSizeSelector);
-
     infoLabel.setText(infotext, juce::dontSendNotification);
     infoLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(infoLabel);
-    
+
     infoButton.onClick = [] { juce::URL("https://sheasyve.dev/simplecrush").launchInDefaultBrowser(); };
     infoButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
     infoButton.setAlpha(0.0f);
@@ -47,9 +32,7 @@ PluginSettings::PluginSettings() {
     tooltipToggle.setTooltip(SettingsTooltips::tooltips);
     addChildComponent(tooltipToggle);
     tooltipToggle.onClick = [this]() {
-        if (onTooltipToggled != nullptr) {
-            onTooltipToggled(tooltipToggle.getToggleState());
-        }
+        if (onTooltipToggled != nullptr) { onTooltipToggled(tooltipToggle.getToggleState()); }
     };
     settingsButton.onClick = [this]() {
         isSettingsVisible = !isSettingsVisible;
@@ -95,6 +78,7 @@ void PluginSettings::resized() {
     settingsButton.setBounds(5, 5, 25, 25);
     if (isSettingsVisible) {
         int topY = bounds.getCentreY() - 110 + 7;
+        int labelHeight = 100;
         int availableHeight = bounds.getBottom() - topY - 10;
         auto overlayArea = juce::Rectangle<int>(bounds.getCentreX() - 110, topY, 220, std::max(220, availableHeight));
         overlayArea.removeFromTop(5);
@@ -105,7 +89,6 @@ void PluginSettings::resized() {
         fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
         overlayArea.removeFromTop(15);
         tooltipToggle.setBounds(overlayArea.removeFromTop(25).reduced(30, 0));
-        int labelHeight = 100;
         auto centeredInfoBounds = overlayArea.withSizeKeepingCentre(overlayArea.getWidth(), labelHeight);
         infoLabel.setBounds(centeredInfoBounds);
         infoButton.setBounds(centeredInfoBounds);
