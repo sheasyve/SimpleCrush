@@ -10,11 +10,11 @@ public:
 
     void resized() override;
     juce::Rectangle<int> logoBounds;
-    AbsoluteFineTuneKnob hpSlider;
-    AbsoluteFineTuneKnob lpSlider;
-    AbsoluteFineTuneKnob bitSlider;
-    AbsoluteFineTuneKnob rateSlider;
-    AbsoluteFineTuneKnob mixSlider;
+    CustomKnob hpSlider;
+    CustomKnob lpSlider;
+    CustomKnob bitSlider;
+    CustomKnob rateSlider;
+    CustomKnob mixSlider;
     juce::Label hpLabel, lpLabel, bitLabel, rateLabel, mixLabel;
 
 private:

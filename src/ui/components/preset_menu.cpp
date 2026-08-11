@@ -2,6 +2,7 @@
 
 // --- PRESET MENU ---
 
+
 PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
     // --- Preset Folder ---
@@ -9,15 +10,8 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
         juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
     presetDirectory = appDataDir.getChildFile("Presets");
     auto settingsFile = appDataDir.getChildFile("settings.xml");
-    if (settingsFile.existsAsFile()) {
-        if (std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile)) {
-            juce::String savedPath = xml->getStringAttribute("PresetFolder");
-            if (savedPath.isNotEmpty()) {
-                juce::File savedDir(savedPath);
-                if (savedDir.exists() && savedDir.isDirectory()) { presetDirectory = savedDir; }
-            }
-        }
-    }
+    SettingsFile(settingsFile);
+
     if (!presetDirectory.exists()) presetDirectory.createDirectory();
     loadPresetsFromDirectory();
 
@@ -56,6 +50,18 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     presetList.setColour(juce::ListBox::backgroundColourId, juce::Colours::transparentBlack);
     addChildComponent(presetList);
     presetCallbacks();
+}
+
+void PresetMenu::SettingsFile(juce::File settingsFile){
+    if (settingsFile.existsAsFile()) {
+        if (std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile)) {
+            juce::String savedPath = xml->getStringAttribute("PresetFolder");
+            if (savedPath.isNotEmpty()) {
+                juce::File savedDir(savedPath);
+                if (savedDir.exists() && savedDir.isDirectory()) { presetDirectory = savedDir; }
+            }
+        }
+    }
 }
 
 void PresetMenu::loadPresetsFromDirectory() {
@@ -106,7 +112,7 @@ void PresetMenu::resized() {
     // --- Top Left Stack ---
     folderButton.setBounds(5, 30, 25, 25);
     deleteButton.setBounds(5, 55, 25, 25);
-    
+
     if (isPresetsVisible) {
         auto overlayArea = bounds.withSizeKeepingCentre(260, 240);
         overlayArea.translate(0, 25);
@@ -120,7 +126,6 @@ void PresetMenu::resized() {
 void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
     juce::Colour brightNormal = normal.brighter(0.3f);
     juce::Colour brightHover = hover.brighter(0.3f);
-
     if (drawableList != nullptr) {
         drawableList->setFill(brightNormal);
         drawableListHover->setFill(brightHover);

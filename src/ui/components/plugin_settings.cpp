@@ -3,7 +3,6 @@
 PluginSettings::PluginSettings() {
     juce::String infotext =
         "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
-
     setInterceptsMouseClicks(false, true);
     parseSvgIcon(settingsButton, drawableGear, drawableGearHover, SvgAssets::gearIcon);
     settingsButton.setTooltip(SettingsTooltips::settingsBtn);

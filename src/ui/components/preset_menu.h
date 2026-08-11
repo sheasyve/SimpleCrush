@@ -37,6 +37,7 @@ private:
     void updateMenuVisibility();
     void loadPresetsFromDirectory();
     void presetCallbacks();
+    void SettingsFile(juce::File settingsFile);
 
     juce::AudioProcessorValueTreeState &apvts;
     juce::File presetDirectory;

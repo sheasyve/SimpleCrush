@@ -11,7 +11,8 @@ public:
     void releaseResources() override;
     bool isBusesLayoutSupported(const BusesLayout &layouts) const override;
     void processBlock(juce::AudioBuffer<float> &, juce::MidiBuffer &) override;
-
+    void setFilters(juce::AudioBuffer<float> &, juce::MidiBuffer &, float mix, float sampleRate, int channelsToProcess);
+    void process(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages, int channel, int channelsToProcess, int rate, float totalLevels, float mix);
     // --- GUI Bridging ---
     juce::AudioProcessorEditor *createEditor() override;
     bool hasEditor() const override;
