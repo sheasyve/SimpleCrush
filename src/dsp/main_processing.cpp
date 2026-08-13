@@ -24,7 +24,6 @@ void MyPluginProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Mid
     float mix = apvts.getRawParameterValue("MIX")->load();
     float sampleRate = getSampleRate();
     if (sampleRate > 0.0) setFilters(buffer, midiMessages, mix, sampleRate, channelsToProcess);
-
     for (int channel = 0; channel < channelsToProcess; ++channel) {
         process(buffer, midiMessages, channel, channelsToProcess, rate, totalLevels, mix);
     }

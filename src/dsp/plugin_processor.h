@@ -1,5 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
+#include "knobs.h"
 
 class MyPluginProcessor : public juce::AudioProcessor {
 public:
@@ -13,6 +14,7 @@ public:
     void processBlock(juce::AudioBuffer<float> &, juce::MidiBuffer &) override;
     void setFilters(juce::AudioBuffer<float> &, juce::MidiBuffer &, float mix, float sampleRate, int channelsToProcess);
     void process(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages, int channel, int channelsToProcess, int rate, float totalLevels, float mix);
+
     // --- GUI Bridging ---
     juce::AudioProcessorEditor *createEditor() override;
     bool hasEditor() const override;
@@ -30,9 +32,7 @@ public:
     void changeProgramName(int index, const juce::String &newName) override;
     void getStateInformation(juce::MemoryBlock &destData) override;
     void setStateInformation(const void *data, int sizeInBytes) override;
-
-    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    juce::AudioProcessorValueTreeState apvts{*this, nullptr, "Parameters", createParameterLayout()};
+    juce::AudioProcessorValueTreeState apvts{*this, nullptr, "Parameters", Knobs::createParameterLayout()};
     void saveWindowSize(int width, int height);
     juce::Point<int> getWindowSize();
     int getSavedThemeId() { return appProperties.getUserSettings()->getIntValue("GlobalThemeId", 1); }
@@ -42,7 +42,6 @@ public:
     }
     void saveFontSizeId(int fontSizeId);
     int getSavedFontSizeId();
-
     void saveTooltipState(bool isEnabled);
     bool getSavedTooltipState();
 

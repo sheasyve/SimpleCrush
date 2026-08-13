@@ -50,7 +50,6 @@ public:
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
     juce::ToggleButton tooltipToggle{"Show Tooltips"};
-
     std::function<void(bool)> onTooltipToggled;
 
     void setInitialTooltipState(bool isEnabled);

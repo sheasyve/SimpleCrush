@@ -1,34 +1,19 @@
 #pragma once
 #include <JuceHeader.h>
 
-class CustomKnob : public juce::Slider {
-    // -- Custom Knob Behavior --
-public:
-    CustomKnob() { setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag); }
-
-    void mouseDown(const juce::MouseEvent &e) override {
-        juce::Slider::mouseDown(e);
-        dragStartValue = getValue();
-    }
-
-    void mouseDrag(const juce::MouseEvent &e) override {
-        if (e.mods.isShiftDown() || e.mods.isCtrlDown() || e.mods.isCommandDown()) {
-            int deltaY = -e.getDistanceFromDragStartY();
-            int deltaX = e.getDistanceFromDragStartX();
-            int totalDeltaPixels = deltaY + deltaX;
-            double stepSize = getInterval() > 0.0 ? getInterval() : 0.1;
-            double sensitivity = 0.25;
-            double absoluteOffset = totalDeltaPixels * stepSize * sensitivity;
-            double newValue = dragStartValue + absoluteOffset;
-            newValue = std::round(newValue / stepSize) * stepSize;
-            newValue = juce::jlimit(getMinimum(), getMaximum(), newValue);
-            setValue(newValue, juce::sendNotificationSync);
-        } else {
-            juce::Slider::mouseDrag(e);
-            dragStartValue = getValue();
+namespace Knobs {
+    juce::NormalisableRange<float> makeCustomSkewRange(float start, float end, float skewFactor);
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    class CustomKnob : public juce::Slider {
+    public:
+        CustomKnob() { 
+            setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag); 
         }
-    }
+        void mouseDown(const juce::MouseEvent &e) override;
+        void mouseDrag(const juce::MouseEvent &e) override;
 
-private:
-    double dragStartValue = 0.0;
-};
+    private:
+        double dragStartValue = 0.0;
+    };
+
+} // namespace Knobs
