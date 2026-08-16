@@ -70,11 +70,11 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF222222),
             juce::Colour(0xFFF9F9F9),
             juce::Colour(0xFFDCDCDC),
-            juce::Colour(0xFF333333),
-            juce::Colour(0xff0f0f0f),
+            juce::Colour(0xff080808),
+            juce::Colour(0xff8d8d8d),
             juce::FontOptions(15.0f, juce::Font::bold).withName("Arial"),
             juce::Colour(0xFFE0E0E0).withAlpha(0.83f),
-            juce::Colour(0xFFE0E0E0).withAlpha(0.f),
+            juce::Colour(0xFFE0E0E0).withAlpha(0.83f),
             juce::Colour(0xFF333333)};
     }
 
@@ -86,8 +86,8 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF05D9E8),
             juce::Colour(0xFF390B8A),
             juce::Colour(0xFF000000),
-            juce::Colour(0xff14505f),
             juce::Colour(0xFF05D9E8),
+            juce::Colour(0xFFFF2A6D),
             juce::FontOptions(15.0f, juce::Font::bold | juce::Font::italic).withName("Arial"),
             juce::Colours::black.withAlpha(0.8f),
             juce::Colours::black.withAlpha(0.78f),

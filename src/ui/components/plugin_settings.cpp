@@ -8,20 +8,26 @@ PluginSettings::PluginSettings() {
     settingsButton.setTooltip(SettingsTooltips::settingsBtn);
     addAndMakeVisible(settingsButton);
 
+    // Theme
+    themeLabel.setText("Theme", juce::dontSendNotification);
+    themeLabel.setJustificationType(juce::Justification::centred); 
+    addChildComponent(themeLabel);
     for (const auto &theme : themes) { themeSelector.addItem(theme.first, theme.second); }
     themeSelector.setTooltip(SettingsTooltips::theme);
     addChildComponent(themeSelector);
+
+    // Font Size
     fontSizeLabel.setText("Font Size", juce::dontSendNotification);
     fontSizeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(fontSizeLabel);
-
     for (const auto &size : fontSizes) { fontSizeSelector.addItem(size.first, size.second); }
     fontSizeSelector.setTooltip(SettingsTooltips::fontSize);
     addChildComponent(fontSizeSelector);
+
+    // Info 
     infoLabel.setText(infotext, juce::dontSendNotification);
     infoLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(infoLabel);
-
     infoButton.onClick = [] { juce::URL("https://sheasyve.dev/simplecrush").launchInDefaultBrowser(); };
     infoButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
     infoButton.setAlpha(0.0f);
