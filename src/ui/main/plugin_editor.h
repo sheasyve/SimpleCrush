@@ -1,31 +1,30 @@
 #pragma once
-#include "PluginControls.h"
-#include "PluginProcessor.h"
-#include "PluginSettings.h"
-#include "PluginTheme.h"
-#include "PresetMenu.h"
+#include "dsp/plugin_processor.h"
+#include "ui/components/plugin_settings.h"
+#include "ui/components/preset_menu.h"
+#include "ui/main/plugin_controls.h"
+#include "ui/style/plugin_theme.h"
 #include <JuceHeader.h>
 
 class ThemeLookAndFeel : public juce::LookAndFeel_V4 {
 public:
     juce::FontOptions currentFont;
-
     juce::Font getLabelFont(juce::Label &) override { return juce::Font(currentFont); }
 };
 
-class MyReduxEditor : public juce::AudioProcessorEditor {
+class MyPluginEditor : public juce::AudioProcessorEditor {
 public:
-    MyReduxEditor(MyReduxProcessor &);
-    ~MyReduxEditor() override;
-
+    MyPluginEditor(MyPluginProcessor &);
+    ~MyPluginEditor() override;
+    void updateTooltipState(bool shouldShowTooltips);
     void paint(juce::Graphics &) override;
-    void paintOverChildren(juce::Graphics&) override;
+    void paintOverChildren(juce::Graphics &) override;
     void resized() override;
-
+    
 private:
     PluginTheme::SettingsBackground settingsOverlay;
     PluginTheme::SettingsBackground presetOverlay;
-    MyReduxProcessor &audioProcessor;
+    MyPluginProcessor &audioProcessor;
     ThemeLookAndFeel themeLnF;
     PresetMenu presetMenu;
     PluginControls pluginControls;
@@ -38,6 +37,9 @@ private:
     float getDynamicFontHeight() const;
     void updateTheme(int themeId);
     void updateFontSize(int fontSizeId);
+    void setLabelsVisible(bool shouldBeVisible);
+    
+    std::unique_ptr<juce::TooltipWindow> tooltipWindow;
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hpAttachment;
@@ -46,5 +48,5 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> rateAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mixAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> themeAttachment;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MyReduxEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MyPluginEditor)
 };

@@ -1,55 +1,53 @@
-#include "PluginSettings.h"
-#include "PluginTheme.h"
-PluginSettings::PluginSettings() {
-    juce::String infotext = "SimpleCrush v1.1\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson";
-    setInterceptsMouseClicks(false, true);
+#include "ui/components/plugin_settings.h"
 
-    // --- Settings Gear Button ---
+PluginSettings::PluginSettings() {
+    juce::String infotext =
+        "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
+    setInterceptsMouseClicks(false, true);
     parseSvgIcon(settingsButton, drawableGear, drawableGearHover, SvgAssets::gearIcon);
+    settingsButton.setTooltip(SettingsTooltips::settingsBtn);
     addAndMakeVisible(settingsButton);
 
+    // Theme
     themeLabel.setText("Theme", juce::dontSendNotification);
-    themeLabel.setJustificationType(juce::Justification::centred);
+    themeLabel.setJustificationType(juce::Justification::centred); 
     addChildComponent(themeLabel);
-    themeSelector.addItem("Vaporwave", 1);
-    themeSelector.addItem("Studio Dark", 2);
-    themeSelector.addItem("Studio Light", 3);
-    themeSelector.addItem("Panda Trueno", 4);
-    themeSelector.addItem("Retro Caramel", 5);
-    themeSelector.addItem("Arctic Freeze", 6);
-    themeSelector.addItem("Midnight Hacker", 7);
+    for (const auto &theme : themes) { themeSelector.addItem(theme.first, theme.second); }
+    themeSelector.setTooltip(SettingsTooltips::theme);
     addChildComponent(themeSelector);
 
+    // Font Size
     fontSizeLabel.setText("Font Size", juce::dontSendNotification);
     fontSizeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(fontSizeLabel);
-    fontSizeSelector.addItem("Normal", 1);
-    fontSizeSelector.addItem("Small", 2);
-    fontSizeSelector.addItem("Large", 3);
-    fontSizeSelector.addItem("Extra Large", 4);
+    for (const auto &size : fontSizes) { fontSizeSelector.addItem(size.first, size.second); }
+    fontSizeSelector.setTooltip(SettingsTooltips::fontSize);
     addChildComponent(fontSizeSelector);
 
+    // Info 
     infoLabel.setText(infotext, juce::dontSendNotification);
     infoLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(infoLabel);
     infoButton.onClick = [] { juce::URL("https://sheasyve.dev/simplecrush").launchInDefaultBrowser(); };
     infoButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
     infoButton.setAlpha(0.0f);
+    infoButton.setTooltip(SettingsTooltips::info);
     addChildComponent(infoButton);
 
+    tooltipToggle.setTooltip(SettingsTooltips::tooltips);
+    addChildComponent(tooltipToggle);
+    tooltipToggle.onClick = [this]() {
+        if (onTooltipToggled != nullptr) { onTooltipToggled(tooltipToggle.getToggleState()); }
+    };
     settingsButton.onClick = [this]() {
         isSettingsVisible = !isSettingsVisible;
         updateMenuVisibility();
     };
-
     themeSelector.onChange = [this]() {
-        if (onThemeChanged != nullptr)
-            onThemeChanged(themeSelector.getSelectedId());
+        if (onThemeChanged != nullptr) onThemeChanged(themeSelector.getSelectedId());
     };
-
     fontSizeSelector.onChange = [this]() {
-        if (onFontSizeChanged != nullptr)
-            onFontSizeChanged(fontSizeSelector.getSelectedId());
+        if (onFontSizeChanged != nullptr) onFontSizeChanged(fontSizeSelector.getSelectedId());
     };
 }
 
@@ -61,8 +59,8 @@ void PluginSettings::updateMenuVisibility() {
     fontSizeSelector.setVisible(isSettingsVisible);
     infoLabel.setVisible(isSettingsVisible);
     infoButton.setVisible(isSettingsVisible);
-    if (onSettingsToggled != nullptr)
-        onSettingsToggled(isSettingsVisible);
+    tooltipToggle.setVisible(isSettingsVisible);
+    if (onSettingsToggled != nullptr) onSettingsToggled(isSettingsVisible);
     resized();
     repaint();
 }
@@ -83,17 +81,22 @@ void PluginSettings::paint(juce::Graphics &g) {
 void PluginSettings::resized() {
     auto bounds = getLocalBounds();
     settingsButton.setBounds(5, 5, 25, 25);
-    auto overlayArea = bounds.withSizeKeepingCentre(220, 220);
-    //overlayArea.translate(0, 7);
     if (isSettingsVisible) {
-        themeLabel.setBounds(overlayArea.removeFromTop(40)); // 20
+        int topY = bounds.getCentreY() - 110 + 7;
+        int labelHeight = 100;
+        int availableHeight = bounds.getBottom() - topY - 10;
+        auto overlayArea = juce::Rectangle<int>(bounds.getCentreX() - 110, topY, 220, std::max(220, availableHeight));
+        overlayArea.removeFromTop(5);
+        themeLabel.setBounds(overlayArea.removeFromTop(40));
         themeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
         overlayArea.removeFromTop(15);
         fontSizeLabel.setBounds(overlayArea.removeFromTop(20));
         fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
         overlayArea.removeFromTop(15);
-        infoLabel.setBounds(overlayArea);
-        infoButton.setBounds(overlayArea);
+        tooltipToggle.setBounds(overlayArea.removeFromTop(25).reduced(30, 0));
+        auto centeredInfoBounds = overlayArea.withSizeKeepingCentre(overlayArea.getWidth(), labelHeight);
+        infoLabel.setBounds(centeredInfoBounds);
+        infoButton.setBounds(centeredInfoBounds);
     }
 }
 
@@ -104,13 +107,18 @@ void PluginSettings::setMenuOpen(bool isOpen) {
 
 void PluginSettings::updateIconColors(juce::Colour normal, juce::Colour hover) {
     if (drawableGear != nullptr && drawableGearHover != nullptr) {
-        drawableGear->setFill(normal);
-        drawableGearHover->setFill(hover);
+        drawableGear->setFill(normal.brighter(0.3f));
+        drawableGearHover->setFill(hover.brighter(0.3f));
         settingsButton.setImages(drawableGear.get(), drawableGearHover.get(), drawableGearHover.get());
     }
 }
 
 void PluginSettings::setInitialTheme(int themeId) { themeSelector.setSelectedId(themeId, juce::dontSendNotification); }
+
 void PluginSettings::setInitialFontSize(int fontSizeId) {
     fontSizeSelector.setSelectedId(fontSizeId, juce::dontSendNotification);
+}
+
+void PluginSettings::setInitialTooltipState(bool isEnabled) {
+    tooltipToggle.setToggleState(isEnabled, juce::dontSendNotification);
 }

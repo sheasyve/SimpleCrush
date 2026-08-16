@@ -1,12 +1,13 @@
-#include "PluginControls.h"
+#include "plugin_controls.h"
 
-PluginControls::PluginControls(juce::AudioProcessorValueTreeState& apvts) {
+PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     setInterceptsMouseClicks(false, true);
-    
+
     // --- High Pass Knob ---
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
     hpSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    hpSlider.setTooltip(PluginTooltips::highPass);
     addAndMakeVisible(hpSlider);
     hpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "HPF", hpSlider);
     hpLabel.setText("HIGH PASS", juce::dontSendNotification);
@@ -17,6 +18,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState& apvts) {
     lpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     lpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
     lpSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    lpSlider.setTooltip(PluginTooltips::lowPass);
     addAndMakeVisible(lpSlider);
     lpAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "LPF", lpSlider);
     lpLabel.setText("LOW PASS", juce::dontSendNotification);
@@ -27,6 +29,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState& apvts) {
     bitSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     bitSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     bitSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    bitSlider.setTooltip(PluginTooltips::bitDepth);
     addAndMakeVisible(bitSlider);
     bitAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "BITS", bitSlider);
     bitLabel.setText("BIT DEPTH", juce::dontSendNotification);
@@ -37,6 +40,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState& apvts) {
     rateSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     rateSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     rateSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    rateSlider.setTooltip(PluginTooltips::sampleRate);
     addAndMakeVisible(rateSlider);
     rateAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "RATE", rateSlider);
     rateLabel.setText("SAMPLE RATE", juce::dontSendNotification);
@@ -45,8 +49,9 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState& apvts) {
 
     // --- Mix Knob ---
     mixSlider.setSliderStyle(juce::Slider::LinearVertical);
-    mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 65, 20);
     mixSlider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+    mixSlider.setTooltip(PluginTooltips::mix);
     addAndMakeVisible(mixSlider);
     mixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "MIX", mixSlider);
     mixLabel.setText("MIX", juce::dontSendNotification);
@@ -61,8 +66,8 @@ void PluginControls::resized() {
 
     // --- Mix Section (Right Side) ---
     int mixWidth = bounds.getWidth() * 0.17f;
-    auto mixPanel = bounds.removeFromRight(mixWidth + gap); 
-    mixPanel.removeFromRight(gap); 
+    auto mixPanel = bounds.removeFromRight(mixWidth + gap);
+    mixPanel.removeFromRight(gap);
     auto mixArea = mixPanel;
     mixLabel.setBounds(mixArea.removeFromTop(30));
     mixSlider.setBounds(mixArea);
@@ -71,19 +76,19 @@ void PluginControls::resized() {
     // --- Top Area: Filters (Small & Centered) ---
     auto topArea = bounds.removeFromTop(bounds.getHeight() * 0.45f);
     int maxTopW = topArea.getWidth() * 0.35f;
-    int maxTopH = topArea.getHeight() - 30; 
-    int filterKnobSize = jmin(maxTopW, maxTopH); 
+    int maxTopH = topArea.getHeight() - 30;
+    int filterKnobSize = jmin(maxTopW, maxTopH);
     int topGap = gap / 3;
     int filterAreaWidth = (filterKnobSize * 2) + topGap;
-    int filterAreaHeight = filterKnobSize + 30; 
+    int filterAreaHeight = filterKnobSize + 30;
     auto filterArea = topArea.withSizeKeepingCentre(filterAreaWidth, filterAreaHeight);
     auto hpArea = filterArea.removeFromLeft(filterKnobSize);
     hpLabel.setBounds(hpArea.removeFromTop(30));
-    hpSlider.setBounds(hpArea); 
+    hpSlider.setBounds(hpArea);
     filterArea.removeFromLeft(topGap);
     auto lpArea = filterArea;
     lpLabel.setBounds(lpArea.removeFromTop(30));
-    lpSlider.setBounds(lpArea); 
+    lpSlider.setBounds(lpArea);
     bounds.removeFromTop(bounds.getHeight() * 0.10f);
 
     // --- Bottom Area: Main Controls (Big) ---
@@ -102,4 +107,14 @@ void PluginControls::resized() {
     auto rateArea = centeredBottomArea;
     rateLabel.setBounds(rateArea.removeFromTop(30));
     rateSlider.setBounds(rateArea);
+}
+
+void PluginControls::lookAndFeelChanged() {
+    float currentFontHeight = getLookAndFeel().getLabelFont(mixLabel).getHeight();
+    int dynamicHeight = juce::jmax(20, (int)currentFontHeight + 6);
+    mixSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 65, dynamicHeight);
+    hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, dynamicHeight);
+    lpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, dynamicHeight);
+    bitSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, dynamicHeight);
+    rateSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, dynamicHeight);
 }

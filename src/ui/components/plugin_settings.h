@@ -1,9 +1,22 @@
 #pragma once
+#include "ui/style/plugin_theme.h"
+#include "ui/style/svg.h"
+#include "ui/style/tooltips.h"
 #include <JuceHeader.h>
-#include "Util.h"
+
+const std::vector<std::pair<juce::String, int>> fontSizes = {
+    {"Normal", 1}, {"Small", 2}, {"Large", 3}, {"Extra Large", 4}};
+
+const std::vector<std::pair<juce::String, int>> themes = {{"Panda Trueno", 1},
+    {"Studio Dark", 2},
+    {"Studio Light", 3},
+    {"Vaporwave", 4},
+    {"Retro Caramel", 5},
+    {"Arctic Freeze", 6},
+    {"Midnight Hacker", 7}};
 
 class PluginSettings : public juce::Component {
-    
+
 public:
     PluginSettings();
     ~PluginSettings() override = default;
@@ -15,15 +28,17 @@ public:
     void updateIconColors(juce::Colour normal, juce::Colour hover);
     void setMenuOpen(bool isOpen);
     bool isMenuOpen() const { return isSettingsVisible; }
+
     // Callbacks
     std::function<void(bool)> onSettingsToggled;
     std::function<void(int)> onThemeChanged;
     std::function<void(int)> onFontSizeChanged;
+
     // State helper
     void updateMenuVisibility();
 
     // Components
-    juce::Colour textColor = juce::Colours::white; 
+    juce::Colour textColor = juce::Colours::white;
     juce::Font textFont;
     juce::DrawableButton settingsButton{"Settings", juce::DrawableButton::ImageFitted};
     juce::Label themeLabel;
@@ -34,11 +49,14 @@ public:
     juce::TextButton infoButton;
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
+    juce::ToggleButton tooltipToggle{"Show Tooltips"};
+    std::function<void(bool)> onTooltipToggled;
 
+    void setInitialTooltipState(bool isEnabled);
     void setThemeStyle(juce::Colour newColor, juce::Font newFont) {
         textColor = newColor;
         textFont = newFont;
-        repaint(); 
+        repaint();
     }
 
 private:
