@@ -95,34 +95,34 @@ inline ThemeProps getThemeProps(int themeId) {
     }
 
     if (themeId == 5) { // Retro Caramel
-        return {juce::Colour(0xFFAD7640),
-            juce::Colour(0xFF6B4226),
-            juce::Colour(0xFFC99966),
-            juce::Colour(0xFF5C3822),
-            juce::Colour(0xFFE3D3B5),
-            juce::Colour(0xFF2E1A0F),
-            juce::Colour(0xFF120804),
-            juce::Colour(0xFFC99966),
-            juce::Colour(0xff6d5135),
+        return {juce::Colour(0xFFC58B4E),
+            juce::Colour(0xFF9A623B),
+            juce::Colour(0xFFDFB382),
+            juce::Colour(0xFF7B4A2E),
+            juce::Colour(0xFFF0E3CB),
+            juce::Colour(0xff644630),
+            juce::Colour(0xFF2B1910),
+            juce::Colour(0xFFDFB382),
+            juce::Colour(0xFF8C6C4B),
             juce::FontOptions(15.0f, juce::Font::italic | juce::Font::bold).withName("Helvetica"),
-            juce::Colour(0xFF120804).withAlpha(0.9f),
-            juce::Colour(0xFF120804).withAlpha(0.8f),
-            juce::Colour(0xFFC99966)};
+            juce::Colour(0xFF2B1910).withAlpha(0.9f),
+            juce::Colour(0xFF2B1910).withAlpha(0.8f),
+            juce::Colour(0xFFDFB382)};
     }
 
     if (themeId == 6) { // Arctic Freeze
-        return {juce::Colour(0xFF74B3CE),
-            juce::Colour(0xFF508991),
+        return {juce::Colour(0xFF30C5FF),
+            juce::Colour(0xFF0096C7),
             juce::Colour(0xFFFFFFFF),
-            juce::Colour(0xFF172A3A),
-            juce::Colour(0xFF98C1D9),
-            juce::Colour(0xFF172A3A),
-            juce::Colour(0xFF09141C),
-            juce::Colour(0xFF508991),
-            juce::Colour(0xFF74B3CE),
+            juce::Colour(0xFF0A2440),
+            juce::Colour(0xFFADE8F4),
+            juce::Colour(0xFF0A2440),
+            juce::Colour(0xFF031020),
+            juce::Colour(0xFF0096C7),
+            juce::Colour(0xFF30C5FF),
             juce::FontOptions(16.0f, juce::Font::bold).withName("Trebuchet MS"),
-            juce::Colour(0xFF09141C).withAlpha(0.95f),
-            juce::Colour(0xFF09141C).withAlpha(0.8f),
+            juce::Colour(0xFF031020).withAlpha(0.95f),
+            juce::Colour(0xFF031020).withAlpha(0.8f),
             juce::Colour(0xFFFFFFFF)};
     }
 
