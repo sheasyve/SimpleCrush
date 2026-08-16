@@ -13,11 +13,15 @@ void CustomKnob::mouseDrag(const juce::MouseEvent &e) {
             int deltaY = -e.getDistanceFromDragStartY();
             int deltaX = e.getDistanceFromDragStartX();
             int totalDeltaPixels = deltaY + deltaX;
-            double stepSize = getInterval() > 0.0 ? getInterval() : 0.1;
-            double sensitivity = 0.25;
-            double absoluteOffset = totalDeltaPixels * stepSize * sensitivity;
-            double newValue = dragStartValue + absoluteOffset;
-            newValue = std::round(newValue / stepSize) * stepSize;
+            double normalizedSensitivity = 0.001; 
+            double startProportion = valueToProportionOfLength(dragStartValue);
+            double newProportion = startProportion + (totalDeltaPixels * normalizedSensitivity);
+            newProportion = juce::jlimit(0.0, 1.0, newProportion);
+            double newValue = proportionOfLengthToValue(newProportion);
+            if (getInterval() > 0.0) {
+                double snap = getInterval();
+                newValue = std::round(newValue / snap) * snap;
+            }
             newValue = juce::jlimit(getMinimum(), getMaximum(), newValue);
             setValue(newValue, juce::sendNotificationSync);
         } else {
