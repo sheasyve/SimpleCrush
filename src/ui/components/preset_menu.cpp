@@ -2,7 +2,6 @@
 
 // --- PRESET MENU ---
 
-
 PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
     // --- Preset Folder ---
@@ -106,8 +105,8 @@ void PresetMenu::resized() {
 
     // --- Top Right Stack ---
     presetsButton.setBounds(bounds.getWidth() - 30, 5, 25, 25);
-    saveButton.setBounds(bounds.getWidth() - 27.5, 30, 22.5, 22.5);
-    randomButton.setBounds(bounds.getWidth() - 27.5, 55, 22.5, 22.5);
+    randomButton.setBounds(bounds.getWidth() - 27.5, 30, 22.5, 22.5);
+    saveButton.setBounds(bounds.getWidth() - 27.5, 55, 22.5, 22.5);
 
     // --- Top Left Stack ---
     folderButton.setBounds(5, 30, 25, 25);

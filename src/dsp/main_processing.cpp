@@ -1,7 +1,7 @@
 #include "plugin_processor.h"
 
 void MyPluginProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages) {
-    juce::ScopedNoDenormals noDenormals; // Prevents CPU spikes
+    juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     auto actualBufferChannels = buffer.getNumChannels();

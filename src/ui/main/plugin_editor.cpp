@@ -118,7 +118,7 @@ void MyPluginEditor::updateTheme(int themeId) {
     applyRotaryTheme(pluginControls.bitSlider);
     applyRotaryTheme(pluginControls.rateSlider);
 
-    // Mix Slider (Uses different layout properties than rotaries)
+    // Mix Slider
     pluginControls.mixSlider.setColour(juce::Slider::trackColourId, theme.sliderFill);
     pluginControls.mixSlider.setColour(juce::Slider::backgroundColourId, theme.sliderTrack);
     pluginControls.mixSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
