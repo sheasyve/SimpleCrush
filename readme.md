@@ -29,6 +29,7 @@ Download the latest `SimpleCrush_v1.x.x_Windows.exe` release, run the installer,
 1. Extract the zip file.
 2. Place the `SimpleCrush.vst3` folder into your DAW's designated VST3 plugin directory.
 3. Rescan for new plugins within your DAW.
+4. Redirect the preset folder within the plugin to wherever you placed the plugins in the zip file. 
 
 ## Build Instructions
 This project is structured for modern C++ development using CMake. To compile the plugin locally:
