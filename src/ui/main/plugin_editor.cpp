@@ -191,23 +191,26 @@ float MyPluginEditor::getDynamicFontHeight() const {
 
 void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
     bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
+    auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
+
     if (pluginControls.isVisible()) {
-        auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
         float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
-        g.setColour(ThemeProps.labelText);
         juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
         float logoScale = isAnyMenuOpen ? 1.5f : 2.5f;
         g.setFont(logoFont.withHeight(dynamicFontHeight * logoScale));
+        juce::Rectangle<int> textBounds;
         if (isAnyMenuOpen) {
             int yOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 15.0f, 28.0f);
             int yPosition = pluginControls.logoBounds.getY() - yOffset;
-            juce::Rectangle<int> centerBounds(0, yPosition, getWidth(), pluginControls.logoBounds.getHeight());
-            g.drawText("SimpleCrush", centerBounds, juce::Justification::centred);
+            textBounds = juce::Rectangle<int>(0, yPosition, getWidth(), pluginControls.logoBounds.getHeight());
         } else {
             int standardOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 5.0f, 9.0f);
-            g.drawText(
-                "SimpleCrush", pluginControls.logoBounds.translated(7, -standardOffset), juce::Justification::centred);
+            textBounds = pluginControls.logoBounds.translated(7, -standardOffset);
         }
+        g.setColour(ThemeProps.labelShadow);
+        g.drawText("SimpleCrush", textBounds.translated(2, 2), juce::Justification::centred);
+        g.setColour(ThemeProps.labelText);
+        g.drawText("SimpleCrush", textBounds, juce::Justification::centred);
     }
 }
 

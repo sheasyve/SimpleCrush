@@ -9,6 +9,7 @@ struct ThemeProps {
     juce::Colour sliderThumb;
     juce::Colour sliderTrack;
     juce::Colour labelText;
+    juce::Colour labelShadow;
     juce::Colour bgCenter;
     juce::Colour bgEdge;
     juce::Colour buttonColor;
@@ -37,6 +38,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF333333),
             juce::Colour(0xFFFFFFFF),
             juce::Colour(0xFF2B2B2B),
+            juce::Colour(0xFF2B2B2B),
             juce::Colour(0xFF050505),
             juce::Colour(0xbdffffff),
             juce::Colour(0xFFE50000),
@@ -52,6 +54,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFD4D4D4),
             juce::Colour(0xff575757),
             juce::Colour(0xfff1f1f1),
+            juce::Colour(0xFFF9F9F9),
             juce::Colour(0xFF202020),
             juce::Colour(0xff131313),
             juce::Colour(0xdea1a1a1),
@@ -69,6 +72,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xffbbbbbb),
             juce::Colour(0xFF222222),
             juce::Colour(0xFFF9F9F9),
+            juce::Colour(0xFFF9F9F9),
             juce::Colour(0xFFDCDCDC),
             juce::Colour(0xff080808),
             juce::Colour(0xff8d8d8d),
@@ -84,6 +88,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF01FFF4),
             juce::Colour(0xff14505f),
             juce::Colour(0xFF05D9E8),
+            juce::Colour(0xFFFF2A6D),
             juce::Colour(0xFF390B8A),
             juce::Colour(0xFF000000),
             juce::Colour(0xFF05D9E8),
@@ -100,6 +105,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFFDFB382),
             juce::Colour(0xFF7B4A2E),
             juce::Colour(0xFFF0E3CB),
+            juce::Colour(0xFFDFB382),
             juce::Colour(0xff644630),
             juce::Colour(0xFF2B1910),
             juce::Colour(0xFFDFB382),
@@ -117,6 +123,7 @@ inline ThemeProps getThemeProps(int themeId) {
             juce::Colour(0xFF0A2440),
             juce::Colour(0xFFADE8F4),
             juce::Colour(0xFF0A2440),
+            juce::Colour(0xFF0A2440),
             juce::Colour(0xFF031020),
             juce::Colour(0xFF0096C7),
             juce::Colour(0xFF30C5FF),
@@ -132,6 +139,7 @@ inline ThemeProps getThemeProps(int themeId) {
         juce::Colour(0xFFFFFFFF),
         juce::Colour(0xff31422d),
         juce::Colour(0xFF00FF41),
+        juce::Colour(0xFF008F11),
         juce::Colour(0xff272727),
         juce::Colour(0xFF000000),
         juce::Colour(0xFF008F11),
