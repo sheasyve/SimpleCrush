@@ -1,4 +1,5 @@
 #pragma once
+
 // --- Tooltip Definitions ---
 
 struct PluginTooltips {

@@ -39,6 +39,7 @@ private:
     void updateTheme(int themeId);
     void updateFontSize(int fontSizeId);
     void setLabelsVisible(bool shouldBeVisible);
+    void setupCallbacks();
     juce::DropShadow shadowProperties;
     juce::DropShadowEffect overlayShadow;
     std::unique_ptr<juce::TooltipWindow> tooltipWindow;

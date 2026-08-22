@@ -1,7 +1,5 @@
 #include "preset_menu.h"
 
-// --- PRESET MENU ---
-
 PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
     
@@ -56,11 +54,11 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
 void PresetMenu::SettingsFile(juce::File settingsFile){
     if (settingsFile.existsAsFile()) {
         if (std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile)) {
-            juce::String savedPath = xml->getStringAttribute("PresetFolder");
+            // CHANGED: Now reading from "DataFolder"
+            juce::String savedPath = xml->getStringAttribute("DataFolder");
             if (savedPath.isNotEmpty()) {
                 juce::File savedDir(savedPath);
                 if (savedDir.exists() && savedDir.isDirectory()) { 
-                    // ADD .getChildFile("Presets"):
                     presetDirectory = savedDir.getChildFile("Presets"); 
                     if (!presetDirectory.exists()) presetDirectory.createDirectory();
                 }
@@ -114,7 +112,6 @@ void PresetMenu::resized() {
     randomButton.setBounds(bounds.getWidth() - 27.5, 30, 22.5, 22.5);
     saveButton.setBounds(bounds.getWidth() - 27.5, 55, 22.5, 22.5);
     
-
     // --- Top Left Stack ---
     folderButton.setBounds(5, 30, 25, 25); 
     deleteButton.setBounds(5, 55, 25, 25);

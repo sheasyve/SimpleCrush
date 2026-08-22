@@ -7,7 +7,6 @@ ThemeManager::ThemeManager() {
     refreshThemes();
 }
 
-
 juce::Colour ThemeManager::parseHexColour(const juce::String& hexString) {
     return juce::Colour::fromString(hexString);
 }
@@ -85,7 +84,7 @@ std::vector<std::pair<juce::String, int>> ThemeManager::getAvailableThemes() con
 }
 
 void ThemeManager::loadDefaultFallbackTheme() {
-    // Hardcoded fallback safety net (e.g., Panda Trueno)
+    // Hardcoded default theme values
     defaultTheme.name = "Panda Trueno (Default)";
     defaultTheme.id = 1;
     defaultTheme.sliderFill = juce::Colour(0xFFFFFFFF);
@@ -107,7 +106,7 @@ void ThemeManager::loadDefaultFallbackTheme() {
 void ThemeManager::loadSettings(const juce::File& settingsFile) {
     if (settingsFile.existsAsFile()) {
         if (std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile)) {
-            juce::String savedPath = xml->getStringAttribute("PresetFolder");
+            juce::String savedPath = xml->getStringAttribute("DataFolder");
             if (savedPath.isNotEmpty()) {
                 juce::File savedDir(savedPath);
                 if (savedDir.exists() && savedDir.isDirectory()) { 

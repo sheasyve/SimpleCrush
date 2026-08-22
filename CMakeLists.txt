@@ -34,10 +34,12 @@ target_sources(SimpleCrush PRIVATE
     src/dsp/knobs.cpp
     src/ui/main/plugin_editor.cpp
     src/ui/main/plugin_editor.h
+    src/ui/main/editor_actions.cpp
     src/ui/main/plugin_controls.h
     src/ui/main/plugin_controls.cpp
     src/ui/style/plugin_theme.h
     src/ui/style/plugin_theme.cpp
+    src/ui/style/update_theme.cpp
     src/ui/style/svg.h
     src/ui/components/plugin_settings.h
     src/ui/components/plugin_settings.cpp

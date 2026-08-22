@@ -1,7 +1,6 @@
 #include "preset_menu.h"
 
 void PresetMenu::presetCallbacks() {
-    // --- Click actions in the preset menu ---
 
     presetsButton.onClick = [this]() {
         isPresetsVisible = !isPresetsVisible;

@@ -60,6 +60,7 @@ public:
     void launchFolderChooser();
 
 private:
+    void setupCallbacks();
     bool isSettingsVisible = false;
     bool isPresetsVisible = false;
     PluginTheme::ThemeManager& themeManager;

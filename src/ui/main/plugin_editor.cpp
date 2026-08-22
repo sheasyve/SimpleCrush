@@ -1,78 +1,45 @@
 #include "ui/main/plugin_editor.h"
 #include "dsp/plugin_processor.h"
+
 // --- Main UI Controller File ---
 
-// --- Constructor ---
 MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p), presetMenu(p.apvts), pluginControls(p.apvts) {
-    
+
+    auto settingsFile = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
+                            .getChildFile("Syverson Audio/SimpleCrush/settings.xml");
+    themeManager.loadSettings(settingsFile);
+    pluginSettings.refreshThemeList();
+
     setLookAndFeel(&themeLnF);
     addAndMakeVisible(pluginControls);
+    
     addChildComponent(settingsOverlay);
     addChildComponent(presetOverlay);
+    
     addAndMakeVisible(pluginSettings);
     addAndMakeVisible(presetMenu);
 
-    pluginSettings.onThemeChanged = [this](int selectedId) {
-        updateTheme(selectedId);
-        audioProcessor.saveThemeId(selectedId);
-    };
+    setupCallbacks();
 
-    pluginSettings.onSettingsToggled = [this](bool isOpen) {
-        settingsOverlay.setVisible(isOpen);
-        if (isOpen) {
-            presetMenu.setMenuOpen(false);
-            presetOverlay.setVisible(false);
-        }
-        bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
-        setLabelsVisible(!isAnyMenuOpen);
-        repaint();
-    };
-
-    presetMenu.onPresetsToggled = [this](bool isOpen) {
-        presetOverlay.setVisible(isOpen);
-        if (isOpen) {
-            pluginSettings.setMenuOpen(false);
-            settingsOverlay.setVisible(false);
-        }
-        bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
-        setLabelsVisible(!isAnyMenuOpen);
-        repaint();
-    };
-
-    pluginSettings.onFontSizeChanged = [this](int selectedId) {
-        updateFontSize(selectedId);
-        audioProcessor.saveFontSizeId(selectedId);
-    };
-
-    pluginSettings.onTooltipToggled = [this](bool isEnabled) {
-        updateTooltipState(isEnabled);
-        audioProcessor.saveTooltipState(isEnabled);
-    };
-
-    presetMenu.onFolderIconClicked = [this]() {
-        pluginSettings.launchFolderChooser();
-    };
-auto settingsFile = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
-                            .getChildFile("SimpleCrush/settings.xml");
-    
-    themeManager.loadSettings(settingsFile);
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
+    
     int initialFontSize = audioProcessor.getSavedFontSizeId();
     pluginSettings.setInitialFontSize(initialFontSize);
     currentFontSizeId = initialFontSize;
-    
+
     setResizable(true, true);
     setResizeLimits(340, 340, 599, 599);
     getConstrainer()->setFixedAspectRatio(1.0);
-    
+
     auto savedSize = audioProcessor.getWindowSize();
     setSize(savedSize.x, savedSize.y);
-    
+
     bool initialTooltipState = audioProcessor.getSavedTooltipState();
     pluginSettings.setInitialTooltipState(initialTooltipState);
     updateTooltipState(initialTooltipState);
+
     updateTheme(initialTheme);
 }
 
@@ -81,93 +48,9 @@ MyPluginEditor::~MyPluginEditor() {
     setLookAndFeel(nullptr);
 }
 
-void MyPluginEditor::updateTheme(int themeId) {
-    currentThemeId = themeId;
-    
-    auto theme = themeManager.getThemeProps(themeId); 
-    
-    themeLnF.currentFont = theme.labelFont.withHeight(getDynamicFontHeight());
-    themeLnF.setColour(juce::ScrollBar::thumbColourId, theme.scrollbarThumb);
-
-    // Standard Buttons
-    themeLnF.setColour(juce::TextButton::buttonColourId, theme.buttonColor);
-    themeLnF.setColour(juce::TextButton::buttonOnColourId, theme.buttonHoverColor);
-    themeLnF.setColour(juce::TextButton::textColourOffId, theme.labelText);
-    themeLnF.setColour(juce::TextButton::textColourOnId, theme.labelText);
-
-    // Toggle Buttons / Checkboxes
-    themeLnF.setColour(juce::ToggleButton::tickColourId, theme.buttonColor);
-    themeLnF.setColour(juce::ToggleButton::tickDisabledColourId, theme.buttonColor.withAlpha(0.5f));
-    themeLnF.setColour(juce::ToggleButton::textColourId, theme.labelText);
-
-    // ComboBoxes (Dropdown Menus) & Popups
-    themeLnF.setColour(juce::ComboBox::backgroundColourId, theme.bgCenter);
-    themeLnF.setColour(juce::ComboBox::outlineColourId, theme.buttonHoverColor);
-    themeLnF.setColour(juce::ComboBox::arrowColourId, theme.buttonHoverColor);
-    themeLnF.setColour(juce::ComboBox::textColourId, theme.labelText);
-    themeLnF.setColour(juce::PopupMenu::textColourId, theme.labelText);
-    themeLnF.setColour(juce::PopupMenu::highlightedTextColourId, theme.bgCenter);
-    themeLnF.setColour(juce::PopupMenu::backgroundColourId, theme.bgCenter);
-    themeLnF.setColour(juce::PopupMenu::highlightedBackgroundColourId, theme.buttonHoverColor);
-    themeLnF.setColour(juce::TooltipWindow::backgroundColourId, theme.bgCenter.withAlpha(0.8f));
-    themeLnF.setColour(juce::TooltipWindow::textColourId, theme.labelText);
-    themeLnF.setColour(juce::TooltipWindow::outlineColourId, theme.bgCenter.withAlpha(0.8f));
-
-    sendLookAndFeelChange();
-
-    auto applyRotaryTheme = [&](juce::Slider &slider) {
-        slider.setColour(juce::Slider::rotarySliderFillColourId, theme.sliderFill);
-        slider.setColour(juce::Slider::rotarySliderOutlineColourId, theme.sliderTrack);
-        slider.setColour(juce::Slider::trackColourId, theme.sliderTrack);
-        slider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
-        slider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
-    };
-
-    auto applyLabelTheme = [&](juce::Label &label) { label.setColour(juce::Label::textColourId, theme.labelText); };
-
-    // Rotary Sliders
-    applyRotaryTheme(pluginControls.hpSlider);
-    applyRotaryTheme(pluginControls.lpSlider);
-    applyRotaryTheme(pluginControls.bitSlider);
-    applyRotaryTheme(pluginControls.rateSlider);
-
-    // Mix Slider
-    pluginControls.mixSlider.setColour(juce::Slider::trackColourId, theme.sliderFill);
-    pluginControls.mixSlider.setColour(juce::Slider::backgroundColourId, theme.sliderTrack);
-    pluginControls.mixSlider.setColour(juce::Slider::thumbColourId, theme.sliderThumb);
-    pluginControls.mixSlider.setColour(juce::Slider::textBoxTextColourId, theme.labelText);
-
-    // Main UI Labels
-    applyLabelTheme(pluginControls.hpLabel);
-    applyLabelTheme(pluginControls.lpLabel);
-    applyLabelTheme(pluginControls.bitLabel);
-    applyLabelTheme(pluginControls.rateLabel);
-    applyLabelTheme(pluginControls.mixLabel);
-
-    // Overlay Labels
-    applyLabelTheme(pluginSettings.themeLabel);
-    applyLabelTheme(pluginSettings.fontSizeLabel);
-    applyLabelTheme(pluginSettings.infoLabel);
-
-    // Icons
-    pluginSettings.updateIconColors(theme.buttonColor, theme.buttonHoverColor);
-    presetMenu.updateIconColors(theme.buttonColor, theme.buttonHoverColor);
-
-    // Menu Styling & Fonts
-    pluginSettings.setThemeStyle(theme.labelText, themeLnF.currentFont);
-    presetMenu.setThemeStyle(theme.labelText, themeLnF.currentFont);
-
-    // Overlay Background Colors (Fixed typo from setttingsOverlay)
-    settingsOverlay.setOverlayColor(theme.settingsOverlay);
-    presetOverlay.setOverlayColor(theme.presetOverlay);
-
-    // Refresh UI
-    repaint();
-}
-
 void MyPluginEditor::paint(juce::Graphics &g) {
     auto themeProps = themeManager.getThemeProps(currentThemeId);
-    
+
     auto center = getLocalBounds().getCentre().toFloat();
     float radius = juce::jmax(getWidth(), getHeight()) * 0.7f;
     juce::ColourGradient gradient(
@@ -178,11 +61,11 @@ void MyPluginEditor::paint(juce::Graphics &g) {
 
 void MyPluginEditor::resized() {
     auto theme = themeManager.getThemeProps(currentThemeId);
-    
+
     float dynamicFontHeight = getDynamicFontHeight();
     themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
     sendLookAndFeelChange();
-    
+
     auto fullBounds = getLocalBounds();
     settingsOverlay.setBounds(fullBounds);
     presetOverlay.setBounds(fullBounds);
@@ -214,7 +97,7 @@ void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
         juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
         float logoScale = isAnyMenuOpen ? 1.5f : 2.5f;
         g.setFont(logoFont.withHeight(dynamicFontHeight * logoScale));
-        
+
         juce::Rectangle<int> textBounds;
         if (isAnyMenuOpen) {
             int yOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 15.0f, 28.0f);
@@ -224,7 +107,7 @@ void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
             int standardOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 5.0f, 9.0f);
             textBounds = pluginControls.logoBounds.translated(7, -standardOffset);
         }
-        
+
         g.setColour(themeProps.labelShadow);
         g.drawText("SimpleCrush", textBounds.translated(2, 2), juce::Justification::centred);
         g.setColour(themeProps.labelText);
