@@ -10,23 +10,7 @@ void PresetMenu::presetCallbacks() {
     };
 
     folderButton.onClick = [this]() {
-        fileChooser = std::make_unique<juce::FileChooser>("Select Preset Folder", presetDirectory);
-        auto browserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectDirectories;
-        fileChooser->launchAsync(browserFlags, [this](const juce::FileChooser &fc) {
-            auto result = fc.getResult();
-            if (result.exists()) {
-                presetDirectory = result;
-                loadPresetsFromDirectory();
-                auto appDataDir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
-                                      .getChildFile("SimpleCrush");
-                auto settingsFile = appDataDir.getChildFile("settings.xml");
-                std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile);
-                if (xml == nullptr) { xml = std::make_unique<juce::XmlElement>("SimpleCrushSettings"); }
-                xml->setAttribute("PresetFolder", presetDirectory.getFullPathName());
-                xml->writeTo(settingsFile);
-                juce::Logger::writeToLog("Folder selected and saved: " + result.getFullPathName());
-            }
-        });
+        if (onFolderIconClicked) onFolderIconClicked();
     };
 
     deleteButton.onClick = [this]() {

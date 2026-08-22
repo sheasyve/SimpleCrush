@@ -1,0 +1,25 @@
+{
+  "name": "Panda Trueno",
+  "id": 1,
+  "colors": {
+    "sliderFill": "0xFFFFFFFF",
+    "sliderOutline": "0xFF1A1A1A",
+    "sliderThumb": "0xFFE50000",
+    "sliderTrack": "0xFF333333",
+    "labelText": "0xFFFFFFFF",
+    "labelShadow": "0x7E2B2B2B",
+    "bgCenter": "0xFF2B2B2B",
+    "bgEdge": "0xFF050505",
+    "buttonColor": "0xBDFFFFFF",
+    "buttonHoverColor": "0xFFE50000",
+    "settingsOverlay": "0xE6000000",
+    "presetOverlay": "0xCC000000",
+    "scrollbarThumb": "0xFFE50000"
+  },
+  "font": {
+    "name": "Arial",
+    "height": 15.0,
+    "isBold": true,
+    "isItalic": true
+  }
+}

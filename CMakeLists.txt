@@ -37,9 +37,11 @@ target_sources(SimpleCrush PRIVATE
     src/ui/main/plugin_controls.h
     src/ui/main/plugin_controls.cpp
     src/ui/style/plugin_theme.h
+    src/ui/style/plugin_theme.cpp
     src/ui/style/svg.h
     src/ui/components/plugin_settings.h
     src/ui/components/plugin_settings.cpp
+    src/ui/components/setting_actions.cpp
     src/ui/components/preset_menu.h
     src/ui/components/preset_menu.cpp
     src/ui/components/preset_actions.cpp

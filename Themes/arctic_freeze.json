@@ -1,0 +1,25 @@
+{
+  "name": "Arctic Freeze",
+  "id": 6,
+  "colors": {
+    "sliderFill": "0xFF30C5FF",
+    "sliderOutline": "0xFF0096C7",
+    "sliderThumb": "0xFFFFFFFF",
+    "sliderTrack": "0xFF0A2440",
+    "labelText": "0xFFADE8F4",
+    "labelShadow": "0x5B0A2440",
+    "bgCenter": "0xFF0A2440",
+    "bgEdge": "0xFF031020",
+    "buttonColor": "0xFF0096C7",
+    "buttonHoverColor": "0xFF30C5FF",
+    "settingsOverlay": "0xF2031020",
+    "presetOverlay": "0xCC031020",
+    "scrollbarThumb": "0xFFFFFFFF"
+  },
+  "font": {
+    "name": "Trebuchet MS",
+    "height": 16.0,
+    "isBold": true,
+    "isItalic": false
+  }
+}

@@ -7,20 +7,11 @@
 const std::vector<std::pair<juce::String, int>> fontSizes = {
     {"Normal", 1}, {"Small", 2}, {"Large", 3}, {"Extra Large", 4}};
 
-const std::vector<std::pair<juce::String, int>> themes = {{"Panda Trueno", 1},
-    {"Studio Dark", 2},
-    {"Studio Light", 3},
-    {"Vaporwave", 4},
-    {"Retro Caramel", 5},
-    {"Arctic Freeze", 6},
-    {"Midnight Hacker", 7}};
-
 class PluginSettings : public juce::Component {
-
 public:
     PluginSettings();
     ~PluginSettings() override = default;
-
+    PluginSettings(PluginTheme::ThemeManager &tm);
     void paint(juce::Graphics &g) override;
     void resized() override;
     void setInitialTheme(int themeId);
@@ -28,6 +19,8 @@ public:
     void updateIconColors(juce::Colour normal, juce::Colour hover);
     void setMenuOpen(bool isOpen);
     bool isMenuOpen() const { return isSettingsVisible; }
+
+    void refreshThemeList();
 
     // Callbacks
     std::function<void(bool)> onSettingsToggled;
@@ -52,15 +45,23 @@ public:
     juce::ToggleButton tooltipToggle{"Show Tooltips"};
     std::function<void(bool)> onTooltipToggled;
 
+    juce::DrawableButton folderButton{"Folder", juce::DrawableButton::ImageFitted};
+    std::unique_ptr<juce::DrawablePath> drawableFolder, drawableFolderHover;
+    
+    std::unique_ptr<juce::FileChooser> fileChooser;
+    std::function<void(const juce::File&)> onDataFolderChanged;
+
     void setInitialTooltipState(bool isEnabled);
     void setThemeStyle(juce::Colour newColor, juce::Font newFont) {
         textColor = newColor;
         textFont = newFont;
         repaint();
     }
+    void launchFolderChooser();
 
 private:
     bool isSettingsVisible = false;
     bool isPresetsVisible = false;
+    PluginTheme::ThemeManager& themeManager;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginSettings)
 };

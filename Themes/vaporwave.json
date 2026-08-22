@@ -1,0 +1,25 @@
+{
+  "name": "Vaporwave",
+  "id": 4,
+  "colors": {
+    "sliderFill": "0xFFFF2A6D",
+    "sliderOutline": "0xFF05D9E8",
+    "sliderThumb": "0xFF01FFF4",
+    "sliderTrack": "0xFF14505F",
+    "labelText": "0xFF05D9E8",
+    "labelShadow": "0x2AFF2A6E",
+    "bgCenter": "0xFF390B8A",
+    "bgEdge": "0xFF000000",
+    "buttonColor": "0xFF05D9E8",
+    "buttonHoverColor": "0xFFFF2A6D",
+    "settingsOverlay": "0xCC000000",
+    "presetOverlay": "0xC7000000",
+    "scrollbarThumb": "0xFF01FFF4"
+  },
+  "font": {
+    "name": "Arial",
+    "height": 15.0,
+    "isBold": true,
+    "isItalic": true
+  }
+}

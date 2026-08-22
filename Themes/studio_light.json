@@ -1,0 +1,25 @@
+{
+  "name": "Studio Light",
+  "id": 3,
+  "colors": {
+    "sliderFill": "0xFF333333",
+    "sliderOutline": "0xFFAAAAAA",
+    "sliderThumb": "0xFF333333",
+    "sliderTrack": "0xFFBBBBBB",
+    "labelText": "0xFF222222",
+    "labelShadow": "0x83F9F9F9",
+    "bgCenter": "0xFFF9F9F9",
+    "bgEdge": "0xFFDCDCDC",
+    "buttonColor": "0xFF080808",
+    "buttonHoverColor": "0xFF8D8D8D",
+    "settingsOverlay": "0xD4E0E0E0",
+    "presetOverlay": "0xD4E0E0E0",
+    "scrollbarThumb": "0xFF333333"
+  },
+  "font": {
+    "name": "Arial",
+    "height": 15.0,
+    "isBold": true,
+    "isItalic": false
+  }
+}

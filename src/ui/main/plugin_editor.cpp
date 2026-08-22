@@ -5,6 +5,7 @@
 // --- Constructor ---
 MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p), presetMenu(p.apvts), pluginControls(p.apvts) {
+    
     setLookAndFeel(&themeLnF);
     addAndMakeVisible(pluginControls);
     addChildComponent(settingsOverlay);
@@ -49,16 +50,26 @@ MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
         audioProcessor.saveTooltipState(isEnabled);
     };
 
+    presetMenu.onFolderIconClicked = [this]() {
+        pluginSettings.launchFolderChooser();
+    };
+auto settingsFile = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
+                            .getChildFile("SimpleCrush/settings.xml");
+    
+    themeManager.loadSettings(settingsFile);
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
     int initialFontSize = audioProcessor.getSavedFontSizeId();
     pluginSettings.setInitialFontSize(initialFontSize);
     currentFontSizeId = initialFontSize;
+    
     setResizable(true, true);
     setResizeLimits(340, 340, 599, 599);
     getConstrainer()->setFixedAspectRatio(1.0);
+    
     auto savedSize = audioProcessor.getWindowSize();
     setSize(savedSize.x, savedSize.y);
+    
     bool initialTooltipState = audioProcessor.getSavedTooltipState();
     pluginSettings.setInitialTooltipState(initialTooltipState);
     updateTooltipState(initialTooltipState);
@@ -72,7 +83,9 @@ MyPluginEditor::~MyPluginEditor() {
 
 void MyPluginEditor::updateTheme(int themeId) {
     currentThemeId = themeId;
-    auto theme = PluginTheme::getThemeProps(themeId);
+    
+    auto theme = themeManager.getThemeProps(themeId); 
+    
     themeLnF.currentFont = theme.labelFont.withHeight(getDynamicFontHeight());
     themeLnF.setColour(juce::ScrollBar::thumbColourId, theme.scrollbarThumb);
 
@@ -144,8 +157,8 @@ void MyPluginEditor::updateTheme(int themeId) {
     pluginSettings.setThemeStyle(theme.labelText, themeLnF.currentFont);
     presetMenu.setThemeStyle(theme.labelText, themeLnF.currentFont);
 
-    // Overlay Background Colors
-    settingsOverlay.setOverlayColor(theme.setttingsOverlay);
+    // Overlay Background Colors (Fixed typo from setttingsOverlay)
+    settingsOverlay.setOverlayColor(theme.settingsOverlay);
     presetOverlay.setOverlayColor(theme.presetOverlay);
 
     // Refresh UI
@@ -153,20 +166,23 @@ void MyPluginEditor::updateTheme(int themeId) {
 }
 
 void MyPluginEditor::paint(juce::Graphics &g) {
-    auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
+    auto themeProps = themeManager.getThemeProps(currentThemeId);
+    
     auto center = getLocalBounds().getCentre().toFloat();
     float radius = juce::jmax(getWidth(), getHeight()) * 0.7f;
     juce::ColourGradient gradient(
-        ThemeProps.bgCenter, center.x, center.y, ThemeProps.bgEdge, center.x, center.y + radius, true);
+        themeProps.bgCenter, center.x, center.y, themeProps.bgEdge, center.x, center.y + radius, true);
     g.setGradientFill(gradient);
     g.fillAll();
 }
 
 void MyPluginEditor::resized() {
-    auto theme = PluginTheme::getThemeProps(currentThemeId);
+    auto theme = themeManager.getThemeProps(currentThemeId);
+    
     float dynamicFontHeight = getDynamicFontHeight();
     themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
     sendLookAndFeelChange();
+    
     auto fullBounds = getLocalBounds();
     settingsOverlay.setBounds(fullBounds);
     presetOverlay.setBounds(fullBounds);
@@ -191,13 +207,14 @@ float MyPluginEditor::getDynamicFontHeight() const {
 
 void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
     bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
-    auto ThemeProps = PluginTheme::getThemeProps(currentThemeId);
+    auto themeProps = themeManager.getThemeProps(currentThemeId);
 
     if (pluginControls.isVisible()) {
         float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
         juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
         float logoScale = isAnyMenuOpen ? 1.5f : 2.5f;
         g.setFont(logoFont.withHeight(dynamicFontHeight * logoScale));
+        
         juce::Rectangle<int> textBounds;
         if (isAnyMenuOpen) {
             int yOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 15.0f, 28.0f);
@@ -207,9 +224,10 @@ void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
             int standardOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 5.0f, 9.0f);
             textBounds = pluginControls.logoBounds.translated(7, -standardOffset);
         }
-        g.setColour(ThemeProps.labelShadow);
+        
+        g.setColour(themeProps.labelShadow);
         g.drawText("SimpleCrush", textBounds.translated(2, 2), juce::Justification::centred);
-        g.setColour(ThemeProps.labelText);
+        g.setColour(themeProps.labelText);
         g.drawText("SimpleCrush", textBounds, juce::Justification::centred);
     }
 }

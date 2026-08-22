@@ -1,0 +1,25 @@
+{
+  "name": "Studio Dark",
+  "id": 2,
+  "colors": {
+    "sliderFill": "0xFFD6D6D6",
+    "sliderOutline": "0xFF4C4C4C",
+    "sliderThumb": "0xFFD4D4D4",
+    "sliderTrack": "0xFF575757",
+    "labelText": "0xFFF1F1F1",
+    "labelShadow": "0x81575757",
+    "bgCenter": "0xFF202020",
+    "bgEdge": "0xFF131313",
+    "buttonColor": "0xDEA1A1A1",
+    "buttonHoverColor": "0xFFEBEBEB",
+    "settingsOverlay": "0xE6000000",
+    "presetOverlay": "0xCC000000",
+    "scrollbarThumb": "0xFFD4D4D4"
+  },
+  "font": {
+    "name": "Arial",
+    "height": 15.0,
+    "isBold": true,
+    "isItalic": false
+  }
+}

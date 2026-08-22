@@ -1,0 +1,25 @@
+{
+  "name": "Midnight Hacker",
+  "id": 7,
+  "colors": {
+    "sliderFill": "0xFF00FF41",
+    "sliderOutline": "0xFF008F11",
+    "sliderThumb": "0xFFFFFFFF",
+    "sliderTrack": "0xFF31422D",
+    "labelText": "0xFF00FF41",
+    "labelShadow": "0xFF008F11",
+    "bgCenter": "0xFF272727",
+    "bgEdge": "0xFF000000",
+    "buttonColor": "0xFF008F11",
+    "buttonHoverColor": "0xFF00FF41",
+    "settingsOverlay": "0xF2000000",
+    "presetOverlay": "0xCC000000",
+    "scrollbarThumb": "0xFF00FF41"
+  },
+  "font": {
+    "name": "Lucida Console",
+    "height": 10.0,
+    "isBold": true,
+    "isItalic": false
+  }
+}
