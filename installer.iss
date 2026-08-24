@@ -4,7 +4,7 @@ AppVersion=1.0.3
 AppPublisher=Syverson Audio
 DefaultDirName={autopf}\Syverson Audio\SimpleCrush
 DefaultGroupName=SimpleCrush
-OutputBaseFilename=SimpleCrush_v1.0.3_Windows
+OutputBaseFilename=SimpleCrush_v1.3.1_Windows
 PrivilegesRequired=admin
 Compression=lzma
 SolidCompression=yes
@@ -22,7 +22,6 @@ Source: "C:\Users\sheam\Documents\Presets\*"; DestDir: "{code:GetDataDir}\Preset
 Source: "C:\Users\sheam\Documents\Themes\*.json"; DestDir: "{code:GetDataDir}\Themes"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 
 [Registry]
-; Save the chosen Data folder path to the Windows Registry so JUCE can find it
 Root: HKCU; Subkey: "Software\Syverson Audio\SimpleCrush"; ValueType: string; ValueName: "DataPath"; ValueData: "{code:GetDataDir}"; Flags: uninsdeletekey
 
 [Icons]
