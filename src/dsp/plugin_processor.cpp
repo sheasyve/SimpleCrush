@@ -50,7 +50,6 @@ void MyPluginProcessor::releaseResources() {}
 
 bool MyPluginProcessor::hasEditor() const { return true; }
 juce::AudioProcessorEditor *MyPluginProcessor::createEditor() { return new MyPluginEditor(*this); }
-
 void MyPluginProcessor::getStateInformation(juce::MemoryBlock &destData) {
     auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml(state.createXml());

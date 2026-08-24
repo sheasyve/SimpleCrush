@@ -1,6 +1,6 @@
 {
   "name": "Midnight Hacker",
-  "id": 7,
+  "id": 9,
   "colors": {
     "sliderFill": "0xFF00FF41",
     "sliderOutline": "0xFF008F11",
@@ -18,7 +18,7 @@
   },
   "font": {
     "name": "Lucida Console",
-    "height": 10.0,
+    "height": 8.0,
     "isBold": true,
     "isItalic": false
   }
