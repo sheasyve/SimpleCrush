@@ -49,10 +49,8 @@ void MyPluginEditor::setupCallbacks() {
     pluginSettings.onDataFolderChanged = [this](const juce::File & /*newFolder*/) {
         auto liveSettingsFile = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
                                     .getChildFile("Syverson Audio/SimpleCrush/settings.xml");
-
         presetMenu.SettingsFile(liveSettingsFile);
         presetMenu.loadPresetsFromDirectory();
-        
         themeManager.loadSettings(liveSettingsFile);
         pluginSettings.refreshThemeList();
         

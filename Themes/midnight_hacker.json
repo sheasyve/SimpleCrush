@@ -18,7 +18,12 @@
   },
   "font": {
     "name": "Lucida Console",
-    "height": 8.0,
+    "height": 10.0,
+    "isBold": true,
+    "isItalic": false
+  },
+  "logoFont": {
+    "name": "Arial",
     "isBold": true,
     "isItalic": false
   }

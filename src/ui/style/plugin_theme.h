@@ -20,6 +20,7 @@ struct ThemeProps {
     juce::Colour buttonColor;
     juce::Colour buttonHoverColor;
     juce::FontOptions labelFont;
+    juce::Font logoFont;
     juce::Colour settingsOverlay;
     juce::Colour presetOverlay;
     juce::Colour scrollbarThumb;

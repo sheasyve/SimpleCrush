@@ -5,26 +5,20 @@
 
 MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p), presetMenu(p.apvts), pluginControls(p.apvts) {
-
     auto settingsFile = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
                             .getChildFile("Syverson Audio/SimpleCrush/settings.xml");
     themeManager.loadSettings(settingsFile);
     pluginSettings.refreshThemeList();
-
     setLookAndFeel(&themeLnF);
     addAndMakeVisible(pluginControls);
-    
     addChildComponent(settingsOverlay);
     addChildComponent(presetOverlay);
-    
     addAndMakeVisible(pluginSettings);
     addAndMakeVisible(presetMenu);
-
     setupCallbacks();
 
     int initialTheme = audioProcessor.getSavedThemeId();
     pluginSettings.setInitialTheme(initialTheme);
-    
     int initialFontSize = audioProcessor.getSavedFontSizeId();
     pluginSettings.setInitialFontSize(initialFontSize);
     currentFontSizeId = initialFontSize;
@@ -35,11 +29,9 @@ MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
 
     auto savedSize = audioProcessor.getWindowSize();
     setSize(savedSize.x, savedSize.y);
-
     bool initialTooltipState = audioProcessor.getSavedTooltipState();
     pluginSettings.setInitialTooltipState(initialTooltipState);
     updateTooltipState(initialTooltipState);
-
     updateTheme(initialTheme);
 }
 
@@ -50,7 +42,6 @@ MyPluginEditor::~MyPluginEditor() {
 
 void MyPluginEditor::paint(juce::Graphics &g) {
     auto themeProps = themeManager.getThemeProps(currentThemeId);
-
     auto center = getLocalBounds().getCentre().toFloat();
     float radius = juce::jmax(getWidth(), getHeight()) * 0.7f;
     juce::ColourGradient gradient(
@@ -61,11 +52,9 @@ void MyPluginEditor::paint(juce::Graphics &g) {
 
 void MyPluginEditor::resized() {
     auto theme = themeManager.getThemeProps(currentThemeId);
-
     float dynamicFontHeight = getDynamicFontHeight();
     themeLnF.currentFont = theme.labelFont.withHeight(dynamicFontHeight);
     sendLookAndFeelChange();
-
     auto fullBounds = getLocalBounds();
     settingsOverlay.setBounds(fullBounds);
     presetOverlay.setBounds(fullBounds);
@@ -91,13 +80,11 @@ float MyPluginEditor::getDynamicFontHeight() const {
 void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
     bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
     auto themeProps = themeManager.getThemeProps(currentThemeId);
-
     if (pluginControls.isVisible()) {
         float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
-        juce::Font logoFont = pluginControls.hpLabel.getLookAndFeel().getLabelFont(pluginControls.hpLabel);
+        juce::Font logoFont = themeProps.logoFont; 
         float logoScale = isAnyMenuOpen ? 1.5f : 2.5f;
         g.setFont(logoFont.withHeight(dynamicFontHeight * logoScale));
-
         juce::Rectangle<int> textBounds;
         if (isAnyMenuOpen) {
             int yOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 15.0f, 28.0f);
@@ -107,7 +94,6 @@ void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
             int standardOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 5.0f, 9.0f);
             textBounds = pluginControls.logoBounds.translated(7, -standardOffset);
         }
-
         g.setColour(themeProps.labelShadow);
         g.drawText("SimpleCrush", textBounds.translated(2, 2), juce::Justification::centred);
         g.setColour(themeProps.labelText);
