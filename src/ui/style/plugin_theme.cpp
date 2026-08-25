@@ -8,7 +8,21 @@ ThemeManager::ThemeManager() {
 }
 
 juce::Colour ThemeManager::parseHexColour(const juce::String& hexString) {
-    return juce::Colour::fromString(hexString);
+    //Parse the color so that I can use rgba format in the json file. The format is #RRGGBBAA or #RRGGBB
+    juce::String localHex = hexString; 
+    if (localHex.startsWithChar('#')) {
+        localHex = localHex.substring(1);
+        if (localHex.length() == 8) {
+            juce::String alpha = localHex.substring(6, 8);
+            juce::String rgb = localHex.substring(0, 6);
+            localHex = alpha + rgb;
+        } 
+        else if (localHex.length() == 6) {
+            localHex = "FF" + localHex;
+        }
+        localHex = "0x" + localHex;
+    }
+    return juce::Colour::fromString(localHex);
 }
 
 ThemeProps ThemeManager::loadThemeFromFile(const juce::File& file) {

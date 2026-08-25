@@ -34,21 +34,17 @@ struct SettingsBackground : public juce::Component {
     void paint(juce::Graphics &g) override { g.fillAll(currentOverlayColor); }
 };
 
+
 class ThemeManager {
 public:
     ThemeManager();
     ~ThemeManager() = default;
-
-    // Caches theme files in memory
     void refreshThemes();
     void loadSettings(const juce::File& settingsFile); 
 
-    // Accessors
     ThemeProps getThemeProps(int themeId) const;
     std::vector<std::pair<juce::String, int>> getAvailableThemes() const;
-
     juce::File getThemesDirectory(); 
-
     static ThemeProps loadThemeFromFile(const juce::File& file);
     static juce::Colour parseHexColour(const juce::String& hexString);
 
@@ -56,7 +52,6 @@ private:
     std::map<int, ThemeProps> cachedThemes;
     ThemeProps defaultTheme;
     juce::File customThemesDir;
-
     void loadDefaultFallbackTheme();
 };
 
