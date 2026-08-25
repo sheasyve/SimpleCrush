@@ -21,5 +21,10 @@
     "height": 15.0,
     "isBold": true,
     "isItalic": true
+  },
+  "logoFont": {
+    "name": "Arial",
+    "isBold": true,
+    "isItalic": false
   }
 }
