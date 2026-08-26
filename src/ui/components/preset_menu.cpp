@@ -1,12 +1,10 @@
 #include "preset_menu.h"
 
-// --- PRESET MENU ---
-
 PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
+    
     // --- Preset Folder ---
-    auto appDataDir =
-        juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
+    auto appDataDir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
     presetDirectory = appDataDir.getChildFile("Presets");
     auto settingsFile = appDataDir.getChildFile("settings.xml");
     SettingsFile(settingsFile);
@@ -40,6 +38,7 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     saveTextBox.setReturnKeyStartsNewLine(false);
     saveTextBox.setTooltip(PresetTooltips::saveInput);
     addChildComponent(saveTextBox);
+    
     parseSvgIcon(saveButton, drawableSave, drawableSaveHover, SvgAssets::saveIcon);
     saveButton.setTooltip(PresetTooltips::saveButton);
     addChildComponent(saveButton);
@@ -48,16 +47,21 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     presetList.setModel(this);
     presetList.setColour(juce::ListBox::backgroundColourId, juce::Colours::transparentBlack);
     addChildComponent(presetList);
-    presetCallbacks();
+    
+    presetCallbacks(); 
 }
 
 void PresetMenu::SettingsFile(juce::File settingsFile){
     if (settingsFile.existsAsFile()) {
         if (std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile)) {
-            juce::String savedPath = xml->getStringAttribute("PresetFolder");
+            // CHANGED: Now reading from "DataFolder"
+            juce::String savedPath = xml->getStringAttribute("DataFolder");
             if (savedPath.isNotEmpty()) {
                 juce::File savedDir(savedPath);
-                if (savedDir.exists() && savedDir.isDirectory()) { presetDirectory = savedDir; }
+                if (savedDir.exists() && savedDir.isDirectory()) { 
+                    presetDirectory = savedDir.getChildFile("Presets"); 
+                    if (!presetDirectory.exists()) presetDirectory.createDirectory();
+                }
             }
         }
     }
@@ -72,12 +76,12 @@ void PresetMenu::loadPresetsFromDirectory() {
 }
 
 void PresetMenu::updateMenuVisibility() {
-    folderButton.setVisible(isPresetsVisible);
     deleteButton.setVisible(isPresetsVisible);
     saveTextBox.setVisible(isPresetsVisible);
     saveButton.setVisible(isPresetsVisible);
     randomButton.setVisible(isPresetsVisible);
     presetList.setVisible(isPresetsVisible);
+    folderButton.setVisible(isPresetsVisible);
     resized();
     repaint();
 }
@@ -107,9 +111,9 @@ void PresetMenu::resized() {
     presetsButton.setBounds(bounds.getWidth() - 30, 5, 25, 25);
     randomButton.setBounds(bounds.getWidth() - 27.5, 30, 22.5, 22.5);
     saveButton.setBounds(bounds.getWidth() - 27.5, 55, 22.5, 22.5);
-
+    
     // --- Top Left Stack ---
-    folderButton.setBounds(5, 30, 25, 25);
+    folderButton.setBounds(5, 30, 25, 25); 
     deleteButton.setBounds(5, 55, 25, 25);
 
     if (isPresetsVisible) {
@@ -125,15 +129,11 @@ void PresetMenu::resized() {
 void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
     juce::Colour brightNormal = normal.brighter(0.3f);
     juce::Colour brightHover = hover.brighter(0.3f);
+    
     if (drawableList != nullptr) {
         drawableList->setFill(brightNormal);
         drawableListHover->setFill(brightHover);
         presetsButton.setImages(drawableList.get(), drawableListHover.get(), drawableListHover.get());
-    }
-    if (drawableFolder != nullptr) {
-        drawableFolder->setFill(brightNormal);
-        drawableFolderHover->setFill(brightHover);
-        folderButton.setImages(drawableFolder.get(), drawableFolderHover.get(), drawableFolderHover.get());
     }
     if (drawableDelete != nullptr) {
         drawableDelete->setFill(brightNormal);
@@ -150,12 +150,16 @@ void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
         drawableRandomHover->setFill(brightHover);
         randomButton.setImages(drawableRandom.get(), drawableRandomHover.get(), drawableRandomHover.get());
     }
+    if (drawableFolder != nullptr) {
+        drawableFolder->setFill(brightNormal);
+        drawableFolderHover->setFill(brightHover);
+        folderButton.setImages(drawableFolder.get(), drawableFolderHover.get(), drawableFolderHover.get());
+    }
 }
 
 int PresetMenu::getNumRows() { return (int)presets.size(); }
 
 void PresetMenu::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) {
-    // --- The preset list ---
     if (juce::isPositiveAndBelow(rowNumber, (int)presets.size())) {
         if (rowIsSelected) { g.fillAll(juce::Colours::white.withAlpha(0.2f)); }
         g.setColour(textColor);

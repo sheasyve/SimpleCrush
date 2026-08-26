@@ -1,6 +1,6 @@
 #include "ui/components/plugin_settings.h"
 
-PluginSettings::PluginSettings() {
+PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm) : themeManager(tm) {
     juce::String infotext =
         "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
     setInterceptsMouseClicks(false, true);
@@ -8,15 +8,17 @@ PluginSettings::PluginSettings() {
     settingsButton.setTooltip(SettingsTooltips::settingsBtn);
     addAndMakeVisible(settingsButton);
 
-    // Theme
+    // Theme Setup
     themeLabel.setText("Theme", juce::dontSendNotification);
-    themeLabel.setJustificationType(juce::Justification::centred); 
+    themeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(themeLabel);
-    for (const auto &theme : themes) { themeSelector.addItem(theme.first, theme.second); }
     themeSelector.setTooltip(SettingsTooltips::theme);
     addChildComponent(themeSelector);
 
-    // Font Size
+    // Load dynamic themes on start
+    refreshThemeList();
+
+    // Font Size Setup
     fontSizeLabel.setText("Font Size", juce::dontSendNotification);
     fontSizeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(fontSizeLabel);
@@ -24,7 +26,7 @@ PluginSettings::PluginSettings() {
     fontSizeSelector.setTooltip(SettingsTooltips::fontSize);
     addChildComponent(fontSizeSelector);
 
-    // Info 
+    // Info Setup
     infoLabel.setText(infotext, juce::dontSendNotification);
     infoLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(infoLabel);
@@ -34,24 +36,21 @@ PluginSettings::PluginSettings() {
     infoButton.setTooltip(SettingsTooltips::info);
     addChildComponent(infoButton);
 
+    // Tooltip Toggle
     tooltipToggle.setTooltip(SettingsTooltips::tooltips);
     addChildComponent(tooltipToggle);
-    tooltipToggle.onClick = [this]() {
-        if (onTooltipToggled != nullptr) { onTooltipToggled(tooltipToggle.getToggleState()); }
-    };
-    settingsButton.onClick = [this]() {
-        isSettingsVisible = !isSettingsVisible;
-        updateMenuVisibility();
-    };
-    themeSelector.onChange = [this]() {
-        if (onThemeChanged != nullptr) onThemeChanged(themeSelector.getSelectedId());
-    };
-    fontSizeSelector.onChange = [this]() {
-        if (onFontSizeChanged != nullptr) onFontSizeChanged(fontSizeSelector.getSelectedId());
-    };
+
+    // Folder Button
+    parseSvgIcon(folderButton, drawableFolder, drawableFolderHover, SvgAssets::folderIcon);
+    folderButton.setTooltip("Move your Presets and Themes folder");
+    addChildComponent(folderButton);
+
+    setupCallbacks();
 }
 
 void PluginSettings::updateMenuVisibility() {
+    if (isSettingsVisible) refreshThemeList();
+
     // Settings Page
     themeLabel.setVisible(isSettingsVisible);
     themeSelector.setVisible(isSettingsVisible);
@@ -60,6 +59,8 @@ void PluginSettings::updateMenuVisibility() {
     infoLabel.setVisible(isSettingsVisible);
     infoButton.setVisible(isSettingsVisible);
     tooltipToggle.setVisible(isSettingsVisible);
+    folderButton.setVisible(isSettingsVisible);
+
     if (onSettingsToggled != nullptr) onSettingsToggled(isSettingsVisible);
     resized();
     repaint();
@@ -81,7 +82,9 @@ void PluginSettings::paint(juce::Graphics &g) {
 void PluginSettings::resized() {
     auto bounds = getLocalBounds();
     settingsButton.setBounds(5, 5, 25, 25);
+
     if (isSettingsVisible) {
+        folderButton.setBounds(5, 30, 25, 25);
         int topY = bounds.getCentreY() - 110 + 7;
         int labelHeight = 100;
         int availableHeight = bounds.getBottom() - topY - 10;
@@ -100,20 +103,46 @@ void PluginSettings::resized() {
     }
 }
 
+void PluginSettings::refreshThemeList() {
+    int currentSelection = themeSelector.getSelectedId();
+    themeSelector.clear(juce::dontSendNotification);
+    auto availableThemes = themeManager.getAvailableThemes();
+    for (const auto &[name, id] : availableThemes) { 
+        themeSelector.addItem(name, id); 
+    }
+    if (currentSelection != 0) {
+        themeSelector.setSelectedId(currentSelection, juce::dontSendNotification);
+        auto props = themeManager.getThemeProps(currentSelection);
+        themeSelector.setTooltip(juce::String(SettingsTooltips::theme) + "\n\n" + props.description);
+    }
+}
+
+void PluginSettings::setInitialTheme(int themeId) { 
+    themeSelector.setSelectedId(themeId, juce::dontSendNotification); 
+    auto props = themeManager.getThemeProps(themeId);
+    themeSelector.setTooltip(juce::String(SettingsTooltips::theme) + "\n\n" + props.description);
+}
+
 void PluginSettings::setMenuOpen(bool isOpen) {
     isSettingsVisible = isOpen;
     updateMenuVisibility();
 }
 
 void PluginSettings::updateIconColors(juce::Colour normal, juce::Colour hover) {
+    juce::Colour brightNormal = normal.brighter(0.3f);
+    juce::Colour brightHover = hover.brighter(0.3f);
+
     if (drawableGear != nullptr && drawableGearHover != nullptr) {
-        drawableGear->setFill(normal.brighter(0.3f));
-        drawableGearHover->setFill(hover.brighter(0.3f));
+        drawableGear->setFill(brightNormal);
+        drawableGearHover->setFill(brightHover);
         settingsButton.setImages(drawableGear.get(), drawableGearHover.get(), drawableGearHover.get());
     }
+    if (drawableFolder != nullptr) {
+        drawableFolder->setFill(brightNormal);
+        drawableFolderHover->setFill(brightHover);
+        folderButton.setImages(drawableFolder.get(), drawableFolderHover.get(), drawableFolderHover.get());
+    }
 }
-
-void PluginSettings::setInitialTheme(int themeId) { themeSelector.setSelectedId(themeId, juce::dontSendNotification); }
 
 void PluginSettings::setInitialFontSize(int fontSizeId) {
     fontSizeSelector.setSelectedId(fontSizeId, juce::dontSendNotification);

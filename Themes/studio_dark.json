@@ -1,0 +1,31 @@
+{
+  "name": "Studio Dark",
+  "id": 2,
+  "description": "Studio Dark: \n A classic dark theme.",
+  "colors": {
+    "sliderFill": "#D6D6D6FF",
+    "sliderOutline": "#4C4C4CFF",
+    "sliderThumb": "#D4D4D4FF",
+    "sliderTrack": "#575757FF",
+    "labelText": "#F1F1F1FF",
+    "labelShadow": "#57575781",
+    "bgCenter": "#202020FF",
+    "bgEdge": "#131313FF",
+    "buttonColor": "#A1A1A1DE",
+    "buttonHoverColor": "#EBEBEBFF",
+    "settingsOverlay": "#000000E6",
+    "presetOverlay": "#000000CC",
+    "scrollbarThumb": "#D4D4D4FF"
+  },
+  "font": {
+    "name": "Arial",
+    "height": 15.0,
+    "isBold": true,
+    "isItalic": false
+  },
+  "logoFont": {
+    "name": "Arial",
+    "isBold": true,
+    "isItalic": false
+  }
+}

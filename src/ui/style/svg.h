@@ -18,7 +18,8 @@ inline auto parseSvgIcon = [](juce::DrawableButton &btn,
 };
 
 namespace SvgAssets {
-static constexpr const char *listIcon = 
+    
+static constexpr const char *listIcon =
     "<svg viewBox='0 0 24 24'><path d='M5 6h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2zm0 5h14a1 1 0 0 "
     "1 0 2H5a1 1 0 0 1 0-2zm5 5h9a1 1 0 0 1 0 2H10a1 1 0 0 1 0-2z'/></svg>";
 

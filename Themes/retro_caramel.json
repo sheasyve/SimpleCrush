@@ -1,0 +1,31 @@
+{
+  "name": "Retro Caramel",
+  "id": 8,
+  "description": "Retro Caramel: \n A warm, nostalgic theme with caramel and brown tones.",
+  "colors": {
+    "sliderFill": "#C58B4EFF",
+    "sliderOutline": "#9A623BFF",
+    "sliderThumb": "#DFB382FF",
+    "sliderTrack": "#7B4A2EFF",
+    "labelText": "#F0E3CBFF",
+    "labelShadow": "#DFB48238",
+    "bgCenter": "#9C7866D3",
+    "bgEdge": "#2B1910FF",
+    "buttonColor": "#DFB382FF",
+    "buttonHoverColor": "#8C6C4BFF",
+    "settingsOverlay": "#2B1910E6",
+    "presetOverlay": "#2B1910CC",
+    "scrollbarThumb": "#DFB382FF"
+  },
+  "font": {
+    "name": "Helvetica",
+    "height": 15.0,
+    "isBold": true,
+    "isItalic": true
+  },
+  "logoFont": {
+    "name": "Arial",
+    "isBold": true,
+    "isItalic": false
+  }
+}

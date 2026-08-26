@@ -10,6 +10,14 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/std:c++latest>")
 cmake_policy(SET CMP0177 NEW)
 add_subdirectory(JUCE)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(DO_COPY TRUE)
+    set(VST3_DIR "C:/Users/sheam/Documents/VST")
+else()
+    set(DO_COPY FALSE)
+    set(VST3_DIR "")
+endif()
+
 juce_add_plugin(SimpleCrush
     COMPANY_NAME "Syverson Audio"
     BUNDLE_ID "com.SyversonAudio.SimpleCrush"
@@ -20,8 +28,8 @@ juce_add_plugin(SimpleCrush
     PLUGIN_CODE "Rdx4"
     FORMATS VST3 AU Standalone
     PRODUCT_NAME "SimpleCrush"
-    COPY_PLUGIN_AFTER_BUILD TRUE
-    VST3_COPY_DIR "C:/Users/sheam/Documents/VST" 
+    COPY_PLUGIN_AFTER_BUILD ${DO_COPY}
+    VST3_COPY_DIR "${VST3_DIR}" 
 )
 
 juce_generate_juce_header(SimpleCrush)
@@ -34,12 +42,16 @@ target_sources(SimpleCrush PRIVATE
     src/dsp/knobs.cpp
     src/ui/main/plugin_editor.cpp
     src/ui/main/plugin_editor.h
+    src/ui/main/editor_actions.cpp
     src/ui/main/plugin_controls.h
     src/ui/main/plugin_controls.cpp
     src/ui/style/plugin_theme.h
+    src/ui/style/plugin_theme.cpp
+    src/ui/style/update_theme.cpp
     src/ui/style/svg.h
     src/ui/components/plugin_settings.h
     src/ui/components/plugin_settings.cpp
+    src/ui/components/setting_actions.cpp
     src/ui/components/preset_menu.h
     src/ui/components/preset_menu.cpp
     src/ui/components/preset_actions.cpp

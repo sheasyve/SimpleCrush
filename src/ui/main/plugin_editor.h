@@ -20,16 +20,17 @@ public:
     void paint(juce::Graphics &) override;
     void paintOverChildren(juce::Graphics &) override;
     void resized() override;
-    
+
 private:
-    PluginTheme::SettingsBackground settingsOverlay;
-    PluginTheme::SettingsBackground presetOverlay;
+    PluginTheme::ThemeManager themeManager; 
     MyPluginProcessor &audioProcessor;
     ThemeLookAndFeel themeLnF;
     PresetMenu presetMenu;
     PluginControls pluginControls;
-    PluginSettings pluginSettings;
+    PluginSettings pluginSettings{themeManager};
     juce::Rectangle<int> logoBounds;
+    PluginTheme::SettingsBackground settingsOverlay;
+    PluginTheme::SettingsBackground presetOverlay;
     bool isSettingsVisible = false;
     bool isPresetsVisible = false;
     int currentThemeId = 1;
@@ -38,7 +39,9 @@ private:
     void updateTheme(int themeId);
     void updateFontSize(int fontSizeId);
     void setLabelsVisible(bool shouldBeVisible);
-    
+    void setupCallbacks();
+    juce::DropShadow shadowProperties;
+    juce::DropShadowEffect overlayShadow;
     std::unique_ptr<juce::TooltipWindow> tooltipWindow;
     std::unique_ptr<juce::DrawablePath> drawableGear;
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
