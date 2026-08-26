@@ -44,7 +44,6 @@ public:
     std::unique_ptr<juce::DrawablePath> drawableGearHover;
     juce::ToggleButton tooltipToggle{"Show Tooltips"};
     std::function<void(bool)> onTooltipToggled;
-
     juce::DrawableButton folderButton{"Folder", juce::DrawableButton::ImageFitted};
     std::unique_ptr<juce::DrawablePath> drawableFolder, drawableFolderHover;
     

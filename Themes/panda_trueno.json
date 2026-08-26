@@ -1,6 +1,7 @@
 {
   "name": "Panda Trueno",
   "id": 1,
+  "description": "Panda Trueno: \n A sleek dark theme with red accents, inspired by the iconic Toyota AE86.",
   "colors": {
     "sliderFill": "#FFFFFFFF",
     "sliderOutline": "#1A1A1AFF",

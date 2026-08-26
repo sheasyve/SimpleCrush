@@ -1,6 +1,7 @@
 {
   "name": "Studio Dark",
   "id": 2,
+  "description": "Studio Dark: \n A classic dark theme.",
   "colors": {
     "sliderFill": "#D6D6D6FF",
     "sliderOutline": "#4C4C4CFF",

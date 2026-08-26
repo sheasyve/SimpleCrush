@@ -1,6 +1,7 @@
 {
   "name": "Sunset Horizon",
   "id": 6,
+  "description": "Sunset Horizon: \n A theme that captures the beauty of a sunset.",
   "colors": {
     "sliderFill": "#FF7043FF",
     "sliderOutline": "#D84315FF",

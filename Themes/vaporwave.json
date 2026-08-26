@@ -1,6 +1,7 @@
 {
   "name": "Vaporwave",
   "id": 4,
+  "description": "Vaporwave: \n Neon colors and a nostalgic vibe.",
   "colors": {
     "sliderFill": "#FF2A6DFF",
     "sliderOutline": "#05D9E8FF",

@@ -1,6 +1,7 @@
 {
   "name": "Retro Caramel",
   "id": 8,
+  "description": "Retro Caramel: \n A warm, nostalgic theme with caramel and brown tones.",
   "colors": {
     "sliderFill": "#C58B4EFF",
     "sliderOutline": "#9A623BFF",

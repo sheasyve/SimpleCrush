@@ -2,9 +2,12 @@
 
 void PluginSettings::setupCallbacks() {
     
-    themeSelector.onChange = [this]() {
+    themeSelector.onChange = [this] {
         int selectedId = themeSelector.getSelectedId();
-        if (selectedId > 0 && onThemeChanged) { 
+        auto props = themeManager.getThemeProps(selectedId); 
+        juce::String newTooltip = props.description + "\n\n" + juce::String(SettingsTooltips::theme);
+        themeSelector.setTooltip(newTooltip);
+        if (onThemeChanged != nullptr) {
             onThemeChanged(selectedId); 
         }
     };

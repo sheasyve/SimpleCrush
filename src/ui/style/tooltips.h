@@ -21,7 +21,7 @@ struct PresetTooltips {
 
 struct SettingsTooltips {
     static constexpr const char* settingsBtn = "Toggle the settings menu.";
-    static constexpr const char* theme       = "Change the color scheme. You can also add your own themes by placing a .json file in the 'themes' folder.";
+    static constexpr const char* theme       = "Add your own theme by placing a .json file in the 'Themes' folder.";
     static constexpr const char* fontSize    = "Adjust the size of the text and labels.";
     static constexpr const char* tooltips    = "Show or hide these hover hints.";
     static constexpr const char* info        = "Visit the developer's website.";

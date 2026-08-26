@@ -1,6 +1,7 @@
 {
   "name": "Forest Zone",
   "id": 5,
+  "description": "Forest Zone: \n A lush green theme inspired by the woods.",
   "colors": {
     "sliderFill": "#4CAF50FF",
     "sliderOutline": "#388E3CFF",

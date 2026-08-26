@@ -32,7 +32,7 @@ ThemeProps ThemeManager::loadThemeFromFile(const juce::File &file) {
     if (auto *obj = parsedJson.getDynamicObject()) {
         theme.name = obj->getProperty("name").toString();
         theme.id = static_cast<int>(obj->getProperty("id"));
-
+        theme.description = obj->getProperty("description").toString();
         auto colorsVar = obj->getProperty("colors");
         if (auto *colors = colorsVar.getDynamicObject()) {
             theme.sliderFill = parseHexColour(colors->getProperty("sliderFill").toString());
@@ -56,11 +56,9 @@ ThemeProps ThemeManager::loadThemeFromFile(const juce::File &file) {
             float height = static_cast<float>(font->getProperty("height"));
             bool isBold = static_cast<bool>(font->getProperty("isBold"));
             bool isItalic = static_cast<bool>(font->getProperty("isItalic"));
-
             int styleFlags = juce::Font::plain;
             if (isBold) styleFlags |= juce::Font::bold;
             if (isItalic) styleFlags |= juce::Font::italic;
-
             theme.labelFont = juce::FontOptions(height, styleFlags).withName(fontName);
         }
 
@@ -69,11 +67,9 @@ ThemeProps ThemeManager::loadThemeFromFile(const juce::File &file) {
             juce::String fontName = logoFont->getProperty("name").toString();
             bool isBold = static_cast<bool>(logoFont->getProperty("isBold"));
             bool isItalic = static_cast<bool>(logoFont->getProperty("isItalic"));
-
             int styleFlags = juce::Font::plain;
             if (isBold) styleFlags |= juce::Font::bold;
             if (isItalic) styleFlags |= juce::Font::italic;
-
             theme.logoFont = juce::FontOptions(20.0f, styleFlags).withName(fontName);
         } else {
             theme.logoFont = juce::FontOptions(20.0f, juce::Font::bold).withName("Arial");
@@ -85,7 +81,6 @@ ThemeProps ThemeManager::loadThemeFromFile(const juce::File &file) {
 void ThemeManager::refreshThemes() {
     cachedThemes.clear();
     auto files = getThemesDirectory().findChildFiles(juce::File::findFiles, false, "*.json");
-
     for (const auto &file : files) {
         auto props = loadThemeFromFile(file);
         if (props.name.isNotEmpty()) { cachedThemes[props.id] = props; }

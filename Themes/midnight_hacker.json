@@ -1,6 +1,7 @@
 {
   "name": "Midnight Hacker",
   "id": 9,
+  "description": "Midnight Hacker: \n A dark theme with neon green accents, for the coding enthusiast.",
   "colors": {
     "sliderFill": "#00FF41FF",
     "sliderOutline": "#008F11FF",

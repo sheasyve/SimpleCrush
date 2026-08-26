@@ -2,9 +2,7 @@
 
 void MyPluginEditor::updateTheme(int themeId) {
     currentThemeId = themeId;
-
     auto theme = themeManager.getThemeProps(themeId);
-
     themeLnF.currentFont = theme.labelFont.withHeight(getDynamicFontHeight());
     themeLnF.setColour(juce::ScrollBar::thumbColourId, theme.scrollbarThumb);
 

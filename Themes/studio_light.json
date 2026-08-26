@@ -1,6 +1,7 @@
 {
   "name": "Studio Light",
   "id": 3,
+  "description": "Studio Light: \n A classic light theme.",
   "colors": {
     "sliderFill": "#333333FF",
     "sliderOutline": "#AAAAAAFF",

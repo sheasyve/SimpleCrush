@@ -8,7 +8,7 @@ namespace PluginTheme {
 struct ThemeProps {
     juce::String name;
     int id { 1 };
-    
+    juce::String description;
     juce::Colour sliderFill;
     juce::Colour sliderOutline;
     juce::Colour sliderThumb;

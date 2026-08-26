@@ -12,7 +12,6 @@ PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm) : themeManager(tm)
     themeLabel.setText("Theme", juce::dontSendNotification);
     themeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(themeLabel);
-
     themeSelector.setTooltip(SettingsTooltips::theme);
     addChildComponent(themeSelector);
 
@@ -31,7 +30,6 @@ PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm) : themeManager(tm)
     infoLabel.setText(infotext, juce::dontSendNotification);
     infoLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(infoLabel);
-
     infoButton.onClick = [] { juce::URL("https://sheasyve.dev/simplecrush").launchInDefaultBrowser(); };
     infoButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
     infoButton.setAlpha(0.0f);
@@ -87,12 +85,10 @@ void PluginSettings::resized() {
 
     if (isSettingsVisible) {
         folderButton.setBounds(5, 30, 25, 25);
-
         int topY = bounds.getCentreY() - 110 + 7;
         int labelHeight = 100;
         int availableHeight = bounds.getBottom() - topY - 10;
         auto overlayArea = juce::Rectangle<int>(bounds.getCentreX() - 110, topY, 220, std::max(220, availableHeight));
-
         overlayArea.removeFromTop(5);
         themeLabel.setBounds(overlayArea.removeFromTop(40));
         themeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
@@ -101,7 +97,6 @@ void PluginSettings::resized() {
         fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
         overlayArea.removeFromTop(15);
         tooltipToggle.setBounds(overlayArea.removeFromTop(25).reduced(30, 0));
-
         auto centeredInfoBounds = overlayArea.withSizeKeepingCentre(overlayArea.getWidth(), labelHeight);
         infoLabel.setBounds(centeredInfoBounds);
         infoButton.setBounds(centeredInfoBounds);
@@ -117,10 +112,16 @@ void PluginSettings::refreshThemeList() {
     }
     if (currentSelection != 0) {
         themeSelector.setSelectedId(currentSelection, juce::dontSendNotification);
+        auto props = themeManager.getThemeProps(currentSelection);
+        themeSelector.setTooltip(juce::String(SettingsTooltips::theme) + "\n\n" + props.description);
     }
 }
 
-void PluginSettings::setInitialTheme(int themeId) { themeSelector.setSelectedId(themeId, juce::dontSendNotification); }
+void PluginSettings::setInitialTheme(int themeId) { 
+    themeSelector.setSelectedId(themeId, juce::dontSendNotification); 
+    auto props = themeManager.getThemeProps(themeId);
+    themeSelector.setTooltip(juce::String(SettingsTooltips::theme) + "\n\n" + props.description);
+}
 
 void PluginSettings::setMenuOpen(bool isOpen) {
     isSettingsVisible = isOpen;
