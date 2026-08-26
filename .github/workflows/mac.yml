@@ -1,0 +1,30 @@
+name: Build macOS Plugin (Unsigned)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build Plugin
+      run: cmake --build build --config Release --parallel 4
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: SimpleCrush-macOS-Unsigned
+        path: |
+          build/**/*_artefacts/Release/VST3/*.vst3
+          build/**/*_artefacts/Release/AU/*.component
+          build/**/*_artefacts/Release/Standalone/*.app
