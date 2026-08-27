@@ -87,7 +87,7 @@ void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
         g.setFont(logoFont.withHeight(dynamicFontHeight * logoScale));
         juce::Rectangle<int> textBounds;
         if (isAnyMenuOpen) {
-            int yPosition = (int)(getHeight() * 0.037f);
+            int yPosition = (int)(getHeight() * 0.035f);
             int textHeight = (int)(dynamicFontHeight * logoScale * 1.5f);
             textBounds = juce::Rectangle<int>(0, yPosition, getWidth(), textHeight);
         } else {
