@@ -44,21 +44,19 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         "High Pass",
         makeCustomSkewRange(0.0f, 20000.0f, 0.3f),
         0.0f,
-        juce::String(),
-        juce::AudioProcessorParameter::genericParameter,
-        [](float value, int) { return juce::String(value, 0) + " Hz"; },
-        [](const juce::String &text) { return text.getFloatValue(); }));
+        juce::AudioParameterFloatAttributes()
+            .withStringFromValueFunction([](float value, int) { return juce::String(value, 0) + " Hz"; })
+            .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
 
-    // BITS - Continuous interval (0.0f) manually passed in since there's no skew
+    // BITS - Continuous interval 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         juce::ParameterID{"BITS", 1},
         "Bit Depth",
         juce::NormalisableRange<float>(1.0f, 16.0f, 0.0f),
         16.0f,
-        juce::String(),
-        juce::AudioProcessorParameter::genericParameter,
-        [](float value, int) { return juce::String(value, 1); },
-        [](const juce::String &text) { return text.getFloatValue(); }));
+        juce::AudioParameterFloatAttributes()
+            .withStringFromValueFunction([](float value, int) { return juce::String(value, 1); })
+            .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
 
     // RATE - Custom Range
     layout.add(std::make_unique<juce::AudioParameterFloat>(
@@ -66,10 +64,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         "Sample Rate",
         makeCustomSkewRange(1.0f, 44.1f, 0.6f),
         44.1f,
-        juce::String(),
-        juce::AudioProcessorParameter::genericParameter,
-        [](float value, int) { return juce::String(value, 2); },
-        [](const juce::String &text) { return text.getFloatValue(); }));
+        juce::AudioParameterFloatAttributes()
+            .withStringFromValueFunction([](float value, int) { return juce::String(value, 2); })
+            .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
 
     // LPF - Custom Range
     layout.add(std::make_unique<juce::AudioParameterFloat>(
@@ -77,10 +74,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         "Low Pass",
         makeCustomSkewRange(20.0f, 20000.0f, 0.3f),
         20000.0f,
-        juce::String(),
-        juce::AudioProcessorParameter::genericParameter,
-        [](float value, int) { return juce::String(value, 0) + " Hz"; },
-        [](const juce::String &text) { return text.getFloatValue(); }));
+        juce::AudioParameterFloatAttributes()
+            .withStringFromValueFunction([](float value, int) { return juce::String(value, 0) + " Hz"; })
+            .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
 
     // MIX - Continuous interval (0.0f)
     layout.add(std::make_unique<juce::AudioParameterFloat>(
@@ -88,13 +84,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         "Mix",
         juce::NormalisableRange<float>(0.0f, 1.0f, 0.0f),
         1.0f,
-        juce::String(),
-        juce::AudioProcessorParameter::genericParameter,
-        [](float value, int) { return juce::String(value * 100.0f, 1) + "%"; },
-        [](const juce::String &text) { return text.getFloatValue() / 100.0f; }));
+        juce::AudioParameterFloatAttributes()
+            .withStringFromValueFunction([](float value, int) { return juce::String(value * 100.0f, 1) + "%"; })
+            .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue() / 100.0f; })));
 
+    // AudioParameterInt already conforms to the new style here because it doesn't use the trailing lambdas
     layout.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{"THEME_ID", 1}, "Theme ID", 1, 8, 1));
-
+    
     return layout;
 }
 
