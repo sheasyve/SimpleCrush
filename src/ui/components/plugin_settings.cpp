@@ -7,26 +7,18 @@ PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm) : themeManager(tm)
     parseSvgIcon(settingsButton, drawableGear, drawableGearHover, SvgAssets::gearIcon);
     settingsButton.setTooltip(SettingsTooltips::settingsBtn);
     addAndMakeVisible(settingsButton);
-
-    // Theme Setup
     themeLabel.setText("Theme", juce::dontSendNotification);
     themeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(themeLabel);
     themeSelector.setTooltip(SettingsTooltips::theme);
     addChildComponent(themeSelector);
-
-    // Load dynamic themes on start
     refreshThemeList();
-
-    // Font Size Setup
     fontSizeLabel.setText("Font Size", juce::dontSendNotification);
     fontSizeLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(fontSizeLabel);
     for (const auto &size : fontSizes) { fontSizeSelector.addItem(size.first, size.second); }
     fontSizeSelector.setTooltip(SettingsTooltips::fontSize);
     addChildComponent(fontSizeSelector);
-
-    // Info Setup
     infoLabel.setText(infotext, juce::dontSendNotification);
     infoLabel.setJustificationType(juce::Justification::centred);
     addChildComponent(infoLabel);
@@ -35,23 +27,16 @@ PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm) : themeManager(tm)
     infoButton.setAlpha(0.0f);
     infoButton.setTooltip(SettingsTooltips::info);
     addChildComponent(infoButton);
-
-    // Tooltip Toggle
     tooltipToggle.setTooltip(SettingsTooltips::tooltips);
     addChildComponent(tooltipToggle);
-
-    // Folder Button
     parseSvgIcon(folderButton, drawableFolder, drawableFolderHover, SvgAssets::folderIcon);
     folderButton.setTooltip("Move your Presets and Themes folder");
     addChildComponent(folderButton);
-
     setupCallbacks();
 }
 
 void PluginSettings::updateMenuVisibility() {
     if (isSettingsVisible) refreshThemeList();
-
-    // Settings Page
     themeLabel.setVisible(isSettingsVisible);
     themeSelector.setVisible(isSettingsVisible);
     fontSizeLabel.setVisible(isSettingsVisible);
@@ -60,7 +45,6 @@ void PluginSettings::updateMenuVisibility() {
     infoButton.setVisible(isSettingsVisible);
     tooltipToggle.setVisible(isSettingsVisible);
     folderButton.setVisible(isSettingsVisible);
-
     if (onSettingsToggled != nullptr) onSettingsToggled(isSettingsVisible);
     resized();
     repaint();
@@ -69,9 +53,9 @@ void PluginSettings::updateMenuVisibility() {
 void PluginSettings::paint(juce::Graphics &g) {
     if (isSettingsVisible) {
         g.setColour(textColor);
-        float titleSize = textFont.getHeight() * 1.2f;
-        g.setFont(textFont.withHeight(titleSize).withStyle(juce::Font::bold));
         auto bounds = getLocalBounds();
+        float titleSize = bounds.getHeight() * 0.05f;
+        g.setFont(textFont.withHeight(titleSize).withStyle(juce::Font::bold));
         int textHeight = (int)titleSize + 10;
         int yPosition = (int)juce::jmap<float>(static_cast<float>(bounds.getHeight()), 340.0f, 600.0f, 40.0f, 79.0f);
         juce::Rectangle<int> titleArea(0, yPosition, bounds.getWidth(), textHeight);
@@ -82,24 +66,30 @@ void PluginSettings::paint(juce::Graphics &g) {
 void PluginSettings::resized() {
     auto bounds = getLocalBounds();
     settingsButton.setBounds(5, 5, 25, 25);
-
     if (isSettingsVisible) {
         folderButton.setBounds(5, 30, 25, 25);
-        int topY = bounds.getCentreY() - 110 + 7;
-        int labelHeight = 100;
-        int availableHeight = bounds.getBottom() - topY - 10;
-        auto overlayArea = juce::Rectangle<int>(bounds.getCentreX() - 110, topY, 220, std::max(220, availableHeight));
-        overlayArea.removeFromTop(5);
-        themeLabel.setBounds(overlayArea.removeFromTop(40));
-        themeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
-        overlayArea.removeFromTop(15);
-        fontSizeLabel.setBounds(overlayArea.removeFromTop(20));
-        fontSizeSelector.setBounds(overlayArea.removeFromTop(25).reduced(10, 0));
-        overlayArea.removeFromTop(15);
-        tooltipToggle.setBounds(overlayArea.removeFromTop(25).reduced(30, 0));
-        auto centeredInfoBounds = overlayArea.withSizeKeepingCentre(overlayArea.getWidth(), labelHeight);
+        int menuWidth = (int)(bounds.getWidth() * 0.75f);
+        int menuHeight = (int)(bounds.getHeight() * 0.8f);
+        auto overlayArea = bounds.withSizeKeepingCentre(menuWidth, menuHeight);
+        int totalHeight = overlayArea.getHeight();
+        overlayArea.removeFromTop(totalHeight * 0.13f);
+        auto themeLabelArea = overlayArea.removeFromTop(totalHeight * 0.12f);
+        themeLabel.setBounds(themeLabelArea);
+        themeLabel.setFont(juce::Font(themeLabelArea.getHeight() * 0.6f, juce::Font::bold));
+        int hPadding = (int)(menuWidth * 0.05f);
+        themeSelector.setBounds(overlayArea.removeFromTop(totalHeight * 0.10f).reduced(hPadding, 0));
+        overlayArea.removeFromTop(totalHeight * 0.04f);
+        auto fontSizeLabelArea = overlayArea.removeFromTop(totalHeight * 0.10f);
+        fontSizeLabel.setBounds(fontSizeLabelArea);
+        fontSizeLabel.setFont(juce::Font(fontSizeLabelArea.getHeight() * 0.6f, juce::Font::bold));
+        fontSizeSelector.setBounds(overlayArea.removeFromTop(totalHeight * 0.10f).reduced(hPadding, 0));
+        overlayArea.removeFromTop(totalHeight * 0.04f);
+        auto toggleArea = overlayArea.removeFromTop(totalHeight * 0.10f);
+        tooltipToggle.setBounds(toggleArea.withSizeKeepingCentre(120, toggleArea.getHeight()));
+        auto centeredInfoBounds = overlayArea.withSizeKeepingCentre(overlayArea.getWidth(), (int)(totalHeight * 0.30f));
         infoLabel.setBounds(centeredInfoBounds);
         infoButton.setBounds(centeredInfoBounds);
+        infoLabel.setFont(juce::Font(centeredInfoBounds.getHeight() * 0.25f));
     }
 }
 
@@ -107,9 +97,7 @@ void PluginSettings::refreshThemeList() {
     int currentSelection = themeSelector.getSelectedId();
     themeSelector.clear(juce::dontSendNotification);
     auto availableThemes = themeManager.getAvailableThemes();
-    for (const auto &[name, id] : availableThemes) { 
-        themeSelector.addItem(name, id); 
-    }
+    for (const auto &[name, id] : availableThemes) { themeSelector.addItem(name, id); }
     if (currentSelection != 0) {
         themeSelector.setSelectedId(currentSelection, juce::dontSendNotification);
         auto props = themeManager.getThemeProps(currentSelection);
@@ -117,8 +105,8 @@ void PluginSettings::refreshThemeList() {
     }
 }
 
-void PluginSettings::setInitialTheme(int themeId) { 
-    themeSelector.setSelectedId(themeId, juce::dontSendNotification); 
+void PluginSettings::setInitialTheme(int themeId) {
+    themeSelector.setSelectedId(themeId, juce::dontSendNotification);
     auto props = themeManager.getThemeProps(themeId);
     themeSelector.setTooltip(juce::String(SettingsTooltips::theme) + "\n\n" + props.description);
 }
@@ -131,7 +119,6 @@ void PluginSettings::setMenuOpen(bool isOpen) {
 void PluginSettings::updateIconColors(juce::Colour normal, juce::Colour hover) {
     juce::Colour brightNormal = normal.brighter(0.3f);
     juce::Colour brightHover = hover.brighter(0.3f);
-
     if (drawableGear != nullptr && drawableGearHover != nullptr) {
         drawableGear->setFill(brightNormal);
         drawableGearHover->setFill(brightHover);

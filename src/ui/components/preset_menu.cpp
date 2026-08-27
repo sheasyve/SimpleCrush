@@ -106,6 +106,11 @@ void PresetMenu::paint(juce::Graphics &g) {
 
 void PresetMenu::resized() {
     auto bounds = getLocalBounds();
+    float dynamicFontSize = bounds.getHeight() * 0.04f; 
+    textFont = textFont.withHeight(dynamicFontSize);
+    saveTextBox.setFont(textFont.withHeight(dynamicFontSize * 1.0f)); 
+    int dynamicRowHeight = juce::roundToInt(dynamicFontSize * 1.8f);
+    presetList.setRowHeight(dynamicRowHeight);
 
     // --- Top Right Stack ---
     presetsButton.setBounds(bounds.getWidth() - 30, 5, 25, 25);
@@ -117,12 +122,14 @@ void PresetMenu::resized() {
     deleteButton.setBounds(5, 55, 25, 25);
 
     if (isPresetsVisible) {
-        auto overlayArea = bounds.withSizeKeepingCentre(260, 240);
+        int menuWidth = (int)(bounds.getWidth() * 0.7f);
+        int menuHeight = (int)(bounds.getHeight() * 0.7f);
+        auto overlayArea = bounds.withSizeKeepingCentre(menuWidth, menuHeight);
         overlayArea.translate(0, 25);
-        auto topBar = overlayArea.removeFromTop(26);
+        auto topBar = overlayArea.removeFromTop(dynamicRowHeight); 
         saveTextBox.setBounds(topBar.reduced(10, 0));
-        overlayArea.removeFromTop(10);
-        presetList.setBounds(overlayArea);
+        overlayArea.removeFromTop(10); 
+        presetList.setBounds(overlayArea); 
     }
 }
 
@@ -161,9 +168,9 @@ int PresetMenu::getNumRows() { return (int)presets.size(); }
 
 void PresetMenu::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) {
     if (juce::isPositiveAndBelow(rowNumber, (int)presets.size())) {
-        if (rowIsSelected) { g.fillAll(juce::Colours::white.withAlpha(0.2f)); }
+        if (rowIsSelected) { g.fillAll(juce::Colours::white.withAlpha(0.2f)); }  
         g.setColour(textColor);
-        g.setFont(textFont);
+        g.setFont(textFont.withHeight(height * 0.6f)); 
         g.drawText(presets[rowNumber].name, 5, 0, width - 10, height, juce::Justification::centredLeft, true);
     }
 }
