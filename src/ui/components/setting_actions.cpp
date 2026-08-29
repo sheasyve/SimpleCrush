@@ -1,31 +1,23 @@
 #include "ui/components/plugin_settings.h"
 
 void PluginSettings::setupCallbacks() {
-    
+
     themeSelector.onChange = [this] {
         int selectedId = themeSelector.getSelectedId();
-        auto props = themeManager.getThemeProps(selectedId); 
+        auto props = themeManager.getThemeProps(selectedId);
         juce::String newTooltip = props.description + "\n\n" + juce::String(SettingsTooltips::theme);
         themeSelector.setTooltip(newTooltip);
-        if (onThemeChanged != nullptr) {
-            onThemeChanged(selectedId); 
-        }
+        if (onThemeChanged != nullptr) { onThemeChanged(selectedId); }
     };
 
     fontSizeSelector.onChange = [this]() {
-        if (onFontSizeChanged != nullptr) {
-            onFontSizeChanged(fontSizeSelector.getSelectedId());
-        }
+        if (onFontSizeChanged != nullptr) { onFontSizeChanged(fontSizeSelector.getSelectedId()); }
     };
 
-    infoButton.onClick = [] { 
-        juce::URL("https://sheasyve.dev/simplecrush").launchInDefaultBrowser(); 
-    };
+    infoButton.onClick = [] { juce::URL("https://sheasyve.dev/simplecrush").launchInDefaultBrowser(); };
 
     tooltipToggle.onClick = [this]() {
-        if (onTooltipToggled != nullptr) { 
-            onTooltipToggled(tooltipToggle.getToggleState()); 
-        }
+        if (onTooltipToggled != nullptr) { onTooltipToggled(tooltipToggle.getToggleState()); }
     };
 
     settingsButton.onClick = [this]() {
@@ -33,9 +25,7 @@ void PluginSettings::setupCallbacks() {
         updateMenuVisibility();
     };
 
-    folderButton.onClick = [this]() { 
-        launchFolderChooser(); 
-    };
+    folderButton.onClick = [this]() { launchFolderChooser(); };
 }
 
 void PluginSettings::launchFolderChooser() {
@@ -54,12 +44,8 @@ void PluginSettings::launchFolderChooser() {
                 newFolder = newFolder.getParentDirectory();
             }
 
-            auto appDataDir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
-                                  .getChildFile("Syverson Audio/SimpleCrush");
-            auto settingsFile = appDataDir.getChildFile("settings.xml");
-            juce::XmlElement xml("SETTINGS");
-            xml.setAttribute("DataFolder", newFolder.getFullPathName());
-            xml.writeTo(settingsFile);
+            processor.saveDataFolder(newFolder.getFullPathName());
+
             if (onDataFolderChanged) { onDataFolderChanged(newFolder); }
         }
     });

@@ -33,6 +33,14 @@ MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     pluginSettings.setInitialTooltipState(initialTooltipState);
     updateTooltipState(initialTooltipState);
     updateTheme(initialTheme);
+
+    juce::String savedFolderPath = audioProcessor.getSavedDataFolder();
+    juce::File customDataFolder(savedFolderPath);
+    if (customDataFolder.isDirectory()) {
+        juce::File presetSubfolder = customDataFolder.getChildFile("Presets");
+        presetSubfolder.createDirectory();
+        presetMenu.setPresetDirectory(presetSubfolder);
+    }
 }
 
 MyPluginEditor::~MyPluginEditor() {

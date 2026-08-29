@@ -1,6 +1,6 @@
 #include "ui/components/plugin_settings.h"
 
-PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm) : themeManager(tm) {
+PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm, MyPluginProcessor& p) :  themeManager(tm), processor(p){
     juce::String infotext =
         "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
     setInterceptsMouseClicks(false, true);
@@ -89,7 +89,7 @@ void PluginSettings::resized() {
         auto centeredInfoBounds = overlayArea.withSizeKeepingCentre(overlayArea.getWidth(), (int)(totalHeight * 0.30f));
         infoLabel.setBounds(centeredInfoBounds);
         infoButton.setBounds(centeredInfoBounds);
-        infoLabel.setFont(juce::Font(centeredInfoBounds.getHeight() * 0.25f));
+        infoLabel.setFont(juce::Font(centeredInfoBounds.getHeight() * 0.22f));
     }
 }
 

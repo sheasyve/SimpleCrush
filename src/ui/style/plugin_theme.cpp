@@ -1,4 +1,5 @@
 #include "plugin_theme.h"
+#include <algorithm>
 
 namespace PluginTheme {
 
@@ -8,7 +9,6 @@ ThemeManager::ThemeManager() {
 }
 
 juce::Colour ThemeManager::parseHexColour(const juce::String &hexString) {
-    // Parse the color so that I can use rgba format in the json file. The format is #RRGGBBAA or #RRGGBB
     juce::String localHex = hexString;
     if (localHex.startsWithChar('#')) {
         localHex = localHex.substring(1);
@@ -31,8 +31,8 @@ ThemeProps ThemeManager::loadThemeFromFile(const juce::File &file) {
     var parsedJson = juce::JSON::parse(file);
     if (auto *obj = parsedJson.getDynamicObject()) {
         theme.name = obj->getProperty("name").toString();
-        theme.id = static_cast<int>(obj->getProperty("id"));
         theme.description = obj->getProperty("description").toString();
+        
         auto colorsVar = obj->getProperty("colors");
         if (auto *colors = colorsVar.getDynamicObject()) {
             theme.sliderFill = parseHexColour(colors->getProperty("sliderFill").toString());
@@ -41,6 +41,7 @@ ThemeProps ThemeManager::loadThemeFromFile(const juce::File &file) {
             theme.sliderTrack = parseHexColour(colors->getProperty("sliderTrack").toString());
             theme.labelText = parseHexColour(colors->getProperty("labelText").toString());
             theme.labelShadow = parseHexColour(colors->getProperty("labelShadow").toString());
+            theme.altText = parseHexColour(colors->getProperty("altText").toString());
             theme.bgCenter = parseHexColour(colors->getProperty("bgCenter").toString());
             theme.bgEdge = parseHexColour(colors->getProperty("bgEdge").toString());
             theme.buttonColor = parseHexColour(colors->getProperty("buttonColor").toString());
@@ -80,17 +81,31 @@ ThemeProps ThemeManager::loadThemeFromFile(const juce::File &file) {
 
 void ThemeManager::refreshThemes() {
     cachedThemes.clear();
+    std::vector<ThemeProps> tempThemes;
+    
     auto files = getThemesDirectory().findChildFiles(juce::File::findFiles, false, "*.json");
     for (const auto &file : files) {
         auto props = loadThemeFromFile(file);
-        if (props.name.isNotEmpty()) { cachedThemes[props.id] = props; }
+        if (props.name.isNotEmpty()) { 
+            tempThemes.push_back(props); 
+        }
+    }
+
+    std::sort(tempThemes.begin(), tempThemes.end(), [](const ThemeProps& a, const ThemeProps& b) {
+        return a.name.compareIgnoreCase(b.name) < 0;
+    });
+
+    int currentId = 1;
+    for (auto& theme : tempThemes) {
+        theme.id = currentId;
+        cachedThemes[currentId] = theme;
+        currentId++;
     }
 }
 
 ThemeProps ThemeManager::getThemeProps(int themeId) const {
     auto it = cachedThemes.find(themeId);
     if (it != cachedThemes.end()) return it->second;
-
     return defaultTheme;
 }
 
@@ -101,7 +116,6 @@ std::vector<std::pair<juce::String, int>> ThemeManager::getAvailableThemes() con
 }
 
 void ThemeManager::loadDefaultFallbackTheme() {
-    // Hardcoded default theme values
     defaultTheme.name = "Panda Trueno (Default)";
     defaultTheme.id = 1;
     defaultTheme.sliderFill = juce::Colour(0xFFFFFFFF);
@@ -110,6 +124,7 @@ void ThemeManager::loadDefaultFallbackTheme() {
     defaultTheme.sliderTrack = juce::Colour(0xFF333333);
     defaultTheme.labelText = juce::Colour(0xFFFFFFFF);
     defaultTheme.labelShadow = juce::Colour(0x7E2B2B2B);
+    defaultTheme.altText = juce::Colour(0xFFAAAAAA);
     defaultTheme.bgCenter = juce::Colour(0xFF2B2B2B);
     defaultTheme.bgEdge = juce::Colour(0xFF050505);
     defaultTheme.buttonColor = juce::Colour(0xBDFFFFFF);
@@ -139,10 +154,9 @@ void ThemeManager::loadSettings(const juce::File &settingsFile) {
 
 juce::File ThemeManager::getThemesDirectory() {
     if (customThemesDir.exists()) return customThemesDir;
-    auto dir =
-        juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush/Themes");
+    auto dir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush/Themes");
     if (!dir.exists()) dir.createDirectory();
     return dir;
 }
 
-} // namespace PluginTheme
+}

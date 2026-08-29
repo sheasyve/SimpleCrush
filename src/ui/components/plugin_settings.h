@@ -2,6 +2,7 @@
 #include "ui/style/plugin_theme.h"
 #include "ui/style/svg.h"
 #include "ui/style/tooltips.h"
+#include "dsp/plugin_processor.h"
 #include <JuceHeader.h>
 
 const std::vector<std::pair<juce::String, int>> fontSizes = {
@@ -9,9 +10,9 @@ const std::vector<std::pair<juce::String, int>> fontSizes = {
 
 class PluginSettings : public juce::Component {
 public:
-    PluginSettings();
+    PluginSettings(PluginTheme::ThemeManager &tm, MyPluginProcessor& p); 
     ~PluginSettings() override = default;
-    PluginSettings(PluginTheme::ThemeManager &tm);
+    
     void paint(juce::Graphics &g) override;
     void resized() override;
     void setInitialTheme(int themeId);
@@ -59,6 +60,7 @@ public:
 
 private:
     void setupCallbacks();
+    MyPluginProcessor& processor;
     bool isSettingsVisible = false;
     bool isPresetsVisible = false;
     PluginTheme::ThemeManager& themeManager;

@@ -1,6 +1,5 @@
 {
   "name": "Midnight Hacker",
-  "id": 9,
   "description": "Midnight Hacker: \n A dark theme with neon green accents, for the coding enthusiast.",
   "colors": {
     "sliderFill": "#00FF41FF",
@@ -9,6 +8,7 @@
     "sliderTrack": "#31422DFF",
     "labelText": "#00FF41FF",
     "labelShadow": "#008F11FF",
+    "altText": "#050505B3",
     "bgCenter": "#272727FF",
     "bgEdge": "#000000FF",
     "buttonColor": "#008F11FF",

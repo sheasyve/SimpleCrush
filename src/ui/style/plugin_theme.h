@@ -15,6 +15,7 @@ struct ThemeProps {
     juce::Colour sliderTrack;
     juce::Colour labelText;
     juce::Colour labelShadow;
+    juce::Colour altText;
     juce::Colour bgCenter;
     juce::Colour bgEdge;
     juce::Colour buttonColor;

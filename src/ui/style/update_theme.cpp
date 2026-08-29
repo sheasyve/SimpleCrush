@@ -72,7 +72,7 @@ void MyPluginEditor::updateTheme(int themeId) {
 
     // Menu Styling & Fonts
     pluginSettings.setThemeStyle(theme.labelText, themeLnF.currentFont);
-    presetMenu.setThemeStyle(theme.labelText, themeLnF.currentFont);
+    presetMenu.setThemeStyle(theme.labelText, themeLnF.currentFont, theme.buttonHoverColor, theme.altText);
 
     // Overlay Background Colors 
     settingsOverlay.setOverlayColor(theme.settingsOverlay);

@@ -1,6 +1,5 @@
 {
   "name": "Studio Light",
-  "id": 3,
   "description": "Studio Light: \n A classic light theme.",
   "colors": {
     "sliderFill": "#333333FF",
@@ -9,6 +8,7 @@
     "sliderTrack": "#BBBBBBFF",
     "labelText": "#222222FF",
     "labelShadow": "#F9F9F983",
+    "altText": "#FAFAFA",
     "bgCenter": "#F9F9F9FF",
     "bgEdge": "#DCDCDCFF",
     "buttonColor": "#080808FF",

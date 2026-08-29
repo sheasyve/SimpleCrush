@@ -1,7 +1,7 @@
 #pragma once
 #include "ui/style/plugin_theme.h"
-#include "ui/style/tooltips.h"
 #include "ui/style/svg.h"
+#include "ui/style/tooltips.h"
 #include <JuceHeader.h>
 
 struct Preset {
@@ -22,12 +22,18 @@ public:
     bool isMenuOpen() const { return isPresetsVisible; }
     void updateMenuVisibility();
     void updateIconColors(juce::Colour normal, juce::Colour hover);
-    void setThemeStyle(juce::Colour newColor, juce::Font newFont) {
+    void setThemeStyle(
+        juce::Colour newColor, juce::Font newFont, juce::Colour newHighlightBg, juce::Colour newHighlightText) {
         textColor = newColor;
         textFont = newFont;
+        highlightColor = newHighlightBg;
+        highlightTextColor = newHighlightText;
         repaint();
     }
-
+    void setPresetDirectory(const juce::File &folder) {
+        presetDirectory = folder;
+        loadPresetsFromDirectory();
+    }
     std::function<void(bool)> onPresetsToggled;
 
     // ListBoxModel overrides
@@ -43,7 +49,8 @@ private:
     juce::File presetDirectory;
     juce::Colour textColor = juce::Colours::white;
     juce::Font textFont;
-
+    juce::Colour highlightColor;
+    juce::Colour highlightTextColor;
     // --- Top Menu Buttons ---
     juce::DrawableButton presetsButton{"Presets", juce::DrawableButton::ImageFitted};
     std::unique_ptr<juce::DrawablePath> drawableList, drawableListHover;
@@ -64,8 +71,8 @@ private:
 
     // State & Data
     bool isPresetsVisible = false;
-    std::vector<Preset> presets; 
-    
+    std::vector<Preset> presets;
+
     std::unique_ptr<juce::FileChooser> fileChooser;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetMenu)

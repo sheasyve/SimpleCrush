@@ -126,6 +126,20 @@ bool MyPluginProcessor::getSavedTooltipState() {
     return false;
 }
 
+void MyPluginProcessor::saveDataFolder(const juce::String& folderPath) {
+    if (auto *props = appProperties.getUserSettings()) {
+        props->setValue("DataFolder", folderPath);
+        props->saveIfNeeded(); 
+    }
+}
+
+juce::String MyPluginProcessor::getSavedDataFolder() {
+    if (auto *props = appProperties.getUserSettings()) { 
+        return props->getValue("DataFolder", ""); 
+    }
+    return "";
+}
+
 // JUCE BOILERPLATE
 
 const juce::String MyPluginProcessor::getName() const { return JucePlugin_Name; }
