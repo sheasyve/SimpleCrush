@@ -46,7 +46,6 @@ public:
     std::function<void(bool)> onTooltipToggled;
     juce::DrawableButton folderButton{"Folder", juce::DrawableButton::ImageFitted};
     std::unique_ptr<juce::DrawablePath> drawableFolder, drawableFolderHover;
-    
     std::unique_ptr<juce::FileChooser> fileChooser;
     std::function<void(const juce::File&)> onDataFolderChanged;
 
