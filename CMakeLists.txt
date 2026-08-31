@@ -48,6 +48,8 @@ target_sources(SimpleCrush PRIVATE
     src/ui/style/plugin_theme.h
     src/ui/style/plugin_theme.cpp
     src/ui/style/update_theme.cpp
+    src/ui/style/knob_look.h
+    src/ui/style/knob_look.cpp
     src/ui/style/svg.h
     src/ui/components/plugin_settings.h
     src/ui/components/plugin_settings.cpp

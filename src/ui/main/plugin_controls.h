@@ -1,12 +1,13 @@
 #pragma once
-#include <JuceHeader.h>
-#include "ui/style/tooltips.h"
 #include "../../dsp/knobs.h"
+#include "ui/style/tooltips.h"
+#include <JuceHeader.h>
+#include "ui/style/knob_look.h"
 
 class PluginControls : public juce::Component {
 public:
     PluginControls(juce::AudioProcessorValueTreeState &apvts);
-    ~PluginControls() override = default;
+    ~PluginControls();
 
     void resized() override;
     juce::Rectangle<int> logoBounds;
@@ -18,6 +19,7 @@ public:
     juce::Label hpLabel, lpLabel, bitLabel, rateLabel, mixLabel;
 
 private:
+    KnobLookAndFeel KnobLookAndFeel;
     void lookAndFeelChanged() override;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hpAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lpAttachment;
