@@ -1,8 +1,8 @@
 #pragma once
-#include "../../dsp/knobs.h"
-#include "ui/style/tooltips.h"
 #include <JuceHeader.h>
+#include "../../dsp/knob_processing.h"
 #include "ui/style/knob_look.h"
+#include "ui/style/tooltips.h"
 
 class PluginControls : public juce::Component {
 public:

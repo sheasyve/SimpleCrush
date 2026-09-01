@@ -6,6 +6,7 @@ PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     lpSlider.setLookAndFeel(&KnobLookAndFeel);
     bitSlider.setLookAndFeel(&KnobLookAndFeel);
     rateSlider.setLookAndFeel(&KnobLookAndFeel);
+    
     // --- High Pass Knob ---
     hpSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     hpSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
@@ -87,7 +88,6 @@ void PluginControls::resized() {
     mixLabel.setBounds(mixArea.removeFromTop(labelBoxHeight));
     mixArea.removeFromTop(dynamicGap); 
     mixSlider.setBounds(mixArea);
-    
     logoBounds = bounds.removeFromTop(bounds.getHeight() * 0.12f);
 
     // --- Top Area: Filters (Small & Centered) ---
@@ -103,13 +103,11 @@ void PluginControls::resized() {
     hpLabel.setBounds(hpArea.removeFromTop(labelBoxHeight));
     hpArea.removeFromTop(dynamicGap);
     hpSlider.setBounds(hpArea);
-    
     filterArea.removeFromLeft(topGap);
     auto lpArea = filterArea;
     lpLabel.setBounds(lpArea.removeFromTop(labelBoxHeight));
     lpArea.removeFromTop(dynamicGap); 
     lpSlider.setBounds(lpArea);
-    
     bounds.removeFromTop(bounds.getHeight() * 0.10f);
 
     // --- Bottom Area: Main Controls (Big) ---
@@ -120,14 +118,11 @@ void PluginControls::resized() {
     int bottomGap = gap * 0.25f;
     int bottomTotalWidth = (bottomKnobSize * 2) + bottomGap;
     int bottomTotalHeight = bottomKnobSize + totalTopSpace;
-    
     auto centeredBottomArea = bottomArea.withSizeKeepingCentre(bottomTotalWidth, bottomTotalHeight);
-    
     auto bitArea = centeredBottomArea.removeFromLeft(bottomKnobSize);
     bitLabel.setBounds(bitArea.removeFromTop(labelBoxHeight));
     bitArea.removeFromTop(dynamicGap); 
     bitSlider.setBounds(bitArea);
-    
     centeredBottomArea.removeFromLeft(bottomGap);
     auto rateArea = centeredBottomArea;
     rateLabel.setBounds(rateArea.removeFromTop(labelBoxHeight));

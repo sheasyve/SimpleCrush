@@ -11,7 +11,7 @@ void KnobLookAndFeel::drawRotarySlider(juce::Graphics &g,
     juce::Slider &slider) {
 
     float minDimension = (float)juce::jmin(width, height);
-    float lineThickness = juce::jlimit(5.0f, 18.0f, minDimension * 0.105f);
+    float lineThickness = juce::jlimit(5.0f, 18.0f, minDimension * 0.11f);
     auto radius = (minDimension / 2.0f) - (lineThickness / 2.0f) - 2.0f;
     auto centreX = (float)x + (float)width * 0.5f;
     auto centreY = (float)y + (float)height * 0.5f;

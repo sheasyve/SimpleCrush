@@ -38,8 +38,8 @@ target_sources(SimpleCrush PRIVATE
     src/dsp/plugin_processor.cpp
     src/dsp/plugin_processor.h
     src/dsp/main_processing.cpp
-    src/dsp/knobs.h
-    src/dsp/knobs.cpp
+    src/dsp/knob_processing.h
+    src/dsp/knob_processing.cpp
     src/ui/main/plugin_editor.cpp
     src/ui/main/plugin_editor.h
     src/ui/main/editor_actions.cpp

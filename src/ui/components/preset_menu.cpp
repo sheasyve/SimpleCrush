@@ -9,7 +9,6 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     presetDirectory = appDataDir.getChildFile("Presets");
     auto settingsFile = appDataDir.getChildFile("settings.xml");
     SettingsFile(settingsFile);
-
     if (!presetDirectory.exists()) presetDirectory.createDirectory();
     loadPresetsFromDirectory();
 
@@ -54,7 +53,6 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
 void PresetMenu::SettingsFile(juce::File settingsFile) {
     if (settingsFile.existsAsFile()) {
         if (std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile)) {
-            // CHANGED: Now reading from "DataFolder"
             juce::String savedPath = xml->getStringAttribute("DataFolder");
             if (savedPath.isNotEmpty()) {
                 juce::File savedDir(savedPath);
@@ -136,7 +134,6 @@ void PresetMenu::resized() {
 void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
     juce::Colour brightNormal = normal.brighter(0.3f);
     juce::Colour brightHover = hover.brighter(0.3f);
-
     if (drawableList != nullptr) {
         drawableList->setFill(brightNormal);
         drawableListHover->setFill(brightHover);

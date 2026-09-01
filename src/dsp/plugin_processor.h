@@ -1,6 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
-#include "knobs.h"
+#include "knob_processing.h"
 
 class MyPluginProcessor : public juce::AudioProcessor {
 public:

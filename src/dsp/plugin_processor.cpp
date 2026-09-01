@@ -1,6 +1,6 @@
 #include "plugin_processor.h"
+#include "knob_processing.h"
 #include "ui/main/plugin_editor.h"
-#include "knobs.h"
 
 // --- CORE LIFECYCLE & ROUTING
 
@@ -67,7 +67,8 @@ void MyPluginProcessor::setStateInformation(const void *data, int sizeInBytes) {
 
 inline juce::NormalisableRange<float> makeCustomSkewRange(float min, float max, float skew) {
     return juce::NormalisableRange<float>(
-        min, max,
+        min,
+        max,
         [skew](float start, float end, float norm) { return start + (end - start) * std::pow(norm, 1.0f / skew); },
         [skew](float start, float end, float val) {
             float normalized = (val - start) / (end - start);
@@ -126,18 +127,34 @@ bool MyPluginProcessor::getSavedTooltipState() {
     return false;
 }
 
-void MyPluginProcessor::saveDataFolder(const juce::String& folderPath) {
+void MyPluginProcessor::saveDataFolder(const juce::String &folderPath) {
     if (auto *props = appProperties.getUserSettings()) {
         props->setValue("DataFolder", folderPath);
-        props->saveIfNeeded(); 
+        props->saveIfNeeded();
     }
 }
 
 juce::String MyPluginProcessor::getSavedDataFolder() {
-    if (auto *props = appProperties.getUserSettings()) { 
-        return props->getValue("DataFolder", ""); 
+    if (auto *props = appProperties.getUserSettings()) {
+        juce::String savedPath = props->getValue("DataFolder", "");
+        if (savedPath.isNotEmpty()) { return savedPath; }
     }
-    return "";
+
+#if JUCE_WINDOWS
+    juce::String regPath =
+        juce::WindowsRegistry::getValue("HKEY_LOCAL_MACHINE\\Software\\Syverson Audio\\SimpleCrush\\DataPath");
+
+    if (regPath.isNotEmpty()) {
+        saveDataFolder(regPath);
+        return regPath;
+    }
+#endif
+
+    juce::File defaultFolder = juce::File::getSpecialLocation(juce::File::commonApplicationDataDirectory)
+                                   .getChildFile("Syverson Audio")
+                                   .getChildFile("SimpleCrush");
+
+    return defaultFolder.getFullPathName();
 }
 
 // JUCE BOILERPLATE

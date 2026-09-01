@@ -154,7 +154,20 @@ void ThemeManager::loadSettings(const juce::File &settingsFile) {
 
 juce::File ThemeManager::getThemesDirectory() {
     if (customThemesDir.exists()) return customThemesDir;
-    auto dir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush/Themes");
+#if JUCE_WINDOWS
+    juce::String regPath = juce::WindowsRegistry::getValue("HKEY_LOCAL_MACHINE\\Software\\Syverson Audio\\SimpleCrush\\DataPath");
+    
+    if (regPath.isNotEmpty()) {
+        juce::File regDir = juce::File(regPath).getChildFile("Themes");
+        if (!regDir.exists()) regDir.createDirectory();
+        return regDir;
+    }
+#endif
+    auto dir = juce::File::getSpecialLocation(juce::File::commonApplicationDataDirectory)
+                .getChildFile("Syverson Audio")
+                .getChildFile("SimpleCrush")
+                .getChildFile("Themes");
+                
     if (!dir.exists()) dir.createDirectory();
     return dir;
 }
