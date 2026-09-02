@@ -1,11 +1,11 @@
 [Setup]
 AppName=SimpleCrush
-AppVersion=1.0.3
+AppVersion=1.3.1
 AppPublisher=Syverson Audio
 DefaultDirName={autopf}\Syverson Audio\SimpleCrush
 ; CRITICAL: Required for {cf64} (Common Files 64-bit) to resolve correctly for VST3
 ArchitecturesInstallIn64BitMode=x64
-OutputBaseFilename=SimpleCrush_v1.0.3_Windows
+OutputBaseFilename=SimpleCrush_v1.3.1_Windows
 PrivilegesRequired=admin
 Compression=lzma
 SolidCompression=yes

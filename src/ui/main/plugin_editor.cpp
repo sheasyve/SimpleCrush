@@ -22,7 +22,6 @@ MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     int initialFontSize = audioProcessor.getSavedFontSizeId();
     pluginSettings.setInitialFontSize(initialFontSize);
     currentFontSizeId = initialFontSize;
-
     setResizable(true, true);
     setResizeLimits(340, 340, 599, 599);
     getConstrainer()->setFixedAspectRatio(1.0);
