@@ -2,7 +2,7 @@
 
 A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio destruction. Perfect for lo-fi textures and adding unique harmonics to bass, drums, and chords. Built from the ground up in C++ using the JUCE framework. 
 
-<img width="342" height="372" alt="image" src="https://github.com/user-attachments/assets/b206de7b-927a-481e-8e1d-77547662e0ed" />
+<img width="342" height="372" alt="image" src="https://github.com/user-attachments/assets/69de983e-9d38-4fad-87d5-fac155d62054" />
 
 ## Features
 * **Bit Depth Reduction:** Introduce quantization noise to create a characteristic lo-fi sound. Highly effective for adding texture to bass and drums.
@@ -12,27 +12,30 @@ A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio d
 * **Custom Precision Knobs:** Overridden default behavior allows for highly precise, responsive, and intuitive parameter adjustments.
 * **Interactive Tooltips:** Hover over any control to reveal a concise description of its function, reducing the learning curve.
 * **Preset Management:** A fully featured preset system including save, delete, load, folder selection, and a randomization tool for quick inspiration.
-* **Custom Themes:** Choose from seven unique, persistent color palettes to match your DAW or personal aesthetic.
-* **Dedicated Settings:** A centralized menu to manage theme selection, UI scale, and global plugin preferences.
-* **Resizable UI:** A fully scalable, SVG-backed interface ensures crisp usability across any monitor size or resolution.
+* **Custom Themes:** Choose from seven unique color palettes or load/add your own custom themes via files.
+* **Dedicated Settings:** A centralized menu to manage theme selection, data folders, UI scale, and global plugin preferences.
+* **Resizable UI:** A fully scalable, SVG-backed interface with improved resizing across knobs, presets, and settings panels to ensure crisp usability across any monitor size or resolution.
 
 ## Compatibility
 * **Format:** VST3 & Standalone Application
-* **OS:** Cross Platform (Compiled via MSVC 2026 x64)
-* **DAWs:** Compatible with any major digital audio workstation that supports the 64-bit VST3 format (Ableton Live, FL Studio, Reaper, Bitwig, Cubase, etc.)
+* **OS:** Windows and macOS (v1.3.1+)
+* **DAWs:** Compatible with any major digital audio workstation that supports the 64-bit VST3 format (Ableton Live, FL Studio, Reaper, Bitwig, Cubase, Logic Pro, etc.)
 
 ## Installation
 
 ### Windows
 **Using the Installer (Recommended):**
-Download the latest `SimpleCrush_v1.x.x_Windows.exe` release, run the installer, and follow the prompts.
+Download the latest `SimpleCrush_v1.3.1_Windows.exe` release, run the installer, and follow the prompts.
 
 **Manual ZIP Installation:**
-1. Extract the zip file.
+1. Extract the zip file (`SimpleCrush_v1.3.1.zip`).
 2. Place the `SimpleCrush.vst3` folder into your DAW's designated VST3 plugin directory.
 3. Rescan for new plugins within your DAW.
-4. Redirect the preset folder within the plugin to wherever you placed the plugins in the zip file. 
+4. Redirect the preset folder within the plugin settings to wherever you placed your data files. 
 
-### Mac
-
-- It is not a signed application and will need to be authenticated with `sudo codesign --force --deep --sign -`
+### macOS
+1. Download the unsigned macOS zip package (`SimpleCrush-macOS-Unsigned.zip`).
+2. Extract the archive and place the plugin files into your system or user VST3 directory (`~/Library/Audio/Plug-Ins/VST3/`).
+3. Because the build is unsigned, you will need to authenticate it via Terminal using:
+   ```bash
+   sudo codesign --force --deep --sign - /Library/Audio/Plug-Ins/VST3/SimpleCrush.vst3
