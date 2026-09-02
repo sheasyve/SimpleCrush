@@ -1,14 +1,9 @@
 #include "knob_look.h"
 
 void KnobLookAndFeel::drawRotarySlider(juce::Graphics &g,
-    int x,
-    int y,
-    int width,
-    int height,
-    float sliderPos,
-    const float rotaryStartAngle,
-    const float rotaryEndAngle,
-    juce::Slider &slider) {
+    int x, int y, int width, int height,
+    float sliderPos, const float rotaryStartAngle,
+    const float rotaryEndAngle, juce::Slider &slider) {
 
     float minDimension = (float)juce::jmin(width, height);
     float lineThickness = juce::jlimit(5.0f, 18.0f, minDimension * 0.11f);
