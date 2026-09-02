@@ -12,7 +12,7 @@ A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio d
 * **Custom Precision Knobs:** Overridden default behavior allows for highly precise, responsive, and intuitive parameter adjustments.
 * **Interactive Tooltips:** Hover over any control to reveal a concise description of its function, reducing the learning curve.
 * **Preset Management:** A fully featured preset system including save, delete, load, folder selection, and a randomization tool for quick inspiration.
-* **Custom Themes:** Choose from seven unique color palettes or load/add your own custom themes via files.
+* **Custom Themes:** Choose from eight unique color palettes or load/add your own custom themes via files.
 * **Dedicated Settings:** A centralized menu to manage theme selection, data folders, UI scale, and global plugin preferences.
 * **Resizable UI:** A fully scalable, SVG-backed interface with improved resizing across knobs, presets, and settings panels to ensure crisp usability across any monitor size or resolution.
 
