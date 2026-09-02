@@ -42,11 +42,11 @@ public:
     ThemeManager();
     ~ThemeManager() = default;
     void refreshThemes();
-    void loadSettings(const juce::File& settingsFile); 
     ThemeProps getThemeProps(int themeId) const;
     std::vector<std::pair<juce::String, int>> getAvailableThemes() const;
-    juce::File getThemesDirectory(); 
-    static ThemeProps loadThemeFromFile(const juce::File& file);
+    juce::File getThemesDirectory() const;
+    void setThemesDirectory(const juce::File &newThemeDir);
+    static ThemeProps loadThemeFromFile(const juce::File &file);
     static juce::Colour parseHexColour(const juce::String& hexString);
 
 private:

@@ -1,8 +1,8 @@
-#include "ui/main/plugin_editor.h"
 #include "dsp/plugin_processor.h"
+#include "ui/main/plugin_editor.h"
 
 void MyPluginEditor::setupCallbacks() {
-    
+
     // --- Theme Changed ---
     pluginSettings.onThemeChanged = [this](int selectedId) {
         updateTheme(selectedId);
@@ -46,19 +46,14 @@ void MyPluginEditor::setupCallbacks() {
     };
 
     // --- Data Folder Changed ---
-    pluginSettings.onDataFolderChanged = [this](const juce::File & /*newFolder*/) {
-        auto liveSettingsFile = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
-                                    .getChildFile("Syverson Audio/SimpleCrush/settings.xml");
-        presetMenu.SettingsFile(liveSettingsFile);
-        presetMenu.loadPresetsFromDirectory();
-        themeManager.loadSettings(liveSettingsFile);
+    pluginSettings.onDataFolderChanged = [this](juce::File newFolder) {
+        presetMenu.setPresetDirectory(newFolder.getChildFile("Presets"));
+        themeManager.setThemesDirectory(newFolder.getChildFile("Themes"));
         pluginSettings.refreshThemeList();
-        
         updateTheme(currentThemeId);
+        repaint();
     };
 
     // --- Folder Icon Clicked ---
-    presetMenu.onFolderIconClicked = [this]() { 
-        pluginSettings.launchFolderChooser(); 
-    };
+    presetMenu.onFolderIconClicked = [this]() { pluginSettings.launchFolderChooser(); };
 }

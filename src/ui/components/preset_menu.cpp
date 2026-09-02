@@ -3,15 +3,6 @@
 PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
 
-    // --- Preset Folder ---
-    auto appDataDir =
-        juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
-    presetDirectory = appDataDir.getChildFile("Presets");
-    auto settingsFile = appDataDir.getChildFile("settings.xml");
-    SettingsFile(settingsFile);
-    if (!presetDirectory.exists()) presetDirectory.createDirectory();
-    loadPresetsFromDirectory();
-
     // --- Presets List Button ---
     parseSvgIcon(presetsButton, drawableList, drawableListHover, SvgAssets::listIcon);
     presetsButton.setTooltip(PresetTooltips::menuToggle);
@@ -71,6 +62,14 @@ void PresetMenu::loadPresetsFromDirectory() {
     presetDirectory.findChildFiles(results, juce::File::findFiles, false, "*.preset");
     for (auto &f : results) { presets.push_back({f.getFileNameWithoutExtension(), f}); }
     presetList.updateContent();
+}
+
+void PresetMenu::setPresetDirectory(const juce::File &folder) {
+    presetDirectory = folder;
+    if (!presetDirectory.exists()) { presetDirectory.createDirectory(); }
+    auto settingsFile = presetDirectory.getParentDirectory().getChildFile("settings.xml");
+    SettingsFile(settingsFile);
+    loadPresetsFromDirectory();
 }
 
 void PresetMenu::updateMenuVisibility() {
@@ -165,10 +164,10 @@ int PresetMenu::getNumRows() { return (int)presets.size(); }
 
 void PresetMenu::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) {
     if (rowIsSelected) {
-        g.fillAll(highlightColor);       
-        g.setColour(highlightTextColor); 
+        g.fillAll(highlightColor);
+        g.setColour(highlightTextColor);
     } else {
-        g.setColour(textColor); 
+        g.setColour(textColor);
     }
     g.setFont(textFont);
     if (juce::isPositiveAndBelow(rowNumber, (int)presets.size())) {

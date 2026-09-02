@@ -32,7 +32,7 @@ ThemeProps ThemeManager::loadThemeFromFile(const juce::File &file) {
     if (auto *obj = parsedJson.getDynamicObject()) {
         theme.name = obj->getProperty("name").toString();
         theme.description = obj->getProperty("description").toString();
-        
+
         auto colorsVar = obj->getProperty("colors");
         if (auto *colors = colorsVar.getDynamicObject()) {
             theme.sliderFill = parseHexColour(colors->getProperty("sliderFill").toString());
@@ -82,23 +82,37 @@ ThemeProps ThemeManager::loadThemeFromFile(const juce::File &file) {
 void ThemeManager::refreshThemes() {
     cachedThemes.clear();
     std::vector<ThemeProps> tempThemes;
-    
+    bool jsonDefaultFound = false;
     auto files = getThemesDirectory().findChildFiles(juce::File::findFiles, false, "*.json");
     for (const auto &file : files) {
         auto props = loadThemeFromFile(file);
         if (props.name.isNotEmpty()) { 
+            if (props.name.equalsIgnoreCase("Panda Trueno") || 
+                props.name.equalsIgnoreCase("Panda Trueno (Default)")) {
+                jsonDefaultFound = true;
+            }
             tempThemes.push_back(props); 
         }
     }
 
-    std::sort(tempThemes.begin(), tempThemes.end(), [](const ThemeProps& a, const ThemeProps& b) {
+    if (!jsonDefaultFound) {
+        loadDefaultFallbackTheme(); 
+        tempThemes.push_back(defaultTheme);
+    }
+
+    std::sort(tempThemes.begin(), tempThemes.end(), [](const ThemeProps &a, const ThemeProps &b) {
         return a.name.compareIgnoreCase(b.name) < 0;
     });
 
     int currentId = 1;
-    for (auto& theme : tempThemes) {
+    for (auto &theme : tempThemes) {
         theme.id = currentId;
         cachedThemes[currentId] = theme;
+        if (theme.name.equalsIgnoreCase("Panda Trueno") || 
+            theme.name.equalsIgnoreCase("Panda Trueno (Default)")) {
+            defaultTheme = theme;
+        }
+        
         currentId++;
     }
 }
@@ -136,40 +150,11 @@ void ThemeManager::loadDefaultFallbackTheme() {
     defaultTheme.scrollbarThumb = juce::Colour(0xFFE50000);
 }
 
-void ThemeManager::loadSettings(const juce::File &settingsFile) {
-    if (settingsFile.existsAsFile()) {
-        if (std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile)) {
-            juce::String savedPath = xml->getStringAttribute("DataFolder");
-            if (savedPath.isNotEmpty()) {
-                juce::File savedDir(savedPath);
-                if (savedDir.exists() && savedDir.isDirectory()) {
-                    customThemesDir = savedDir.getChildFile("Themes");
-                    if (!customThemesDir.exists()) customThemesDir.createDirectory();
-                }
-            }
-        }
-    }
+void ThemeManager::setThemesDirectory(const juce::File &newThemeDir) {
+    customThemesDir = newThemeDir;
+    if (!customThemesDir.exists()) { customThemesDir.createDirectory(); }
     refreshThemes();
 }
 
-juce::File ThemeManager::getThemesDirectory() {
-    if (customThemesDir.exists()) return customThemesDir;
-#if JUCE_WINDOWS
-    juce::String regPath = juce::WindowsRegistry::getValue("HKEY_LOCAL_MACHINE\\Software\\Syverson Audio\\SimpleCrush\\DataPath");
-    
-    if (regPath.isNotEmpty()) {
-        juce::File regDir = juce::File(regPath).getChildFile("Themes");
-        if (!regDir.exists()) regDir.createDirectory();
-        return regDir;
-    }
-#endif
-    auto dir = juce::File::getSpecialLocation(juce::File::commonApplicationDataDirectory)
-                .getChildFile("Syverson Audio")
-                .getChildFile("SimpleCrush")
-                .getChildFile("Themes");
-                
-    if (!dir.exists()) dir.createDirectory();
-    return dir;
-}
-
-}
+juce::File ThemeManager::getThemesDirectory() const { return customThemesDir; }
+} // namespace PluginTheme

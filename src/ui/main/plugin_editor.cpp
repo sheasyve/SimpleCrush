@@ -5,10 +5,18 @@
 
 MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p), presetMenu(p.apvts), pluginControls(p.apvts) {
-    auto settingsFile = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
-                            .getChildFile("Syverson Audio/SimpleCrush/settings.xml");
-    themeManager.loadSettings(settingsFile);
+
+    juce::File savedDataFolder(audioProcessor.getSavedDataFolder());
+    presetMenu.setPresetDirectory(savedDataFolder.getChildFile("Presets"));
+    themeManager.setThemesDirectory(savedDataFolder.getChildFile("Themes")); 
     pluginSettings.refreshThemeList();
+    pluginSettings.onDataFolderChanged = [this](juce::File newFolder) {
+        presetMenu.setPresetDirectory(newFolder.getChildFile("Presets"));
+        themeManager.setThemesDirectory(newFolder.getChildFile("Themes")); 
+        pluginSettings.refreshThemeList();                                
+        repaint();
+    };
+
     setLookAndFeel(&themeLnF);
     addAndMakeVisible(pluginControls);
     addChildComponent(settingsOverlay);
@@ -22,24 +30,17 @@ MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     int initialFontSize = audioProcessor.getSavedFontSizeId();
     pluginSettings.setInitialFontSize(initialFontSize);
     currentFontSizeId = initialFontSize;
-    setResizable(true, true);
-    setResizeLimits(340, 340, 599, 599);
-    getConstrainer()->setFixedAspectRatio(1.0);
 
-    auto savedSize = audioProcessor.getWindowSize();
-    setSize(savedSize.x, savedSize.y);
     bool initialTooltipState = audioProcessor.getSavedTooltipState();
     pluginSettings.setInitialTooltipState(initialTooltipState);
     updateTooltipState(initialTooltipState);
     updateTheme(initialTheme);
 
-    juce::String savedFolderPath = audioProcessor.getSavedDataFolder();
-    juce::File customDataFolder(savedFolderPath);
-    if (customDataFolder.isDirectory()) {
-        juce::File presetSubfolder = customDataFolder.getChildFile("Presets");
-        presetSubfolder.createDirectory();
-        presetMenu.setPresetDirectory(presetSubfolder);
-    }
+    setResizable(true, true);
+    setResizeLimits(340, 340, 599, 599);
+    getConstrainer()->setFixedAspectRatio(1.0);
+    auto savedSize = audioProcessor.getWindowSize();
+    setSize(savedSize.x, savedSize.y);
 }
 
 MyPluginEditor::~MyPluginEditor() {

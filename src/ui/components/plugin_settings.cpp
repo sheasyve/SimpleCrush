@@ -1,6 +1,6 @@
 #include "ui/components/plugin_settings.h"
 
-PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm, MyPluginProcessor& p) :  themeManager(tm), processor(p){
+PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm, MyPluginProcessor &p) : themeManager(tm), processor(p) {
     juce::String infotext =
         "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";
     setInterceptsMouseClicks(false, true);
@@ -93,22 +93,26 @@ void PluginSettings::resized() {
     }
 }
 
+void PluginSettings::setInitialTheme(int themeId) {
+    auto props = themeManager.getThemeProps(themeId);
+    int safeId = props.id;
+    themeSelector.setSelectedId(safeId, juce::dontSendNotification);
+    themeSelector.setTooltip(juce::String(SettingsTooltips::theme) + "\n\n" + props.description);
+}
+
 void PluginSettings::refreshThemeList() {
     int currentSelection = themeSelector.getSelectedId();
     themeSelector.clear(juce::dontSendNotification);
     auto availableThemes = themeManager.getAvailableThemes();
     for (const auto &[name, id] : availableThemes) { themeSelector.addItem(name, id); }
     if (currentSelection != 0) {
-        themeSelector.setSelectedId(currentSelection, juce::dontSendNotification);
         auto props = themeManager.getThemeProps(currentSelection);
+        themeSelector.setSelectedId(props.id, juce::dontSendNotification);
         themeSelector.setTooltip(juce::String(SettingsTooltips::theme) + "\n\n" + props.description);
+    } else if (availableThemes.size() > 0) {
+        auto props = themeManager.getThemeProps(-1); 
+        themeSelector.setSelectedId(props.id, juce::dontSendNotification);
     }
-}
-
-void PluginSettings::setInitialTheme(int themeId) {
-    themeSelector.setSelectedId(themeId, juce::dontSendNotification);
-    auto props = themeManager.getThemeProps(themeId);
-    themeSelector.setTooltip(juce::String(SettingsTooltips::theme) + "\n\n" + props.description);
 }
 
 void PluginSettings::setMenuOpen(bool isOpen) {

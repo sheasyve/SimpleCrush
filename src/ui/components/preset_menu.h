@@ -30,10 +30,7 @@ public:
         highlightTextColor = newHighlightText;
         repaint();
     }
-    void setPresetDirectory(const juce::File &folder) {
-        presetDirectory = folder;
-        loadPresetsFromDirectory();
-    }
+    void setPresetDirectory(const juce::File &folder);
     std::function<void(bool)> onPresetsToggled;
 
     // ListBoxModel overrides

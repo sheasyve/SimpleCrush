@@ -26,6 +26,8 @@ void PluginSettings::setupCallbacks() {
     };
 
     folderButton.onClick = [this]() { launchFolderChooser(); };
+
+    
 }
 
 void PluginSettings::launchFolderChooser() {

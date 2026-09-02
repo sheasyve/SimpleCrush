@@ -135,7 +135,13 @@ void MyPluginProcessor::saveDataFolder(const juce::String &folderPath) {
 }
 
 juce::String MyPluginProcessor::getSavedDataFolder() {
+    if (appProperties.getUserSettings() == nullptr) {
+        initPropertiesFile();
+    }
+
     if (auto *props = appProperties.getUserSettings()) {
+        props->reload(); 
+        
         juce::String savedPath = props->getValue("DataFolder", "");
         if (savedPath.isNotEmpty()) { return savedPath; }
     }
