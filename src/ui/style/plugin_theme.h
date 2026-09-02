@@ -15,6 +15,7 @@ struct ThemeProps {
     juce::Colour sliderTrack;
     juce::Colour labelText;
     juce::Colour labelShadow;
+    juce::Colour altText;
     juce::Colour bgCenter;
     juce::Colour bgEdge;
     juce::Colour buttonColor;
@@ -42,7 +43,6 @@ public:
     ~ThemeManager() = default;
     void refreshThemes();
     void loadSettings(const juce::File& settingsFile); 
-
     ThemeProps getThemeProps(int themeId) const;
     std::vector<std::pair<juce::String, int>> getAvailableThemes() const;
     juce::File getThemesDirectory(); 

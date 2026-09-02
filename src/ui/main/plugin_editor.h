@@ -27,7 +27,7 @@ private:
     ThemeLookAndFeel themeLnF;
     PresetMenu presetMenu;
     PluginControls pluginControls;
-    PluginSettings pluginSettings{themeManager};
+    PluginSettings pluginSettings{themeManager, audioProcessor};
     juce::Rectangle<int> logoBounds;
     PluginTheme::SettingsBackground settingsOverlay;
     PluginTheme::SettingsBackground presetOverlay;

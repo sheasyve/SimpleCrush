@@ -22,7 +22,6 @@ MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     int initialFontSize = audioProcessor.getSavedFontSizeId();
     pluginSettings.setInitialFontSize(initialFontSize);
     currentFontSizeId = initialFontSize;
-
     setResizable(true, true);
     setResizeLimits(340, 340, 599, 599);
     getConstrainer()->setFixedAspectRatio(1.0);
@@ -33,6 +32,14 @@ MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     pluginSettings.setInitialTooltipState(initialTooltipState);
     updateTooltipState(initialTooltipState);
     updateTheme(initialTheme);
+
+    juce::String savedFolderPath = audioProcessor.getSavedDataFolder();
+    juce::File customDataFolder(savedFolderPath);
+    if (customDataFolder.isDirectory()) {
+        juce::File presetSubfolder = customDataFolder.getChildFile("Presets");
+        presetSubfolder.createDirectory();
+        presetMenu.setPresetDirectory(presetSubfolder);
+    }
 }
 
 MyPluginEditor::~MyPluginEditor() {
@@ -81,18 +88,18 @@ void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
     bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
     auto themeProps = themeManager.getThemeProps(currentThemeId);
     if (pluginControls.isVisible()) {
-        float dynamicFontHeight = juce::jmap<float>(static_cast<float>(getWidth()), 300.0f, 900.0f, 14.0f, 22.0f);
-        juce::Font logoFont = themeProps.logoFont; 
-        float logoScale = isAnyMenuOpen ? 1.5f : 2.5f;
+        float dynamicFontHeight = getWidth() * 0.025f;
+        juce::Font logoFont = themeProps.logoFont;
+        float logoScale = isAnyMenuOpen ? 2.5f : 4.0f;
         g.setFont(logoFont.withHeight(dynamicFontHeight * logoScale));
         juce::Rectangle<int> textBounds;
         if (isAnyMenuOpen) {
-            int yOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 15.0f, 28.0f);
-            int yPosition = pluginControls.logoBounds.getY() - yOffset;
-            textBounds = juce::Rectangle<int>(0, yPosition, getWidth(), pluginControls.logoBounds.getHeight());
+            int yPosition = (int)(getHeight() * 0.035f);
+            int textHeight = (int)(dynamicFontHeight * logoScale * 1.5f);
+            textBounds = juce::Rectangle<int>(0, yPosition, getWidth(), textHeight);
         } else {
-            int standardOffset = (int)juce::jmap<float>(static_cast<float>(getHeight()), 340.0f, 600.0f, 5.0f, 9.0f);
-            textBounds = pluginControls.logoBounds.translated(7, -standardOffset);
+            int standardOffset = (int)(getHeight() * 0.015f);
+            textBounds = pluginControls.logoBounds.translated((int)(getWidth() * 0.02f), -standardOffset);
         }
         g.setColour(themeProps.labelShadow);
         g.drawText("SimpleCrush", textBounds.translated(2, 2), juce::Justification::centred);

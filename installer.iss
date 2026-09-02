@@ -1,9 +1,10 @@
 [Setup]
 AppName=SimpleCrush
-AppVersion=1.0.3
+AppVersion=1.3.1
 AppPublisher=Syverson Audio
 DefaultDirName={autopf}\Syverson Audio\SimpleCrush
-DefaultGroupName=SimpleCrush
+; CRITICAL: Required for {cf64} (Common Files 64-bit) to resolve correctly for VST3
+ArchitecturesInstallIn64BitMode=x64
 OutputBaseFilename=SimpleCrush_v1.3.1_Windows
 PrivilegesRequired=admin
 Compression=lzma
@@ -12,21 +13,18 @@ OutputDir=.\
 DisableDirPage=yes 
 
 [Files]
-; 1. VST3 Plugin
-Source: "C:\Users\sheam\Documents\VST\SimpleCrush.vst3\Contents\x86_64-win\*"; DestDir: "{code:GetVST3Dir}\SimpleCrush.vst3\Contents\x86_64-win"; Flags: ignoreversion recursesubdirs createallsubdirs
+; 1. VST3 Plugin - Copying the whole root folder catches Resources/desktop.ini
+Source: "C:\Users\sheam\Documents\VST\SimpleCrush.vst3\*"; DestDir: "{code:GetVST3Dir}\SimpleCrush.vst3"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-; 2. Presets
-Source: "C:\Users\sheam\Documents\Presets\*"; DestDir: "{code:GetDataDir}\Presets"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+; 2. Presets - Removed skipifsourcedoesntexist so compiler catches missing files
+Source: "C:\Users\sheam\Documents\Presets\*"; DestDir: "{code:GetDataDir}\Presets"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-; 3. Themes 
-Source: "C:\Users\sheam\Documents\Themes\*.json"; DestDir: "{code:GetDataDir}\Themes"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+; 3. Themes - Removed skipifsourcedoesntexist so compiler catches missing files
+Source: "C:\Users\sheam\Documents\Themes\*.json"; DestDir: "{code:GetDataDir}\Themes"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Registry]
-Root: HKCU; Subkey: "Software\Syverson Audio\SimpleCrush"; ValueType: string; ValueName: "DataPath"; ValueData: "{code:GetDataDir}"; Flags: uninsdeletekey
-
-[Icons]
-Name: "{group}\SimpleCrush"; Filename: "{app}\SimpleCrush.exe"
-Name: "{group}\Uninstall SimpleCrush"; Filename: "{uninstallexe}"
+; HKLM (Local Machine) ensures the path is accessible to all users
+Root: HKLM; Subkey: "Software\Syverson Audio\SimpleCrush"; ValueType: string; ValueName: "DataPath"; ValueData: "{code:GetDataDir}"; Flags: uninsdeletekey
 
 [Code]
 var
@@ -53,7 +51,8 @@ begin
   CustomDirsPage.Add('Data Folder (Presets & Themes):'); 
   
   CustomDirsPage.Values[0] := ExpandConstant('{cf64}\VST3');
-  CustomDirsPage.Values[1] := ExpandConstant('{userappdata}\Syverson Audio\SimpleCrush');
+  // Uses C:\ProgramData\Syverson Audio\SimpleCrush
+  CustomDirsPage.Values[1] := ExpandConstant('{commonappdata}\Syverson Audio\SimpleCrush');
 end;
 
 function ShouldSkipPage(PageID: Integer): Boolean;
@@ -76,5 +75,5 @@ begin
   if AdvancedPage.Values[1] = True then
     Result := CustomDirsPage.Values[1]
   else
-    Result := ExpandConstant('{userappdata}\Syverson Audio\SimpleCrush');
+    Result := ExpandConstant('{commonappdata}\Syverson Audio\SimpleCrush');
 end;

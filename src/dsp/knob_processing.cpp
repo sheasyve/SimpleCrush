@@ -1,4 +1,4 @@
-#include "knobs.h"
+#include "knob_processing.h"
 
 namespace Knobs {
 
@@ -87,8 +87,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         juce::AudioParameterFloatAttributes()
             .withStringFromValueFunction([](float value, int) { return juce::String(value * 100.0f, 1) + "%"; })
             .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue() / 100.0f; })));
-
-    // AudioParameterInt already conforms to the new style here because it doesn't use the trailing lambdas
+            
     layout.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{"THEME_ID", 1}, "Theme ID", 1, 8, 1));
     
     return layout;

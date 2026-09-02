@@ -2,13 +2,13 @@
 
 PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     setInterceptsMouseClicks(false, true);
-    
+
     // --- Preset Folder ---
-    auto appDataDir = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
+    auto appDataDir =
+        juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory).getChildFile("SimpleCrush");
     presetDirectory = appDataDir.getChildFile("Presets");
     auto settingsFile = appDataDir.getChildFile("settings.xml");
     SettingsFile(settingsFile);
-
     if (!presetDirectory.exists()) presetDirectory.createDirectory();
     loadPresetsFromDirectory();
 
@@ -38,7 +38,6 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     saveTextBox.setReturnKeyStartsNewLine(false);
     saveTextBox.setTooltip(PresetTooltips::saveInput);
     addChildComponent(saveTextBox);
-    
     parseSvgIcon(saveButton, drawableSave, drawableSaveHover, SvgAssets::saveIcon);
     saveButton.setTooltip(PresetTooltips::saveButton);
     addChildComponent(saveButton);
@@ -47,19 +46,18 @@ PresetMenu::PresetMenu(juce::AudioProcessorValueTreeState &vts) : apvts(vts) {
     presetList.setModel(this);
     presetList.setColour(juce::ListBox::backgroundColourId, juce::Colours::transparentBlack);
     addChildComponent(presetList);
-    
-    presetCallbacks(); 
+
+    presetCallbacks();
 }
 
-void PresetMenu::SettingsFile(juce::File settingsFile){
+void PresetMenu::SettingsFile(juce::File settingsFile) {
     if (settingsFile.existsAsFile()) {
         if (std::unique_ptr<juce::XmlElement> xml = juce::XmlDocument::parse(settingsFile)) {
-            // CHANGED: Now reading from "DataFolder"
             juce::String savedPath = xml->getStringAttribute("DataFolder");
             if (savedPath.isNotEmpty()) {
                 juce::File savedDir(savedPath);
-                if (savedDir.exists() && savedDir.isDirectory()) { 
-                    presetDirectory = savedDir.getChildFile("Presets"); 
+                if (savedDir.exists() && savedDir.isDirectory()) {
+                    presetDirectory = savedDir.getChildFile("Presets");
                     if (!presetDirectory.exists()) presetDirectory.createDirectory();
                 }
             }
@@ -106,20 +104,27 @@ void PresetMenu::paint(juce::Graphics &g) {
 
 void PresetMenu::resized() {
     auto bounds = getLocalBounds();
+    float dynamicFontSize = bounds.getHeight() * 0.04f;
+    textFont = textFont.withHeight(dynamicFontSize);
+    saveTextBox.setFont(textFont.withHeight(dynamicFontSize * 1.0f));
+    int dynamicRowHeight = juce::roundToInt(dynamicFontSize * 1.8f);
+    presetList.setRowHeight(dynamicRowHeight);
 
     // --- Top Right Stack ---
     presetsButton.setBounds(bounds.getWidth() - 30, 5, 25, 25);
     randomButton.setBounds(bounds.getWidth() - 27.5, 30, 22.5, 22.5);
     saveButton.setBounds(bounds.getWidth() - 27.5, 55, 22.5, 22.5);
-    
+
     // --- Top Left Stack ---
-    folderButton.setBounds(5, 30, 25, 25); 
+    folderButton.setBounds(5, 30, 25, 25);
     deleteButton.setBounds(5, 55, 25, 25);
 
     if (isPresetsVisible) {
-        auto overlayArea = bounds.withSizeKeepingCentre(260, 240);
+        int menuWidth = (int)(bounds.getWidth() * 0.7f);
+        int menuHeight = (int)(bounds.getHeight() * 0.7f);
+        auto overlayArea = bounds.withSizeKeepingCentre(menuWidth, menuHeight);
         overlayArea.translate(0, 25);
-        auto topBar = overlayArea.removeFromTop(26);
+        auto topBar = overlayArea.removeFromTop(dynamicRowHeight);
         saveTextBox.setBounds(topBar.reduced(10, 0));
         overlayArea.removeFromTop(10);
         presetList.setBounds(overlayArea);
@@ -129,7 +134,6 @@ void PresetMenu::resized() {
 void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
     juce::Colour brightNormal = normal.brighter(0.3f);
     juce::Colour brightHover = hover.brighter(0.3f);
-    
     if (drawableList != nullptr) {
         drawableList->setFill(brightNormal);
         drawableListHover->setFill(brightHover);
@@ -160,11 +164,16 @@ void PresetMenu::updateIconColors(juce::Colour normal, juce::Colour hover) {
 int PresetMenu::getNumRows() { return (int)presets.size(); }
 
 void PresetMenu::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) {
+    if (rowIsSelected) {
+        g.fillAll(highlightColor);       
+        g.setColour(highlightTextColor); 
+    } else {
+        g.setColour(textColor); 
+    }
+    g.setFont(textFont);
     if (juce::isPositiveAndBelow(rowNumber, (int)presets.size())) {
-        if (rowIsSelected) { g.fillAll(juce::Colours::white.withAlpha(0.2f)); }
-        g.setColour(textColor);
-        g.setFont(textFont);
-        g.drawText(presets[rowNumber].name, 5, 0, width - 10, height, juce::Justification::centredLeft, true);
+        juce::String presetName = presets[rowNumber].file.getFileNameWithoutExtension();
+        g.drawText(presetName, 8, 0, width - 16, height, juce::Justification::centredLeft, true);
     }
 }
 

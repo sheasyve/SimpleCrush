@@ -1,6 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
-#include "knobs.h"
+#include "knob_processing.h"
 
 class MyPluginProcessor : public juce::AudioProcessor {
 public:
@@ -32,6 +32,8 @@ public:
     void changeProgramName(int index, const juce::String &newName) override;
     void getStateInformation(juce::MemoryBlock &destData) override;
     void setStateInformation(const void *data, int sizeInBytes) override;
+    void saveDataFolder(const juce::String& folderPath);
+    juce::String getSavedDataFolder();
     juce::AudioProcessorValueTreeState apvts{*this, nullptr, "Parameters", Knobs::createParameterLayout()};
     void saveWindowSize(int width, int height);
     juce::Point<int> getWindowSize();

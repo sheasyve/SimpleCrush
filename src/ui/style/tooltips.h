@@ -12,7 +12,7 @@ struct PluginTooltips {
 
 struct PresetTooltips {
     static constexpr const char* menuToggle   = "Toggle preset browser.";
-    static constexpr const char* folder       = "Change the preset folder location.";
+    static constexpr const char* folder       = "Select the folder containing the ""Presets"" and ""Themes"".";
     static constexpr const char* deletePreset = "Delete the selected preset.";
     static constexpr const char* randomize    = "Randomize all knob values.";
     static constexpr const char* saveInput    = "Enter a name for your new preset.";
