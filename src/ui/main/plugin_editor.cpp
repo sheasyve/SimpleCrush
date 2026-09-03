@@ -5,7 +5,6 @@
 
 MyPluginEditor::MyPluginEditor(MyPluginProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p), presetMenu(p.apvts), pluginControls(p.apvts) {
-
     juce::File savedDataFolder(audioProcessor.getSavedDataFolder());
     presetMenu.setPresetDirectory(savedDataFolder.getChildFile("Presets"));
     themeManager.setThemesDirectory(savedDataFolder.getChildFile("Themes")); 
@@ -86,6 +85,7 @@ float MyPluginEditor::getDynamicFontHeight() const {
 }
 
 void MyPluginEditor::paintOverChildren(juce::Graphics &g) {
+    // Draw the plugin logo and name with dynamic scaling based on the window size and menu visibility
     bool isAnyMenuOpen = settingsOverlay.isVisible() || presetOverlay.isVisible();
     auto themeProps = themeManager.getThemeProps(currentThemeId);
     if (pluginControls.isVisible()) {
@@ -118,6 +118,7 @@ void MyPluginEditor::setLabelsVisible(bool shouldBeVisible) {
 }
 
 void MyPluginEditor::updateTooltipState(bool shouldShowTooltips) {
+    // Update the tooltip window based on the user's preference
     if (shouldShowTooltips) {
         if (tooltipWindow == nullptr) {
             tooltipWindow = std::make_unique<juce::TooltipWindow>(this, 1700);

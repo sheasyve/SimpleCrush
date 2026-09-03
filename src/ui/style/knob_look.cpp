@@ -1,5 +1,7 @@
 #include "knob_look.h"
 
+// --- Custom Look and Feel for the Knobs ---
+
 void KnobLookAndFeel::drawRotarySlider(juce::Graphics &g,
     int x, int y, int width, int height,
     float sliderPos, const float rotaryStartAngle,

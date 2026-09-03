@@ -1,5 +1,7 @@
 #include "ui/components/plugin_settings.h"
 
+// --- The Main File for the Settings Page ---
+
 PluginSettings::PluginSettings(PluginTheme::ThemeManager &tm, MyPluginProcessor &p) : themeManager(tm), processor(p) {
     juce::String infotext =
         "SimpleCrush v1.2.\n2026 Syverson Audio.\nAll rights reserved.\nDeveloped by Shea Syverson.";

@@ -1,6 +1,8 @@
 #include "plugin_theme.h"
 #include <algorithm>
 
+// -- Theme Manager Implementation ---
+
 namespace PluginTheme {
 
 ThemeManager::ThemeManager() {

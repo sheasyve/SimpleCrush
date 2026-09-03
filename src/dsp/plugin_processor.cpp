@@ -2,7 +2,7 @@
 #include "knob_processing.h"
 #include "ui/main/plugin_editor.h"
 
-// --- CORE LIFECYCLE & ROUTING
+// --- Main Processing file, calls upon the audio processing file ---
 
 MyPluginProcessor::MyPluginProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -32,7 +32,7 @@ bool MyPluginProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const
     return true;
 }
 
-// --- DSP SETUP ---
+// --- DSP ---
 
 void MyPluginProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
     auto numChannels = getTotalNumInputChannels();
@@ -46,7 +46,7 @@ void MyPluginProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
 
 void MyPluginProcessor::releaseResources() {}
 
-// --- EDITOR & UI ---
+// --- Editor Linking and UI ---
 
 bool MyPluginProcessor::hasEditor() const { return true; }
 juce::AudioProcessorEditor *MyPluginProcessor::createEditor() { return new MyPluginEditor(*this); }
@@ -63,8 +63,6 @@ void MyPluginProcessor::setStateInformation(const void *data, int sizeInBytes) {
     }
 }
 
-// --- PARAMETER LAYOUT (The Knobs) ---
-
 inline juce::NormalisableRange<float> makeCustomSkewRange(float min, float max, float skew) {
     return juce::NormalisableRange<float>(
         min,
@@ -76,8 +74,6 @@ inline juce::NormalisableRange<float> makeCustomSkewRange(float min, float max, 
         },
         [](float start, float end, float val) { return juce::jlimit(start, end, val); });
 }
-
-// --- APP SETTINGS ---
 
 void MyPluginProcessor::initPropertiesFile() {
     juce::PropertiesFile::Options options;
@@ -163,7 +159,7 @@ juce::String MyPluginProcessor::getSavedDataFolder() {
     return defaultFolder.getFullPathName();
 }
 
-// JUCE BOILERPLATE
+// Boilerplate
 
 const juce::String MyPluginProcessor::getName() const { return JucePlugin_Name; }
 bool MyPluginProcessor::acceptsMidi() const { return false; }

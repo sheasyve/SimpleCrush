@@ -1,5 +1,7 @@
 #include "knob_processing.h"
 
+// --- The Core Knob Logic ---
+
 namespace Knobs {
 
 void CustomKnob::mouseDown(const juce::MouseEvent &e) {
@@ -8,6 +10,7 @@ void CustomKnob::mouseDown(const juce::MouseEvent &e) {
 }
 
 void CustomKnob::mouseDrag(const juce::MouseEvent &e) {
+    // -- Custom Drag Logic for Knobs with Modifier Keys ---
     if (isEnabled()) {
         if (e.mods.isShiftDown() || e.mods.isCtrlDown() || e.mods.isCommandDown()) {
             int deltaY = -e.getDistanceFromDragStartY();
@@ -36,6 +39,7 @@ juce::NormalisableRange<float> makeCustomSkewRange(float start, float end, float
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
+    // The Knob Params
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
     // HPF - Custom Range
@@ -89,7 +93,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
             .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue() / 100.0f; })));
             
     layout.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{"THEME_ID", 1}, "Theme ID", 1, 8, 1));
-    
     return layout;
 }
 

@@ -1,6 +1,8 @@
 #include "dsp/plugin_processor.h"
 #include "ui/main/plugin_editor.h"
 
+// --- Main Editor onClick Logic ---
+
 void MyPluginEditor::setupCallbacks() {
 
     // --- Theme Changed ---

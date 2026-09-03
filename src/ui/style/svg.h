@@ -1,6 +1,8 @@
 #pragma once
 #include <JuceHeader.h>
 
+// --- SVG Parsing and Icon Management ---
+
 inline auto parseSvgIcon = [](juce::DrawableButton &btn,
                                std::unique_ptr<juce::DrawablePath> &normal,
                                std::unique_ptr<juce::DrawablePath> &hover,

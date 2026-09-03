@@ -1,5 +1,7 @@
 #include "ui/components/plugin_settings.h"
 
+// --- Settings Page onClick Logic ---
+
 void PluginSettings::setupCallbacks() {
 
     themeSelector.onChange = [this] {
@@ -27,27 +29,21 @@ void PluginSettings::setupCallbacks() {
 
     folderButton.onClick = [this]() { launchFolderChooser(); };
 
-    
 }
 
 void PluginSettings::launchFolderChooser() {
     fileChooser = std::make_unique<juce::FileChooser>("Select new Data folder (containing Themes and Presets)...",
         juce::File::getSpecialLocation(juce::File::userHomeDirectory),
         "");
-
     auto folderChooserFlags = juce::FileBrowserComponent::canSelectDirectories | juce::FileBrowserComponent::openMode;
-
     fileChooser->launchAsync(folderChooserFlags, [this](const juce::FileChooser &fc) {
         auto newFolder = fc.getResult();
         if (newFolder.isDirectory()) {
-
             if (newFolder.getFileName().equalsIgnoreCase("Presets") ||
                 newFolder.getFileName().equalsIgnoreCase("Themes")) {
                 newFolder = newFolder.getParentDirectory();
             }
-
             processor.saveDataFolder(newFolder.getFullPathName());
-
             if (onDataFolderChanged) { onDataFolderChanged(newFolder); }
         }
     });

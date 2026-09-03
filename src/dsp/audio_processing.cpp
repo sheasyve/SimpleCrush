@@ -1,5 +1,7 @@
 #include "plugin_processor.h"
 
+// --- Core Audio Logic ---
+
 void MyPluginProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages) {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
@@ -24,26 +26,8 @@ void MyPluginProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::Mid
     float mix = apvts.getRawParameterValue("MIX")->load();
     float sampleRate = getSampleRate();
     if (sampleRate > 0.0) setFilters(buffer, midiMessages, mix, sampleRate, channelsToProcess);
-    for (int channel = 0; channel < channelsToProcess; ++channel) {
+    for (int channel = 0; channel < channelsToProcess; ++channel) {// Call the Process function for each channel
         process(buffer, midiMessages, channel, channelsToProcess, rate, totalLevels, mix);
-    }
-}
-
-void MyPluginProcessor::setFilters(juce::AudioBuffer<float> &buffer,
-    juce::MidiBuffer &midiMessages,
-    float mix,
-    float sampleRate,
-    int channelsToProcess) {
-    float hpFreq = apvts.getRawParameterValue("HPF")->load();
-    float lpFreq = apvts.getRawParameterValue("LPF")->load();
-    float maxFreq = sampleRate / 2.0f * 0.99f; // Prevent the low pass from exceeding the Nyquist limit
-    auto hpCoeffs = juce::IIRCoefficients::makeHighPass(sampleRate, std::max(20.0f, hpFreq));
-    auto lpCoeffs = juce::IIRCoefficients::makeLowPass(sampleRate, std::min(maxFreq, lpFreq));
-    for (int i = 0; i < channelsToProcess; ++i) {
-        if (i < 2) {
-            highPassFilters[i].setCoefficients(hpCoeffs);
-            lowPassFilters[i].setCoefficients(lpCoeffs);
-        }
     }
 }
 
@@ -71,5 +55,23 @@ void MyPluginProcessor::process(juce::AudioBuffer<float> &buffer,
         // Blend the dry and wet signals based on the mix knob position
         channelData[sample] = (drySample * (1.0f - mix)) + (wetSample * mix);
         sampleCounters[channel]++;
+    }
+}
+
+void MyPluginProcessor::setFilters(juce::AudioBuffer<float> &buffer,
+    juce::MidiBuffer &midiMessages,
+    float mix,
+    float sampleRate,
+    int channelsToProcess) {
+    float hpFreq = apvts.getRawParameterValue("HPF")->load();
+    float lpFreq = apvts.getRawParameterValue("LPF")->load();
+    float maxFreq = sampleRate / 2.0f * 0.99f; // Prevent the low pass from exceeding the Nyquist limit
+    auto hpCoeffs = juce::IIRCoefficients::makeHighPass(sampleRate, std::max(20.0f, hpFreq));
+    auto lpCoeffs = juce::IIRCoefficients::makeLowPass(sampleRate, std::min(maxFreq, lpFreq));
+    for (int i = 0; i < channelsToProcess; ++i) {
+        if (i < 2) {
+            highPassFilters[i].setCoefficients(hpCoeffs);
+            lowPassFilters[i].setCoefficients(lpCoeffs);
+        }
     }
 }

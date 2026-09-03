@@ -1,5 +1,7 @@
 #include "plugin_controls.h"
 
+// --- Plugin Controls on the Main Page ---
+
 PluginControls::PluginControls(juce::AudioProcessorValueTreeState &apvts) {
     setInterceptsMouseClicks(false, true);
     hpSlider.setLookAndFeel(&KnobLookAndFeel);

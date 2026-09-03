@@ -1,5 +1,7 @@
 #include "../main/plugin_editor.h"
 
+// --- Theme Update Logic ---
+
 void MyPluginEditor::updateTheme(int themeId) {
     currentThemeId = themeId;
     auto theme = themeManager.getThemeProps(themeId);
