@@ -49,7 +49,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         makeCustomSkewRange(0.0f, 20000.0f, 0.3f),
         0.0f,
         juce::AudioParameterFloatAttributes()
-            .withStringFromValueFunction([](float value, int) { return juce::String(value, 0) + " Hz"; })
+            .withStringFromValueFunction([](float value, int) {
+                if (std::abs(value) < 0.01f) value = 0.0f;
+                juce::String text = juce::String(value, 0) + " Hz";
+                return text.length() > 6 ? text.substring(0, 6) : text;
+            })
             .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
 
     // BITS - Continuous interval 
@@ -59,7 +63,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         juce::NormalisableRange<float>(1.0f, 16.0f, 0.0f),
         16.0f,
         juce::AudioParameterFloatAttributes()
-            .withStringFromValueFunction([](float value, int) { return juce::String(value, 1); })
+            .withStringFromValueFunction([](float value, int) {
+                juce::String text = juce::String(value, 1);
+                return text.length() > 6 ? text.substring(0, 6) : text;
+            })
             .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
 
     // RATE - Custom Range
@@ -69,7 +76,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         makeCustomSkewRange(1.0f, 44.1f, 0.6f),
         44.1f,
         juce::AudioParameterFloatAttributes()
-            .withStringFromValueFunction([](float value, int) { return juce::String(value, 2); })
+            .withStringFromValueFunction([](float value, int) {
+                if (std::abs(value) < 0.001f) value = 0.0f;
+                juce::String text = juce::String(value, 2);
+                return text.length() > 6 ? text.substring(0, 6) : text;
+            })
             .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
 
     // LPF - Custom Range
@@ -79,7 +90,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         makeCustomSkewRange(20.0f, 20000.0f, 0.3f),
         20000.0f,
         juce::AudioParameterFloatAttributes()
-            .withStringFromValueFunction([](float value, int) { return juce::String(value, 0) + " Hz"; })
+            .withStringFromValueFunction([](float value, int) {
+                if (std::abs(value) < 0.01f) value = 0.0f;
+                juce::String text = juce::String(value, 0) + " Hz";
+                return text.length() > 6 ? text.substring(0, 6) : text;
+            })
             .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
 
     // MIX - Continuous interval (0.0f)
@@ -89,7 +104,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         juce::NormalisableRange<float>(0.0f, 1.0f, 0.0f),
         1.0f,
         juce::AudioParameterFloatAttributes()
-            .withStringFromValueFunction([](float value, int) { return juce::String(value * 100.0f, 1) + "%"; })
+            .withStringFromValueFunction([](float value, int) {
+                float mixed = value * 100.0f;
+                if (std::abs(mixed) < 0.01f) mixed = 0.0f;
+                juce::String text = juce::String(mixed, 1) + "%";
+                return text.length() > 6 ? text.substring(0, 6) : text;
+            })
             .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue() / 100.0f; })));
             
     layout.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{"THEME_ID", 1}, "Theme ID", 1, 8, 1));
