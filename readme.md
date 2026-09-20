@@ -1,6 +1,7 @@
 # [SimpleCrush](https://sheasyve.dev/simplecrush)
 
-A custom bitcrusher and downsampling VST3 plugin designed for aggressive audio destruction. Perfect for lo-fi textures and adding unique harmonics to bass, drums, and chords. Built from the ground up in C++ using the JUCE framework. 
+A custom bitcrusher and downsampling VST3 plugin designed for creating unique harmonics, vintage effects, and audio destruction. 
+Perfect for lo-fi textures and adding unique harmonics to bass, drums, and chords. Built from the ground up in C++ using the JUCE framework. 
 
 <img width="342" height="372" alt="image" src="https://github.com/user-attachments/assets/69de983e-9d38-4fad-87d5-fac155d62054"/>
 
