@@ -38,8 +38,7 @@ juce::NormalisableRange<float> makeCustomSkewRange(float start, float end, float
     return juce::NormalisableRange<float>(start, end, 0.0f, skewFactor);
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
-    // The Knob Params
+juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() { // Define the knob functionality and parameters.
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
     // HPF - Custom Range
@@ -50,13 +49,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         0.0f,
         juce::AudioParameterFloatAttributes()
             .withStringFromValueFunction([](float value, int) {
-                // Round to int to strip decimals, then append Hz
                 return juce::String(juce::roundToInt(value)) + " Hz";
             })
             .withValueFromStringFunction([](const juce::String &text) { 
                 return text.removeCharacters(" Hz").getFloatValue(); 
             })));
-
 
     // BITS - Continuous interval 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
