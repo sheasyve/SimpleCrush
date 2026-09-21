@@ -50,11 +50,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         0.0f,
         juce::AudioParameterFloatAttributes()
             .withStringFromValueFunction([](float value, int) {
-                if (std::abs(value) < 0.01f) value = 0.0f;
-                juce::String text = juce::String(value, 0) + " Hz";
-                return text.length() > 6 ? text.substring(0, 6) : text;
+                // Round to int to strip decimals, then append Hz
+                return juce::String(juce::roundToInt(value)) + " Hz";
             })
-            .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
+            .withValueFromStringFunction([](const juce::String &text) { 
+                return text.removeCharacters(" Hz").getFloatValue(); 
+            })));
+
 
     // BITS - Continuous interval 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
@@ -91,11 +93,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
         20000.0f,
         juce::AudioParameterFloatAttributes()
             .withStringFromValueFunction([](float value, int) {
-                if (std::abs(value) < 0.01f) value = 0.0f;
-                juce::String text = juce::String(value, 0) + " Hz";
-                return text.length() > 6 ? text.substring(0, 6) : text;
+                // Round to int to strip decimals, then append Hz
+                return juce::String(juce::roundToInt(value)) + " Hz";
             })
-            .withValueFromStringFunction([](const juce::String &text) { return text.getFloatValue(); })));
+            .withValueFromStringFunction([](const juce::String &text) { 
+                return text.removeCharacters(" Hz").getFloatValue(); 
+            })));
 
     // MIX - Continuous interval (0.0f)
     layout.add(std::make_unique<juce::AudioParameterFloat>(
