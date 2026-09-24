@@ -1,5 +1,5 @@
 # [SimpleCrush](https://sheasyve.dev/simplecrush)
-## A custom bitcrusher and downsampling VST3 plugin designed for lo-fi textures, and adding unique harmonics and grit. Built from the ground up with C++ and JUCE.
+## A custom bitcrusher and downsampling VST3 plugin designed for and adding unique harmonics and degradation. Built from the ground up with C++ and JUCE.
 
 <img width="342" height="372" alt="SimpleCrush Plugin UI" src="https://github.com/user-attachments/assets/69de983e-9d38-4fad-87d5-fac155d62054"/>
 
